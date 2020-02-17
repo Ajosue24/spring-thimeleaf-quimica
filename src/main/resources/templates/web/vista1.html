@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{web/fragments/main_layout}" >
+<head>
+    <title>Programa</title>
+</head>
+<body>
+
+<div  layout:fragment="content" class="container mySpace">
+
+    <div class="right_col" role="main">
+        <div class="">
+            <div class="page-title">
+                <div class="title_left">
+                    <h3>Paises Departamentos Ciudades</h3>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <!--inicio Formulario-->
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2>Agregar / Editar <small>administre sus paises departamentos y ciudades</small></h2>
+                            <ul class="nav navbar-right panel_toolbox">
+                                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+                            </ul>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <br />
+                            <form id="addParametricas" data-parsley-validate class="form-horizontal form-label-left" action="#">
+
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" >Pais<span class="required">*</span>
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <input type="text" required="required" class="form-control col-md-7 col-xs-12"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12">Es Fijo?</label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+
+                                        <div id="gender" class="btn-group" data-toggle="buttons">
+                                            <p>
+                                                Si:
+                                                <input type="radio" class="flat" name="isfijo" id="isfijo" value="true"  required/> No:
+                                                <input type="radio" class="flat" name="isfijo" id="isfijo" value="false" />
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" >Ingrese Orden:<span class="required">*</span>
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <input type="number" required="required" class="form-control col-md-7 col-xs-12"/>
+                                    </div>
+                                </div>
+                                <div class="ln_solid"></div>
+                                <div class="form-group">
+                                    <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                                        <button th:type="submit" th:id="cancel" class="btn btn-primary" type="reset" th:name="action" th:value="cancel">Cancel</button>
+                                        <button th:type="submit" th:id="save"   class="btn btn-success" th:name="action" th:value="save">Submit</button>
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">Quimica</title>
+    <script src="../../vendors/jquery/dist/jquery.min.js"></script>
+    <div th:replace="web/fragments/listCss :: listCss"/>
+</head>
+
+<body class="nav-md">
+<div class="container body">
+    <div class="main_container">
+        <div class="col-md-3 left_col">
+            <div class="left_col scroll-view">
+                <div class="navbar nav_title" style="border: 0;">
+                    <a th:href="@{/web/index}"><img src="../../../images/logo_blanco.jpg" alt="..." style="width: 100%;"></a>
+                </div>
+
+                <div class="clearfix"></div>
+
+                <!-- menu profile quick info -->
+                <div th:replace="web/fragments/menu_profile :: menu-profile"/>
+                <!-- /menu profile quick info -->
+
+                <br />
+                <!-- sidebar menu -->
+                <div th:replace="web/fragments/sidebar_menu :: sidebar-menu"/>
+                <!-- /sidebar menu -->
+
+                <!-- /menu footer buttons -->
+                <div th:replace="web/fragments/menu_footer :: menu-footer"/>
+                <!-- /menu footer buttons -->
+            </div>
+        </div>
+
+        <!-- top navigation -->
+        <div th:replace="web/fragments/top_navigation :: top-navigation"/>
+        <!-- /top navigation -->
+
+        <!-- page content -->
+        <div layout:fragment="content" class="right_col" role="main"> </div>
+        <!-- /page content -->
+
+        <!-- footer content -->
+        <div th:replace="web/fragments/footer :: footer"/>
+        <!-- /footer content -->
+        <div layout:fragment="customjs" />
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{controlexterno/controlExternoFragments/ce_layout}">
+<head>
+    <link href="../../css/form.css" rel="stylesheet">
+    <title>Doc relacionados</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div layout:fragment="cont" style="padding: 15px">
+	<span class="preload">
+		<i class="fa fa-spinner fa-spin"></i>
+	</span>
+    <h2 style="color:#000">Documentos relacionados</h2>
+    <div class="acciones">
+            <table>
+                <tbody>
+                <tr>
+                    <td>
+                        <div class="input text">
+                            <label for="name-f">Nombre</label>
+                            <input type="text" name="name_f" id="name-f" th:value="${nombre}">
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="submit">
+                <button type="submit" formnovalidate="formnovalidate" name="ok" id="buscar" class="buttonProasecal">
+                    Buscar
+                </button>
+            </div>
+    </div>
+
+        <table>
+            <tbody>
+            <tr>
+                <th colspan="3">Documento</th>
+                <th>Acciones</th>
+            </tr>
+
+            <tr th:if="${documentos.getTotalElements()<1}">
+                <td colspan="100%">No se encuentran resultados de documentos.</td>
+            </tr>
+
+            <tr class="tableRow" th:each="documentos: ${documentos}">
+                <td>
+                    <img src="../../controlexterno/images/next.svg" alt="" class="smallIcon" title="">
+                </td>
+                <td th:text="${documentos.nombre}"></td>
+                <td></td>
+                <td>
+                    <a th:href="'../'+${documentos.direccionArchivo}" target="_blank">
+                        <img src="../../controlexterno/images/search.svg" alt="" class="smallIcon" title="">
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    <br>
+    <a href="/controlexterno/index" class="button">Regresar</a>
+    <br>
+    <br>
+</div>
+
+<div layout:fragment="customjs">
+    <script src="../../../controlexterno/js/documentosRelacionados/documentosRelacionados.js"></script>
+</div>
+</body>

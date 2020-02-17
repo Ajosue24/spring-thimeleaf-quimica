@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{controlexterno/controlExternoFragments/ce_layout}">
+<head>
+    <link href="../../css/form.css" rel="stylesheet">
+    <title>Listado de clientes</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="google" content="notranslate">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+</head>
+<body>
+
+<div layout:fragment="cont" style="padding: 0 10px 0 20px;min-height: 600px">
+	<span class="preload">
+		<i class="fa fa-spinner fa-spin"></i>
+	</span>	
+    <div th:if="${save}">
+        <div class="successmsg">
+            <p style="font-weight: bolder; padding:10px 3px 0 10px; text-align:justify;">
+                Los datos han sido guardados satisfactoriamente
+            </p>
+        </div>
+        <br>
+    </div>
+    <span class="titulo">Programa: </span><span class="texto">PRUEBA DE EFICIENCIA EN QUÍMICA CLÍNICA</span>
+    <p></p>
+    <div class="acciones">
+        <ul>
+            <li>
+                <a href="http://controlexterno.proasecal.com/front/" target="_blank">
+                    Muestras inscritas y reportadas hasta diciembre de 2017</a>
+            </li>
+            <li>
+                <a href="/controlexterno/instructivos">Instructivos</a>
+            </li>
+            <li>
+                <a href="/controlexterno/documentosRelacionados">Documentos relacionados</a>
+            </li>
+            <li>
+                <a href="/controlexterno/videosRelacionados">Videos relacionados</a>
+            </li>
+        </ul>
+    </div>
+    <br>
+    <p class="titulo_sub" style="border-bottom: 1px solid #ffc150">Muestras</p>
+    <div class="row">
+        <div class="col-md-3 col-sm-3 col-xs-3 form-group" style="border-bottom:1px solid black;">
+            <label class="col-md-3 col-sm-3 col-xs-3 form-group">Desde</label>
+        </div>
+        <div class="col-md-3 col-sm-3 col-xs-3 form-group" style="border-bottom:1px solid black;">
+            <label class="col-md-3 col-sm-3 col-xs-3 form-group">Hasta</label>
+        </div>
+        <div class="col-md-3 col-sm-3 col-xs-3 form-group" style="border-bottom:1px solid black;">
+            <label class="col-md-3 col-sm-3 col-xs-3 form-group">Número</label>
+        </div>
+        <div class="col-md-3 col-sm-3 col-xs-3 form-group" style="border-bottom:1px solid black;">
+            <label class="col-md-3 col-sm-3 col-xs-3 form-group"></label>
+        </div>
+    </div>
+    <div>
+        <div class="row">
+            <div class="col-md-3 col-sm-3 col-xs-3 form-group">
+                <div class="form-group">
+                    <input class="form-control" type="date"
+                           th:id="desde" name="desde" th:value="${desde}">
+                    <p id="correoLabel" class="label label-danger alerta"></p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-xs-3 form-group">
+                <div class="form-group">
+                    <input class="form-control" type="date"
+                           th:id="hasta" name="correoAlternativo" th:value="${hasta}">
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-3 col-xs-3 form-group">
+                <div class="form-group">
+                    <input type="text" class="form-control"
+                           th:id="numero" th:name="numero" th:value="${numero}">
+                </div>
+            </div>
+            <div class="col-md-1 col-sm-3 col-xs-3 form-group">
+                <button formnovalidate="formnovalidate" th:id="buscar" name="buscar" class="buttonProasecal">Buscar
+                </button>
+            </div>
+            <div class="col-md-1 col-sm-3 col-xs-3 form-group">
+                <button formnovalidate="formnovalidate" name="cancel" class="buttonProasecal">Regresar
+                </button>
+            </div>
+        </div>
+    </div>
+    <p class="titulo_sub" style="width: 100%"></p>
+    <table>
+        <tbody>
+        <tr>
+            <th colspan="2">Muestra</th>
+            <th>Tipo</th>
+            <th>Desde</th>
+            <th>Hasta</th>
+            <th>Fecha de registro</th>
+            <th>Formulario de registro</th>
+            <th>Consultar informe</th>
+            <th>Consultar consolidados</th>
+        </tr>
+        <tr class="tableRow" th:each="muestrasInscritas,row : ${muestrasInscritasList}">
+            <td style="width: 22px;"><img src="../../controlexterno/images/next.svg" alt="" class="smallIcon"
+                                          title=""></td>
+            <td th:text="${muestrasInscritas.idMuestras.numeroMuestra}"></td>
+            <td th:text="${muestrasInscritas.idMuestras.idTipoMuestra.nombre}"></td>
+            <td th:text="${#dates.format(muestrasInscritas.idMuestras.fechaInicial,'dd/MM/yyyy')}"></td>
+            <td th:text="${#dates.format(muestrasInscritas.idMuestras.fechaFinal,'dd/MM/yyyy')}"></td>
+            <td>
+                <label th:each="resultado, row : ${muestrasInscritas.resultadosList}"
+                       th:text="${#dates.format(resultado.fechaCreacion,'dd-MM-yyyy') } ">
+                </label>
+            </td>
+            <td>
+                <div th:if="${muestrasInscritas.resultadosList.size()==0}">
+                    <div th:if="${muestrasInscritas.idMuestras.fechaLibResultado!=null && muestrasInscritas.idMuestras.fechaLibResultado.after(#temporals.createNow())}OR${muestrasInscritas.idMuestras.fechaLibResultado==null}">
+                        <a th:if="${mostrarBotonCrear[row.index]}"
+                           th:href="@{/controlexterno/resultadosParticipante/} + ${muestrasInscritas.idInscripcionMuestras}"><img
+                                src="../../controlexterno/images/plus.svg" width="18px" style="cursor: pointer"></a>
+                    </div>
+                </div>
+                <!-- And${muestrasInscritas.idMuestras.fechaLibResultado!=null && muestrasInscritas.idMuestras.fechaLibResultado.after(#temporals.createNow())} -->
+
+                <div th:if="${muestrasInscritas.resultadosList.size()>0}">
+                    <div th:each="resultado, row : ${muestrasInscritas.resultadosList}">
+                        <div th:if="${resultado.idUsuarioModificacion==null}And (${muestrasInscritas.idMuestras.fechaCierre==null}OR${muestrasInscritas.idMuestras.fechaCierre!=null && muestrasInscritas.idMuestras.fechaCierre.after(#temporals.createNow())})">
+                            <div th:if="${muestrasInscritas.idMuestras.fechaLibResultado!=null && muestrasInscritas.idMuestras.fechaLibResultado.after(#temporals.createNow())}OR${muestrasInscritas.idMuestras.fechaLibResultado==null}">
+                                <a th:href="@{/controlexterno/resultadosParticipante/} + ${muestrasInscritas.idInscripcionMuestras}"><img
+                                        src="../../controlexterno/images/edit.png" width="18px" style="cursor: pointer"></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div th:if="${muestrasInscritas.resultadosList.size()>0}">
+                    <div th:each="resultado, row : ${muestrasInscritas.resultadosList}">
+                        <div th:if="${resultado.idUsuarioModificacion!=null}OR${resultado.idUsuarioModificacion==null&&muestrasInscritas.idMuestras.fechaCierre!=null&&resultado.fechaCreacion.after(muestrasInscritas.idMuestras.fechaCierre)}OR${resultado.idUsuarioModificacion==null&&muestrasInscritas.idMuestras.fechaCierre!=null&&resultado.fechaCreacion.before(muestrasInscritas.idMuestras.fechaCierre)&&muestrasInscritas.idMuestras.fechaCierre.before(#temporals.createNow())}">
+
+                            <a th:href="@{/controlexterno/resultadosParticipante/} + ${muestrasInscritas.idInscripcionMuestras}"><img
+                                    src="../../controlexterno/images/search.svg" width="18px"
+                                    style="cursor: pointer"></a>
+
+                        </div>
+                    </div>
+                </div>
+                <div th:if="${muestrasInscritas.resultadosList.size()==0}and${muestrasInscritas.idMuestras.fechaLibResultado!=null && muestrasInscritas.idMuestras.fechaLibResultado.before(#temporals.createNow())}">
+                    <a onclick="alert('La muestra está bloqueada.')" style="cursor:pointer"><i
+                            class="fa fa-lock"></i></a>
+                </div>
+
+                 <!--<a th:if="!${mostrarBotonCrear[row.index]}" onclick="alert('La muestra aun no esta disponible.')"
+                   style="cursor:pointer"><i class="fa fa-lock"></i></a>-->
+
+            </td>
+            <td>
+                <div th:if="${muestrasInscritas.getResultadosList().size()>0&&muestrasInscritas.getResultadosList().get(0).informesList.size()>0}and${muestrasInscritas.idMuestras.fechaLibResultado!=null && muestrasInscritas.idMuestras.fechaLibResultado.before(#temporals.createNow())}">
+                    <div th:each="informeVersion: ${muestrasInscritas.getResultadosList().get(0).informesList}">
+                        <div th:if="${informeVersion.esVersion}">
+                            <img th:title="Versión+' '+${informeVersion.numeroVersion}"
+                            style="float: left;cursor: pointer" class="smallIcon" src="../../../controlexterno/images/todo_list.svg">
+                        </div>
+
+                    </div>
+                </div>
+            </td>
+            <td></td>
+        </tr>
+        </tbody>
+    </table>
+    <!--<div class="form-group col-md-1">
+        <select class="form-control pagination" id="pageSizeSelect">
+            <option th:each="pageSize : ${pageSizes}" th:text="${pageSize}"
+                    th:value="${pageSize}"
+                    th:selected="${pageSize} == ${selectedPageSize}"></option>
+        </select>
+    </div>-->
+    <div th:if="${muestrasInscritasList.totalPages != 1}"
+         class="dataTables_paginate paging_simple_numbers pagination-centered">
+        <ul class="pagination">
+            <li th:class="${muestrasInscritasList.number == 0} ? hidden"><a
+                    class="pageLink"
+                    th:href="@{/controlexterno/index(pagSizeIndex=${selectedPageSize}, page=1,desde=${desde},hasta=${hasta},numero=${numero})}">&laquo;</a>
+            </li>
+            <li th:class="${muestrasInscritasList.number == 0} ? hidden"><a
+                    class="pageLink"
+                    th:href="@{/controlexterno/index(pagSizeIndex=${selectedPageSize}, page=${muestrasInscritasList.number},desde=${desde},hasta=${hasta},numero=${numero})}">&larr;</a>
+            </li>
+            <li
+                    th:class="${muestrasInscritasList.number == (page - 1)} ? 'active pointer-disabled'"
+                    th:each="page : ${#numbers.sequence(pager.startPage, pager.endPage)}">
+                <a class="pageLink"
+                   th:href="@{/controlexterno/index(pagSizeIndex=${selectedPageSize}, page=${page},desde=${desde},hasta=${hasta},numero=${numero})}"
+                   th:text="${page}"></a>
+            </li>
+            <li
+                    th:class="${muestrasInscritasList.number + 1 == muestrasInscritasList.totalPages} ? hidden">
+                <a class="pageLink"
+                   th:href="@{/controlexterno/index(pagSizeIndex=${selectedPageSize}, page=${muestrasInscritasList.number + 2},desde=${desde},hasta=${hasta},numero=${numero} )}">&rarr;</a>
+            </li>
+            <li
+                    th:class="${muestrasInscritasList.number + 1 == muestrasInscritasList.totalPages} ? hidden">
+                <a class="pageLink"
+                   th:href="@{/controlexterno/index(pagSizeIndex=${selectedPageSize}, page=${muestrasInscritasList.totalPages},desde=${desde},hasta=${hasta},numero=${numero} )}">&raquo;</a>
+            </li>
+        </ul>
+    </div>
+    <br>
+    <br>
+    <div class="modal fade" id="myModal">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <div class="modal-dialog modal-lg static-pdf-example">
+            <div class="modal-content">
+                <div class="container">
+                    <div id="example1"></div>
+                </div>
+                <!--Inicio de los otros div nuevos-->
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<div layout:fragment="customjs">
+    <script>
+		pagPrevia=document.referrer;
+    	if(pagPrevia.indexOf("login") > -1){
+            $(document).ready(function () {
+                /*var options = { PDFJS_URL: "../../controlexterno/js/viewer.html" };*/
+                PDFObject.embed("../../controlexterno/pdf/instructivo.pdf", "#example1");
+                $('#myModal').modal({backdrop: 'static', keyboard: false});
+
+                /*// Asynchronous download of PDF
+                var loadingTask = pdfjsLib.getDocument("../../controlexterno/pdf/instructivo.pdf ");
+                loadingTask.promise.then(function(pdf) {
+                    console.log('PDF loaded');
+
+                    // Fetch the first page
+                    var pageNumber = 1;
+                    pdf.getPage(pageNumber).then(function(page) {
+                        console.log('Page loaded');
+
+                        var scale = 1.5;
+                        var viewport = page.getViewport({scale: scale});
+
+                        // Prepare canvas using PDF page dimensions
+                        var canvas = document.getElementById('example1');
+                        var context = canvas.getContext('2d');
+                        canvas.height = viewport.height;
+                        canvas.width = viewport.width;
+
+                        // Render PDF page into canvas context
+                        var renderContext = {
+                            canvasContext: context,
+                            viewport: viewport
+                        };
+                        var renderTask = page.render(renderContext);
+                        renderTask.promise.then(function () {
+                            console.log('Page rendered');
+                        });
+                    });
+                }, function (reason) {
+                    // PDF loading error
+                    console.error(reason);
+                });*/
+            });
+            $('#myModal').modal({backdrop: 'static', keyboard: false});
+    	}
+
+    </script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+
+        var save = /*[[${save}]]*/ 'true';
+        $(document).ready(function () {
+            if (save) {
+                alert('Los datos han sido guardados satisfactoriamente');
+            }
+        });
+
+        /*]]>*/
+
+    </script>
+    <style>
+        .pdfobject-container {
+            height: 40rem;
+            border: 1rem solid rgba(0, 0, 0, .1);
+        }
+    </style>
+</div>
+</body>

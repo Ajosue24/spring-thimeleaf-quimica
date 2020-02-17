@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{web/fragments/main_layout}">
+<head>
+    <link href="../../css/form.css" rel="stylesheet">
+       <title>usuarios</title>
+    <meta charset="UTF-8">
+</head>
+
+
+<body>
+
+<div layout:fragment="content" class="container mySpace">
+    <!-- Bloque de notificaciÃ³n  -->
+
+    <div th:replace="web/fragments/notify :: notify"/>
+    <div class="right_col" role="main">
+        <!-- top tiles -->
+        <div class="row">
+            <div>
+                <div class="page-title">
+                    <div class="title_left">
+                        <h3>Administrador Usuario</h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <!--inicio Formulario-->
+                        <div class="x_panel">
+                            <div class="x_title">
+                                <h2>
+                                    Agregar / Editar Usuarios
+                                    <small>Administre sus
+                                        Usuarios
+                                    </small>
+                                </h2>
+                                <ul class="nav navbar-right panel_toolbox">
+                                    <li><a class="collapse-link"><i
+                                            class="fa fa-chevron-up"></i></a></li>
+                                </ul>
+                                <div class="clearfix"></div>
+                            </div>
+
+                            <div class="x_content">
+                                <div class="col-md-10 col-md-offset-2">
+                                    <form id="usuariosForm"
+                                          class="form-horizontal form-label-left"
+                                          action="#"
+                                          th:object="${usuariosForm}"
+                                          th:action="@{/usuarios/save}" method="post">
+
+										<div class="row">
+	                                        <div class="col-md-10 col-sm-12 col-xs-12 form-group">
+	                                            <label th:for="nombreUsuario">Nombre Usuario<span
+	                                                    class="required">*</span></label>
+	                                            <input type="text" class="form-control" th:id="nombreUsuario"
+	                                                   th:field="*{nombreUsuario}" placeholder="Ingrese Nombre"
+	                                                   required="required"
+	                                                   maxlength="256">
+	                                            <p th:if="${#fields.hasErrors('nombreUsuario')}"
+	                                               class="label label-danger" th:errors="*{nombreUsuario}">Incorrect</p>
+	                                            <input th:type="hidden" th:field="*{idUsuario}">
+	                                        </div>
+                                        </div>
+                                        
+                                        <div class="row">
+	                                        <div class="col-md-5 col-sm-12 col-xs-12 form-group">
+	                                            <label th:for="password">Contraseña<span
+	                                                    class="required">*</span></label>
+	                                            <input type="password" class="form-control" th:id="password"
+	                                                   th:field="*{password}">
+	                                                   
+	                                                    <p th:if="${#fields.hasErrors('password')}"
+	                                           class="label label-danger" th:errors="*{password}">Incorrect</p>
+                                                <p id="passwordLbl" style="display:none"
+                                                   class="label label-danger alerta">La contraseña debe ser mayor a 4
+                                                    caracteres</p>	                                           
+	                                        </div>
+	
+	
+	                                        <div class="col-md-5 col-sm-12 col-xs-12 form-group">
+	                                            <label th:for="password2">Valide Contraseña<span
+	                                                    class="required">*</span></label>
+	                                            <input type="password" class="form-control" th:id="password2"
+	                                                   th:name="password2"
+	                                                   th:value="${password2}"
+	                                                   data-validate-linked="password">
+	                                                   <p id="passwordLabel" class="label label-danger alerta"></p>
+	                                        </div>
+                                        </div>
+                                        <div class="row">
+	                                        <div class="col-md-5 col-sm-12 col-xs-12 form-group">
+	                                            <label th:for="nombre">Nombres<span
+	                                                    class="required">*</span></label>
+	                                            <input type="text" class="form-control" th:id="nombre"
+	                                                   required="required"
+	                                                   th:field="*{nombres}">
+	                                        </div>
+	                                        <div class="col-md-5 col-sm-12 col-xs-12 form-group">
+	                                            <label th:for="apellidos">Apellidos<span
+	                                                    class="required">*</span></label>
+	                                            <input type="text" class="form-control" th:id="apellidos"
+	                                                   required="required"
+	                                                   th:field="*{apellidos}">
+	                                        </div>
+                                        </div>
+                                        
+                                        <div class="row">
+	                                        <div class="col-md-10 col-sm-12 col-xs-12 form-group">
+	                                            <label th:for="codProasecal">Codigo Proasecal<span
+	                                                    class="required">*</span></label>
+	                                            <input type="text" class="form-control" th:id="codProasecal"
+	                                                   th:field="*{codProasecal}">
+	                                            <p th:if="${#fields.hasErrors('codProasecal')}"
+	                                               class="label label-danger" th:errors="*{codProasecal}">Incorrect</p>
+	                                        </div>
+                                        </div>
+                                        
+                                        <!--<div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-12"
+                                                for="correo">Correo<span class="required">*</span>
+                                            </label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <input type="email" id="correo" name="correo"
+                                                    required="required" class="form-control col-md-7 col-xs-12"
+                                                    th:field="*{correo}" />
+                                            </div>
+                                        </div>-->
+                                        <div class="col-md-10 col-sm-12 col-xs-12 form-group">
+                                            <label>
+                                                <input type="checkbox" class="js-switch" checked th:id="estadoF"
+                                                       th:field="*{estado}"/> Desactivar / Activar Usuario
+                                            </label>
+                                        </div>
+                                        <div class="col-md-10 col-sm-12 col-xs-12 form-group">
+                                            <label class="control-label "
+                                                   th:for="rolesUsuario">Gestion Roles</label>
+                                            <div>
+                                                <div class="col-md-3 col-sm-12 col-xs-12  form-group">
+                                                    <label class="control-label" th:for="rolesUsuario">RolesUsuario<span
+                                                            class="required">*</span>
+                                                    </label>
+                                                    <div class="form-group">
+                                                        <select id='pre-selected-options' class="select-multiple"
+                                                                multiple='multiple' required="required"
+                                                                oninvalid="this.setCustomValidity('Seleccione un rol')"
+                                                                th:field="*{rolesList}">
+                                                            <option th:each="rol,row : ${listaRoles}"
+                                                                    th:value="${{rol}}" th:text="${rol.nombreRol}"
+                                                                    th:id="${rol.idRoles}">elem 1
+                                                            </option>
+                                                        </select>
+
+                                                    </div>
+                                                </div>
+                                                <!--se adiciona div para  mostrar mesaje de requerido
+                                                    esto para solucionar incidencia 583 de mantis -->
+                                                <div id="selRol"></div>
+                                            </div>
+                                        </div>                                        
+             
+                                        <div class="form-group"
+                                             sec:authorize="${hasAnyRole(T(com.proasecal.software.web.controller.seguridad.RolesAccess).permisosPermitidos('/usuarios/save'))}">
+                                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                                <a th:href="@{/usuarios/list}" class="btn btn-primary">
+                                                    Volver
+                                                </a>
+      
+                                                  <button id="save" th:type="submit" th:id="save" class="btn btn-success"
+                                       				 th:name="action" th:value="save">Guardar
+                             			 	  </button>
+                             			 	                             			 	  
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div layout:fragment="customjs">
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+
+        var idParticipante = /*[[${idParticipante}]]*/ 'default';
+        var isCreate = /*[[${create}]]*/ 'default';
+
+        $(document).ready(function () {
+            validarRolesSeleccionados();
+            isCreateF(isCreate);
+            $("#pre-selected-options").change(function () {
+                validarRolesSeleccionados();
+                if (idParticipante > 0) {
+                    if ($("#pre-selected-options").val() != null && $("#pre-selected-options").val().length > 1) {
+                        if ($("#pre-selected-options").val() != null && $("#pre-selected-options").val().indexOf('' + idParticipante + '') >= 0) {
+                            $('#pre-selected-options').multiSelect('deselect_all');
+                            $('#pre-selected-options').multiSelect('select', (['' + idParticipante + '']));
+                            validarRolesSeleccionados();
+                        }
+                    }
+                }
+            });
+        });
+
+        /*]]>*/
+    </script>
+    <link rel="stylesheet" type="text/css"
+          href="../../css/dragg/multi-select.css">
+    <script src="../../js/usuarios_admin.js"></script>
+    <link href="../../css/usuarios_admin.css" rel="stylesheet">
+    <script src="../../js/dragg/jquery.multi-select.js"></script>
+    <!--se realiza validacion para rol no seleccionado para mostrar mesaje de requerido
+        esto para solucionar incidencia 583 de mantis -->
+    <script>
+        $(function() {
+            $('#save').click(function(e) {
+               // e.preventDefault();
+                if ($("#pre-selected-options").val() == null ){
+                    alert("Debe seleccionar por lo menos un rol");
+                }else {
+                    $("#usuariosForm").submit();
+                }
+            });
+        });
+    </script>
+
+    <script type="text/javascript">
+        // run pre selected options
+        $('#pre-selected-options').multiSelect();
+    </script>
+</div>
+</body>
+</html>

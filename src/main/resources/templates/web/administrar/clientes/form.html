@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{web/fragments/main_layout}">
+<head>
+    <link href="../../css/form.css" rel="stylesheet">
+    <title>Gestión de clientes</title>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+<div layout:fragment="content" class="container mySpace">
+    <!-- Bloque de notificación  -->
+
+    <div th:replace="web/fragments/notify :: notify"/>
+
+    <div class="right_col" role="main">
+        <div class="x_panel">
+            <div class="x_title formXTitle">
+                <h2 id="formTitle">Creación/Edición de clientes</h2>
+                <a
+                        sec:authorize="${hasAnyRole(T(com.proasecal.software.web.controller.seguridad.RolesAccess).permisosPermitidos('/clientes/list'))}"
+                        th:href="@{/clientes/list}" class="btn btn-success pull-right">
+						<span class="glyphicon glyphicon-chevron-left"
+                              style="color: #FFFFFF"></span>Atras
+                </a>
+            </div>
+            <div class="x_content">
+                <!-- <br/>-->
+                <div class="col-md-10 col-md-offset-1">
+                    <form id="clienteForm" class="form-horizontal form-label-left"
+                          action="#" th:action="@{/clientes/save}"
+                          th:object="${clienteForm}" method="post" style="display:none" >
+                        <input type="hidden" th:id="clienteId" th:field="*{clienteId}"/>
+
+                        <div class="col-md-3 col-sm-12 col-xs-12 form-group">
+                            <label th:for="desPais">País<span class="required">*</span></label>
+                            <!-- se agrega validacion de campo requerido mantis 590
+                            <input type="text" class="form-control" th:id="desPais"
+                                required="required" th:field="*{idPais.nombrePais}"
+                                placeholder="Ingrese Pais"> <input type="hidden"
+                                th:id="idPais" th:field="*{idPais.idPais}" />
+                                -->
+                            <select th:field="*{idPais}" th:id="desPais" style="width: 100%"
+                                    required="required">
+                                <option th:value="NULL" th:text="Seleccione... "></option>
+                                <option th:fragment="idPais" th:each="pais : ${paisList}"
+                                        th:text="${pais.nombrePais}"
+                                        th:value="${{pais}}" th:id="${pais.idPais}"/>
+                            </select>
+
+                        </div>
+                        <div class="col-md-3 col-sm-12 col-xs-12 form-group"
+                             id="cmbIdTipoPais">
+                            <label th:for="idTipoPais">Tipo de identificación<span
+                                    class="required">*</span>
+                            </label>
+                            <!-- se agrega validacion de campo requerido mantis 590-->
+                            <select th:field="*{idTipoPais}" style="width: 100%"
+                                    required="required">
+                                <option th:value="NULL" th:text="Seleccione... "></option>
+                                <option th:fragment="models" th:each="model : ${models}"
+                                        th:value="${model.idTipoPais}" th:text="${model.nombreId}"/>
+                            </select>
+                        </div>
+                        <div class="col-md-6 col-sm-12 col-xs-12 form-group">
+                            <label th:for="numeroIdentificacionCliente">Número de
+                                identificación<span class="required">*</span>
+                            </label>
+                            <!-- se agrega validacion de campo requerido mantis 590-->
+                            <input type="text" class="form-control" placeholder="123456789"
+                                   required="required" th:id="numeroIdentificacionCliente"
+                                   th:name="numeroIdentificacionCliente"
+                                   th:field="*{numeroIdentificacionCliente}">
+                            <p th:if="${#fields.hasErrors('numeroIdentificacionCliente')}"
+                               class="label label-danger"
+                               th:errors="*{numeroIdentificacionCliente}">Incorrect</p>
+                        </div>
+
+                        <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                            <label th:for="txtRazonSocial">Razón social<span
+                                    class="required">*</span></label> <input maxlength="250" type="text"
+                                                                             required="required" class="form-control"
+                                                                             th:id="razonSocial"
+                                                                             th:field="*{razonSocial}"/>
+                        </div>
+                        <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                            <label th:for="nombreComercial">Nombre Comercial </label> <input
+                                type="text" class="form-control" th:id="nombreComercial"
+                                th:field="*{nombreComercial}" maxlength="250">
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-6 col-sm-12 col-xs-12">
+                                <label th:for="desDepartamento">Departamento<span
+                                        class="required">*</span>
+                                </label> <select th:field="*{idDepartamentos}" required="required"
+                                                 class="form-control" style="width: 100%">
+                                <option th:value="NULL" th:text="Seleccione... "></option>
+                                <option th:fragment="models2" th:each="model : ${models2}"
+                                        th:value="${model.idDepartamentos}"
+                                        th:text="${model.nombreDepartamento}"/>
+                            </select>
+                            </div>
+
+                            <div class="col-md-6 col-sm-12 col-xs-12">
+                                <label th:for="txtCiudad">Ciudad<span class="required">*</span>
+                                </label>
+                                <!-- se agrega validacion de campo requerido mantis 590-->
+                                <select th:field="*{idCiudad}" class="form-control"
+                                        required="required" style="width: 100%">
+                                    <option th:value="NULL" th:text="Seleccione... "></option>
+                                    <option th:fragment="models3" th:each="model : ${models3}"
+                                            th:value="${model.idCiudad}" th:text="${model.nombreCiudad}"/>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <label th:for="direccionCliente">Dirección </label>
+                            <textarea class="resizable_textarea form-control" rows="1"
+                                      placeholder="Direccion exacta cliente"
+                                      th:id="direccionCliente" th:field="*{direccionCliente}"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <!--se cambia orden para mantener el de las historias mantis inc 585 -->
+                            <div class="col-md-3 col-sm-12 col-xs-12 form-group">
+                                <!-- ajuste de correo a correo electronico 1 mantis 585-->
+                                <label class="control-label" th:for="correoCliente">Correo
+                                    electrónico 1
+                                </label>
+                                <div class="form-group">
+                                    <!-- se agrega validacion de campo requerido mantis 590-->
+                                    <input class="form-control" type="email"
+                                           th:id="correoCliente" name="email"
+                                           th:field="*{correoCliente}">
+                                    <p id="correoLabel" class="label label-danger alerta"></p>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-12 col-xs-12 form-group">
+                                <!-- ajuste de correo alternativo a correo electronico mantis 585-->
+                                <label class="control-label" th:for="correoAlternativo">Correo
+                                    electrónico 2</label>
+                                <div class="form-group">
+                                    <input class="form-control" type="email"
+                                           id="correoAlternativo" name="correoAlternativo"
+                                           th:field="*{correoAlternativo}">
+                                    <p id="correoAlternativoLabel"
+                                       class="label label-danger alerta"></p>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-12 col-xs-12 form-group">
+                                <!-- se cambia "Teléfono Cliente" a "Teléfono 1" mantis 585-->
+                                <label class="control-label" th:for="telefonoCliente">Teléfono
+                                    1
+                                </label>
+                                <div class="form-group">
+                                    <!--  se quita el formatio de telefono     data-inputmask="'mask' : '(999) 999-9999'"  -->
+                                    <!-- se agrega validacion de campo requerido mantis 590-->
+                                    <input type="text" class="form-control"
+                                           th:id="telefonoCliente" th:field="*{telefonoCliente}">
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-12 col-xs-12 form-group">
+                                <!--cambio de teléfono alternativo a teléfono 2 mantis 585-->
+                                <label class="control-label" th:for="telefonoAlternativo">Teléfono
+                                    2</label>
+                                <div class="form-group">
+                                    <!--  se quita el formatio de telefono     data-inputmask="'mask' : '(999) 999-9999'"  -->
+                                    <input type="text" class="form-control"
+                                           th:id="telefonoAlternativo"
+                                           th:field="*{telefonoAlternativo}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <!--se cambia orden para mantener el de las historias mantis inc 585 -->
+                            <div class="col-md-6 col-sm-12 col-xs-12">
+                                <!--cambio de usuario de calidad a responsable calidad mantis 585 -->
+                                <label th:for="txtUsuarioCalidad">Responsable calidad<span
+                                        class="required">*</span>
+                                </label>
+                                <!-- se agrega validacion de campo requerido mantis 590-->
+                                <input class="form-control" th:id="usuarioCalidad" type="text"
+                                       th:field="*{usuarioCalidad}" required="required">
+                            </div>
+                            <div class="col-md-6 col-sm-12 col-xs-12">
+                                <!--casmbio de usuario director a director o cordinador mantis 585 -->
+                                <label th:for="txtUsuarioDirector">Director o
+                                    coordinador<span class="required">*</span>
+                                </label>
+                                <!-- se agrega validacion de campo requerido mantis 590-->
+                                <input class="form-control" type="text"
+                                       th:id="usuarioDirector" th:field="*{usuarioDirector}"
+                                       required="required">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-10 col-sm-10 col-xs-12 ">
+                                <!--cambio de Desactivar / Activar Cliente por "Estado" mantis 585-->
+                                <label> <input type="checkbox" class="js-switch"
+                                               checked th:id="estado" th:field="*{estado}"/> Estado
+                                </label>
+                            </div>
+                        </div>
+                        <div th:if="${#fields.hasAnyErrors()}">
+                            <p th:each="err : ${#fields.allErrors()}" th:text="${err}">...</p>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <br>
+                                <button th:type="submit" th:id="save" class="btn btn-success"
+                                        th:name="action" th:value="save">Guardar
+                                </button>
+                                <a
+                                        th:if="*{laboratoriosSedesList!=null &&laboratoriosSedesList.size()>=1}"
+                                        th:href="@{/laboratorios/list(cliente=*{numeroIdentificacionCliente})}"
+                                        class="btn btn-default"><i class="fa fa-search"></i>
+                                    Laboratorios </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+<div layout:fragment="customjs">
+    <script src="../../js/clientes/gestionClientes.js"></script>
+    <link rel="stylesheet" th:href="@{/css/gestion_clientes.css}"
+          href="../../css/clientes/usuariosAdmin.css"/>
+</div>
+</body>
+</html>

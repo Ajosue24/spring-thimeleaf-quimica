@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{web/fragments/main_layout}">
+<head>
+<link href="../../css/form.css" rel="stylesheet">
+	<title>Gestión de periodos de vigencia</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+	<div layout:fragment="content" class="container mySpace">
+		<div class="right_col" role="main">
+			<div class="x_panel">
+            <div class="x_title formXTitle">
+                <h2 id="formTitle">Creación/Edicion de periodos de vigencia</h2>
+                <a href="/periodosvigencia/list" class="btn btn-success pull-right">
+                    <span class="glyphicon glyphicon-chevron-left" style="color:#FFFFFF"></span>Atras</a>
+            </div>					
+				<div class="x_content">
+					<div class="col-md-10 col-md-offset-1">
+					<!-- Bloque de notificación  -->					
+					 <div th:replace="web/fragments/notify :: notify"/>
+					<!-- Fin bloque de notificación --> 
+                           <form id="form" class="form-horizontal form-label-left" action="#" th:action="@{/periodosvigencia/save}" th:object="${periodosprogramaForm}"  method="post"  style="display:none">   
+
+	                          	 <input type="hidden" th:id="periodosvigenciaId" th:field="*{periodosvigenciaId}"/>
+
+			    <div class="form-group">
+			        <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                   		<label th:for="idLaboratoriosSedes">Laboratorio<span	 class="required">*</span></label>
+
+                           <select th:field="*{inscripProgramaId.idSedes.idLaboratoriosSedes}"  th:id="idLaboratoriosSedes" required="required" class="form-control"  style="width: 100%">
+                              <option th:value="NULL" th:text="Seleccione... "></option>
+                                    <option th:each="laboratorios,row : ${laboratoriosList}"
+                                            th:value="${{laboratorios}}"
+                                            th:text="${laboratorios.numeroIdentificacion +' | '+laboratorios.razonSocial}"
+                                            th:id="${laboratorios.idLaboratoriosSedes}">
+                                    </option>
+                          </select>
+                
+			        </div>
+			        
+
+			        <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                 		<label for="sede">Sede<span	 class="required" >*</span></label>				
+   								<select  th:id="idsedes" th:field="*{inscripProgramaId.idSedes}" class="form-control" required="required" style="width: 100%">
+                                    <option th:value="NULL" th:text="Seleccione... "></option>
+                                    <option th:fragment="models3" th:each="model : ${models3}"
+                                            th:text="${model.idLaboratoriosSedes.numeroIdentificacion +' | '+model.nombreSede}"
+                                            th:value="${{model}}" th:id="${model.idSedes}"/>
+                                </select>			            	           
+			        </div>
+			        <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                		<label for="idusuarios">Usuario<span	 class="required">*</span></label>				
+   							  	<select  th:id="idusuarios" th:field="*{inscripProgramaId.idUsuarioLabSedes}" class="form-control" required="required" style="width: 100%">
+                                    <option th:value="NULL" th:text="Seleccione... "></option>
+                                    <option th:fragment="models4" th:each="model2 : ${models4}"
+                                            th:text="${model2.usuarioId.nombreUsuario}"
+                                            th:value="${{model2}}" th:id="${model2.idUsuarioLabSedes}"/>
+                                </select>                                                  			                   			                   
+			        </div>			        
+			    </div>
+			    
+
+			    <div class="form-group">
+			        <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+      	                     <label th:for="inscripProgramaId">Programa inscrito<span	 class="required">*</span></label>
+                              	  <select th:id="inscripProgramaId"   th:field="*{inscripProgramaId}" class="form-control" style="width: 100%">
+                              	          <option th:value="NULL" th:text="Seleccione... "></option>
+                                          <option th:fragment="models5" th:each="models3: ${models5}"
+                                                  th:text="${models3.programaId.nombrePrograma}"
+                                                  th:value="${{models3}}"
+                                                  th:id="${models3.inscripProgramaId}"/>
+				</select>                              
+			        </div>
+			
+			        <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                   		<label th:for="periodoVigencia">Periodo vigencia registrado</label>
+                                  
+                         <select th:field="*{perVigenciaRegistrados}" th:id="perVigenciaRegistrados"  class="form-control" style="width: 100%">
+                             <option th:value="NULL" th:text="Seleccione... "></option>
+							 <option th:fragment="perVRegistrado" th:each="periodos: ${listPerVigR}"
+									 th:text="${periodos.fechaInicio + ' / '+ periodos.fechaFin}"
+									 th:value="${{periodos}}"
+									 th:id="${periodos.periodosvigenciaId}"/>
+                          </select>                            
+			        </div>
+			
+			        <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                   		<label for="modalidad">Modalidad<span	 class="required">*</span></label>				
+                         <select th:field="*{modalidad}" required="required" class="form-control" style="width: 100%">
+                          <option th:value="NULL" th:text="Seleccione... "></option>
+                             <option th:value="Mensual" th:text="Mensual"></option>
+						     <option th:value="Bimestral" th:text="Bimestral"></option>
+						      <option th:value="Trimestral" th:text="Trimestral"></option>
+						       <option th:value="Cuatrimestral" th:text="Cuatrimestral"></option>                      
+                          </select>
+			        </div>
+			    </div>
+			    <div class="form-group">
+			        <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+			            <label for="fechaInicio">Fecha inicio<span
+			                    class="required">*</span></label>
+                                <div class="xdisplay_inputx form-group has-feedback">
+                                    <input type="date" required="required" 
+                                           class="form-control"
+                                           th:name="fechaInicio" th:id="fechaInicio" th:field="*{fechaInicio}">
+                                    <p th:if="${#fields.hasErrors('fechaInicio')}" class="label label-danger"
+                                       th:errors="*{fechaInicio}">Incorrect</p>
+                                </div>
+			        </div>
+			
+			        <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+			            <label for="fechaFin">Fecha fin<span
+			                    class="required">*</span></label>
+                                <div class="xdisplay_inputx form-group has-feedback">
+                                    <input type="date" required="required"
+                                           class="form-control"
+                                           th:name="fechaFin" th:id="fechaFin" th:field="*{fechaFin}">
+                                    <p th:if="${#fields.hasErrors('fechaFin')}" class="label label-danger"
+                                       th:errors="*{fechaFin}">Incorrect</p>
+                                </div>
+			        </div>
+			
+			        <div class="col-md-4 col-sm-12 col-xs-12 form-group" >
+                   		<label for="clientePatrocinador">Cliente patrocinador</label>				
+
+                             <select th:field="*{clientePatrocinador}"  th:id="clientePatrocinador" class="form-control"
+                                     style="width: 100%">
+                          		<option th:value="NULL" th:text="Seleccione... "></option>
+                                 <option th:each="clientes,row : ${clientesList}"
+                                         th:value="${clientes.clienteId}"
+                                         th:text="${clientes.numeroIdentificacionCliente +' | '+clientes.razonSocial}"
+                                         th:id="${clientes.clienteId}">
+                                 </option>                                                        
+                             </select>                                                     
+			        </div>
+			    </div>
+			
+			    <div class="form-group">
+			        <div class="col-md-4 col-sm-12 col-xs-12 form-group" style="padding:20px">
+                        <label> 
+                          <input type="checkbox" class="js-switch"  th:id="enMora"
+                                           th:field="*{enMora}"/> <span class="required">*</span>En mora
+        
+                         </label>			        
+
+			        </div>
+			
+			        <div class="col-md-4 col-sm-12 col-xs-12 form-group" style="padding:20px">
+                         <label>
+                              <input type="checkbox" class="js-switch"  th:id="muestraPatrocinada" th:name="muestraPatrocinada1"     th:field="*{muestraPatrocinada}" 
+                                 /> <span class="required">*</span>Muestra patrocinada
+                         </label>			        
+ 			      
+			            </div>
+			        </div>
+			
+
+			
+
+			
+			                   <div class="col-md-12">
+			                       <div class="form-group">
+			                           <br>
+			                           <button type="submit" th:id="save" class="btn btn-success"
+			                                   name="action"
+			                                   value="Guardar">Guardar
+			                           </button>
+			                       </div>
+			                   </div>         
+              
+						</form>					
+					</div>
+				</div>
+			</div>					
+		</div>
+	</div>
+</body>
+        <div layout:fragment="customjs">
+           <script src="../../js/periodosvigencia/periodosvigencia.js"></script>
+        </div>
+</html>

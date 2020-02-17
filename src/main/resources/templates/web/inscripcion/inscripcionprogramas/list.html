@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{web/fragments/main_layout}">
+<head>
+    <link href="../../css/form.css" rel="stylesheet">
+    <title>Listado de inscripción de programas</title>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+<div layout:fragment="content" class="container mySpace">
+    <!-- Bloque de notificación  -->
+    <div th:replace="web/fragments/notify :: notify"/>
+    <!-- Fin bloque de notificación -->
+    <div class="right_col" role="main">
+        <div class="row tile_count">
+            <div class="">
+                <div class="page-title">
+                    <div class="title_left">
+                        <h3>Listado de inscripción de programas</h3>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <!--inicio Formulario-->
+                        <div class="x_panel">
+                            <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                                <ul class="nav navbar-left panel_toolbox">
+                                    <li>
+                                        <a class="collapse-link filtroColor">
+                                            <label th:for="filtrosList">Filtro</label>
+                                            <i class="fa fa-chevron-down"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+
+                                <a th:href="@{/inscripcionprogramas/create}" class="btn btn-success pull-right">
+	                                               <span class="glyphicon glyphicon-plus-sign"
+                                                         style="color:#FFFFFF"></span> Añadir
+                                </a>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="x_content" style="display: none;margin-bottom: 0;">
+                                <form id="inscripcionprogramaForm" class="form-horizontal form-label-left"
+                                      style="margin-bottom: 0;">
+                                    <div class="form-group" style="margin-bottom: 0;">
+                                        <div class="col-xs-12 form-group" style="margin-bottom: 0;">
+
+                                            <div class="form-group col-xs-4">
+                                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                                    <label>Laboratorio</label>
+                                                    <br/>
+                                                    <select th:value="${laboratorio}" th:id="laboratorio"
+                                                            name="laboratorio" class="form-control" style="width: 100%">
+                                                        <option th:value="NULL" th:text="Seleccione... "></option>
+                                                        <option th:each="laboratorios, row : ${listLaboratorios}"
+                                                                th:value="${laboratorios.razonSocial}"
+                                                                th:selected="${laboratorio.equalsIgnoreCase(laboratorios.razonSocial)?true:false}"
+                                                                th:text="${laboratorios.numeroIdentificacion +' | '+laboratorios.razonSocial}"
+                                                                th:id="laboratorios.idLaboratoriosSedes">
+                                                        </option>
+                                                    </select>
+
+                                                </div>
+                                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                                    <label>Programa</label>
+                                                    <br/>
+                                                    <select th:value="${programaFront} " th:id="programaFront"
+                                                            name="programaFront" class="form-control"
+                                                            style="width: 100%">
+                                                        <option th:value="NULL" th:text="Seleccione... "></option>
+                                                        <option th:each="programas, row : ${listProgramas}"
+                                                                th:value="${programas.nombrePrograma}"
+                                                                th:text="${programas.nombrePrograma}"
+                                                                th:selected="${programaFront.equalsIgnoreCase(programas.nombrePrograma)?true:false}"
+                                                                th:id="${programas.programaId}">
+                                                        </option>
+                                                    </select>
+
+                                                </div>
+                                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                                    <a class="btn btn-primary" id="buscar">
+                                                        <span class="glyphicon glyphicon-search"
+                                                              style="color:#FFFFFF"></span>
+                                                        Buscar
+                                                    </a>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-xs-4">
+                                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                                    <label>Sede</label>
+                                                    <br/>
+                                                    <select th:value="${sede}" th:id="sede"
+                                                            name="sede" class="form-control" style="width: 100%">
+                                                        <option th:value="NULL" th:text="Seleccione... "></option>
+                                                        <option th:each="sedes,row : ${listSedes}"
+                                                                th:value="${{sedes.nombreSede}}"
+                                                                th:selected="${sede.equalsIgnoreCase(sedes.nombreSede)?true:false}"
+                                                                th:text="${sedes.idLaboratoriosSedes.numeroIdentificacion + ' | ' + sedes.nombreSede  }"
+                                                                th:id="${sedes.idSedes}">
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                                    <label>Muestra</label>
+                                                    <br/>
+                                                    <select th:value="${muestra}" th:id="muestra"
+                                                            name="muestra" class="form-control" style="width: 100%">
+                                                        <option th:value="NULL" th:text="Seleccione... "></option>
+                                                        <option th:each="muestras,row : ${listMuestras}"
+                                                                th:selected="${muestra.equalsIgnoreCase(muestras.numeroMuestra)?true:false}"
+                                                                th:value="${{muestras.numeroMuestra}}"
+                                                                th:text="${muestras.numeroMuestra}"
+                                                                th:id="${muestras.muestraId}">
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-xs-4">
+                                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                                    <label>Usuario</label>
+                                                    <br/>
+                                                    <select th:value="${usuario}" th:id="usuario"
+                                                            name="usuario" class="form-control" style="width: 100%">
+                                                        <option th:value="NULL" th:text="Seleccione... "></option>
+                                                        <option th:each="usuarios,row : ${listUsuarios}"
+                                                                th:selected="${usuario.equalsIgnoreCase(usuarios.nombreUsuario)?true:false}"
+                                                                th:value="${{usuarios.nombreUsuario}}"
+                                                                th:text="${usuarios.nombreUsuario}"
+                                                                th:id="${usuarios.idUsuario}">
+                                                        </option>
+                                                    </select>
+
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="x_panel">
+                            <div class="table-responsive">
+                                <p class="text-muted font-13 m-b-30">
+                                    Seleccione el inscripción de programa que desea editar
+                                </p>
+                                <table
+                                        class="table table-dark table-striped table-bordered" style="margin-bottom: 0;">
+                                    <thead>
+                                    <tr>
+                                        <th><a>Usuario</a><i id="IcoidUsuarioLabSedesusuarioIdcodProasecal"
+                                                             class="fa fa-chevron-up iconoOrden"
+                                                             onclick="redirect('idUsuarioLabSedes.usuarioId.codProasecal');"></i>
+                                        </th>
+                                        <th><a>Programa</a><i id="IcoprogramaId" class="fa fa-chevron-up iconoOrden"
+                                                              onclick="redirect('programaId');"></i></th>
+                                        <th><a>Periodo de Vigencia</a></th>
+                                        <th><a>Muestras</a></th>
+                                        <th style="color: #2b7f70 !important">Acciones</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:if="${inscripcionProgramasList.getTotalElements()<1}">
+                                        <td colspan="100%"> No se encuentran resultados de inscripción de programas</td>
+                                    </tr>
+                                    <tr th:each="inscripcionProgramasList, rowls : ${inscripcionProgramasList}">
+                                        <td th:text="${inscripcionProgramasList.idUsuarioLabSedes.usuarioId.nombreUsuario}"></td>
+                                        <td th:text="${inscripcionProgramasList.programaId.nombrePrograma}"></td>
+                                        <td>
+                                            <label th:if="${listPerVigen[rowls.index].fechaInicio != null }"
+                                                   th:text=" ' ' + ${#dates.format(listPerVigen[rowls.index].fechaInicio, 'dd MMM yyyy') +
+                                                             ' - ' + #dates.format(listPerVigen[rowls.index].fechaFin, 'dd MMM yyyy' )} ">
+                                            </label>
+                                        </td>
+                                        <td>
+
+                                            <div th:if="${listPerVigen[rowls.index].fechaInicio != null }">
+
+                                                <div th:if="${inscripcionProgramasList.periodosVigenciaList.size() >= 1}"
+                                                     th:each="inscripcionMuestras, row : ${inscripcionProgramasList.inscripcionMuestrasList}"
+                                                     id="muestrasTabla">
+                                                    <div th:if="${inscripcionMuestras.idMuestras.fechaInicial.after(listPerVigen[rowls.index].fechaInicio)&&inscripcionMuestras.idMuestras.fechaInicial.before(listPerVigen[rowls.index].fechaFin)}"
+                                                         th:text=" ' ' + ${inscripcionMuestras.idMuestras.numeroMuestra} + ${row.last?'':','} "
+                                                         style="float:left">
+                                                    </div>
+                                                    <div th:if="${inscripcionMuestras.idMuestras.fechaInicial.equals(listPerVigen[rowls.index].fechaInicio)}OR${inscripcionMuestras.idMuestras.fechaInicial.equals(listPerVigen[rowls.index].fechaFin)}"
+                                                         th:text=" ' ' + ${inscripcionMuestras.idMuestras.numeroMuestra} + ${row.last?'':','} "
+                                                         style="float:left">
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                        </td>
+                                        <td>
+                                            <a sec:authorize="${hasAnyRole(T(com.proasecal.software.web.controller.seguridad.RolesAccess).permisosPermitidos('/inscripcionprogramas/delete'))}"
+                                               th:onclick="'javascript:openDeleteModal(\''+${inscripcionProgramasList.inscripProgramaId}+'\');'"
+                                               class="btn btn-round btn-danger btn-xs"><i class="fa fa-trash-o"></i>
+                                                Eliminar
+                                            </a>
+                                            <a sec:authorize="${hasAnyRole(T(com.proasecal.software.web.controller.seguridad.RolesAccess).permisosPermitidos('/periodosvigencia/list'))}"
+                                               th:if="${inscripcionProgramasList.periodosVigenciaList.size() >= 1}"
+                                               th:href="${'/periodosvigencia/list?usuario=' + inscripcionProgramasList.idUsuarioLabSedes + '&programa=' + inscripcionProgramasList.programaId}"
+                                               class="btn btn-round btn-info btn-xs"><i class="fa fa-wrench"></i>
+                                                Periodo de vigencia
+                                            </a>
+
+                                            <a th:if="${inscripcionProgramasList.periodosVigenciaList.size() >= 1}"
+                                               th:onclick="'javascript:loadModalPeriodoVigencia(\''+${inscripcionProgramasList.inscripProgramaId}+'\');'"
+                                               class="btn btn-round btn-info btn-xs"><span
+                                                    class="glyphicon glyphicon-plus-sign" style="color:#FFFFFF"></span>
+                                                Inscripción de muestras
+                                            </a>
+                                        </td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+                                <div class="form-group col-md-1">
+                                    <select class="form-control pagination" id="pageSizeSelect">
+                                        <option th:each="pageSize : ${pageSizes}" th:text="${pageSize}"
+                                                th:value="${pageSize}"
+                                                th:selected="${pageSize} == ${selectedPageSize}"></option>
+                                    </select>
+                                </div>
+                                <div th:if="${inscripcionProgramasList.totalPages != 1}"
+                                     class="dataTables_paginate paging_simple_numbers pagination-centered">
+                                    <ul class="pagination">
+                                        <li th:class="${inscripcionProgramasList.number == 0} ? hidden"><a
+                                                class="pageLink"
+                                                th:href="@{/inscripcionprogramas/list(size=${selectedPageSize}, page=1,laboratorio=${laboratorio}, programaFront=${programaFront}, sede=${sede}, muestra=${muestra}, usuario=${usuario},nameColumn=${nameColumn},sortBy=${sort})}"
+                                        >&laquo;</a>
+                                        </li>
+                                        <li th:class="${inscripcionProgramasList.number == 0} ? hidden"><a
+                                                class="pageLink"
+                                                th:href="@{/inscripcionprogramas/list(size=${selectedPageSize}, page=${inscripcionProgramasList.number}, laboratorio=${laboratorio}, programaFront=${programaFront}, sede=${sede}, muestra=${muestra}, usuario=${usuario},nameColumn=${nameColumn},sortBy=${sort})}"
+                                        >&larr;</a>
+                                        </li>
+                                        <li th:class="${inscripcionProgramasList.number == (page - 1)} ? 'active pointer-disabled'"
+                                            th:each="page : ${#numbers.sequence(pager.startPage, pager.endPage)}">
+                                            <a class="pageLink"
+                                               th:href="@{/inscripcionprogramas/list(size=${selectedPageSize}, page=${page}, laboratorio=${laboratorio}, programaFront=${programaFront}, sede=${sede}, muestra=${muestra}, usuario=${usuario},nameColumn=${nameColumn},sortBy=${sort})}"
+                                               th:text="${page}">
+                                                ></a>
+                                        </li>
+                                        <li th:class="${inscripcionProgramasList.number + 1 == inscripcionProgramasList.totalPages} ? hidden">
+                                            <a class="pageLink"
+                                               th:href="@{/inscripcionprogramas/list(size=${selectedPageSize}, page=${inscripcionProgramasList.number + 2}, laboratorio=${laboratorio}, programaFront=${programaFront}, sede=${sede}, muestra=${muestra}, usuario=${usuario},nameColumn=${nameColumn},sortBy=${sort})}"
+                                            >&rarr;</a>
+                                        </li>
+                                        <li th:class="${inscripcionProgramasList.number + 1 == inscripcionProgramasList.totalPages} ? hidden">
+                                            <a class="pageLink"
+                                               th:href="@{/inscripcionprogramas/list(size=${selectedPageSize}, page=${inscripcionProgramasList.totalPages}, laboratorio=${laboratorio}, programaFront=${programaFront}, sede=${sede}, muestra=${muestra}, usuario=${usuario},nameColumn=${nameColumn},sortBy=${sort})}"
+                                            >&raquo;</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--fin tabla para consultar existentes-->
+                    <!-- Modal -->
+                    <div class="modal fade" id="openDeleteModal" tabindex="-1" role="dialog"
+                         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Confirmación</h5>
+                                </div>
+
+                                <div class="modal-body">
+                                    ¿Está seguro de eliminar el registro?</br>
+                                    <input type="hidden" th:id="idInsProgramaD" th:value="idInsProgramaD"/>
+                                    <div class="modal-body">
+                                        <button type="button" class="btn btn-success" data-dismiss="modal">Cancelar
+                                        </button>
+                                        <button type="button" class="btn btn-danger" onclick="borrarInsProgramas()">
+                                            Aceptar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.modal -->
+                    <!-- modal Inscripción de muestras-->
+                    <div class="modal fade" id="openInscripcionModal" tabindex="-1" role="dialog"
+                         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content" style="text-align: center">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title"><b>Inscripcion de muestras</b></h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="modal-body">
+                                        <input type="text" id="idPeriodoModal" hidden="hidden">
+                                        <div class="row">
+                                            <label>Programa: </label>
+                                            <label id="programaModal"></label>
+                                            <input type="text" id="idProgramaModal" hidden="hidden">
+                                        </div>
+                                        <div class="row">
+                                            <label>Usuario: </label>
+                                            <label id="usuarioModal"></label>
+                                            <input type="text" id="idUsuarioModal" hidden="hidden">
+                                        </div>
+                                        <div class="row">
+                                            <label>Periodo de vigencia: </label>
+                                            <label id="fechaInicioModal"></label>
+                                            <label value="  "></label><label id="fechaFinalModal"></label>
+                                        </div>
+                                        <div class="row">
+                                            <label>Modalidad: </label>
+                                            <label id="modalidadModal"></label>
+                                        </div>
+                                        <br>
+
+                                        <div class="row">
+                                            <table style="width: 100%; align-content: center"
+                                                   class="table-hover" th:id="tablaMuestras">
+
+                                                <tbody th:fragment="tablaMuestras"
+                                                       class="col-md-4 col-lg-4 col-md-offset-4 col-lg-offset-4">
+                                                <tr th:each="row: ${muestras}">
+                                                    <td class="col-md-2 col-lg-2">
+                                                        <input type="checkbox" th:id="${row.idMuestra}+'chk'"
+                                                               onchange="save(this)" th:checked="${row.estado}">
+                                                    </td>
+                                                    <td class="col-md-2 col-lg-2">
+                                                        <label th:text="${row.nombreMuestra}"></label>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <br><br>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--/.modal Inscripción de muestras-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div layout:fragment="customjs">
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var sort = /*[[${sort}]]*/ 'ASC';
+        var nameColumn = /*[[${nameColumn}]]*/ 'idPrograma.nombrePrograma';
+        /*]]>*/
+    </script>
+    <script src="../../js/inscripcionprogramas/inscripcionprogramasList.js"></script>
+    <script src="../../js/inscripcionMuestras/InscripcionMuestrasInsProg.js"></script>
+</div>
+
+</body>
+</html>

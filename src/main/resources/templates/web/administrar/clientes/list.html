@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{web/fragments/main_layout}">
+<head>
+    <link href="../../css/form.css" rel="stylesheet">
+    <title>Listado de clientes</title>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+<div layout:fragment="content" class="container mySpace">
+    <!-- Bloque de notificación  -->
+    <div th:replace="web/fragments/notify :: notify"/>
+    <!-- Fin bloque de notificación -->
+    <div class="right_col" role="main">
+        <div class="row tile_count">
+            <div class="">
+                <div class="page-title">
+                    <div class="title_left">
+                        <h3>Listado de clientes</h3>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <!--inicio Formulario-->
+                        <div class="x_panel">
+                            <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                                <ul class="nav navbar-left panel_toolbox">
+                                    <li>
+                                        <a class="collapse-link filtroColor">
+                                            <label th:for="filtrosList">Filtro</label>
+                                            <i class="fa fa-chevron-down"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+
+                                <a sec:authorize="${hasAnyRole(T(com.proasecal.software.web.controller.seguridad.RolesAccess).permisosPermitidos('/clientes/create'))}"
+                                   th:href="@{/clientes/create}" class="btn btn-success pull-right">
+	                                               <span class="glyphicon glyphicon-plus-sign"
+                                                         style="color:#FFFFFF"></span> Añadir
+                                </a>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="x_content" style="display: none;margin-bottom: 0;">
+                                <form id="clienteForm" class="form-horizontal form-label-left"
+                                      style="margin-bottom: 0;">
+                                    <div class="form-group" style="margin-bottom: 0;">
+                                        <div class="col-xs-12 form-group" style="margin-bottom: 0;">
+
+                                            <div class="form-group col-xs-4">
+                                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                                    <label>País</label>            
+                                                           
+                                        			  <select  th:id="paisFront" class="form-control" style="width: 100%">
+						                                <option th:value="NULL" th:text="Seleccione... "></option>
+						                                <option th:each="pais : ${paisList}"
+						                                 th:selected="${paisFront==pais.nombrePais?true:false}"
+						                                        th:text="${pais.nombrePais}"
+						                                        th:value="${pais.nombrePais}"/>						                                                           
+                                                    	</select>                                                             
+                                                </div>
+                                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                                    <label>Razón social</label>
+                                                    <input type="text" placeholder="Razon Social"
+                                                           class="form-control input-sm" id="razonSocial"
+                                                           name="razonSocial"
+                                                           th:value="${razonSocial}">
+                                                </div>
+                                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                                    <a class="btn btn-primary" id="buscar">
+                                                        <span class="glyphicon glyphicon-search"
+                                                              style="color:#FFFFFF"></span>
+                                                        Buscar
+                                                    </a>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-xs-4">
+                                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                                    <label>Tipo de identificación</label>
+
+                                                    
+                                        			  <select  th:id="idTipoPais" class="form-control" style="width: 100%">
+						                         		<option th:value="NULL" th:text="Seleccione... "></option>
+						                                <option th:each="tipoDoc : ${tipoDocList}"
+						                                 th:selected="${idTipoPais==tipoDoc.nombreId?true:false}"
+						                                        th:text="${tipoDoc.nombreId}"
+						                                        th:value="${tipoDoc.nombreId}"/>						                                                           
+                                                    	</select>                                                     
+                                                    
+
+                                                </div>
+                                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                                    <label>Nombre comercial</label>
+                                                    <input type="text" placeholder="Nombre Comercial"
+                                                           class="form-control input-sm" id="nombreComercial"
+                                                           name="nombreComercial"
+                                                           th:value="${nombreComercial}">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-xs-4">
+                                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                                    <label>Número identificación</label>
+                                                    <input type="text" placeholder="Nro Identificacion"
+                                                           class="form-control input-sm"
+                                                           id="numeroid"
+                                                           name="numeroid"
+                                                           th:value="${numeroid}">
+                                                </div>
+                                                <div class="col-md-12 col-sm-12 col-xs-12 form-group"
+                                                     style="padding:20px">
+
+                                                    <input type="checkbox" class="js-switch" th:checked="${estado}" th:id="estado"
+                                                    /> <label>Estado</label>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="x_panel">
+                            <div class="table-responsive">
+                                <p class="text-muted font-13 m-b-30">
+                                    Seleccione el cliente que desea editar
+                                </p>
+                                <table class="table table-dark table-striped table-bordered" style="margin-bottom: 0;">
+                                    <thead>
+                                    <tr>
+                                        <th><a>País</a><i id="IcoidPaisnombrePais" class="fa fa-chevron-up iconoOrden" onclick="redirect('idPais.nombrePais')"></i></th>
+                                        <th><a >Tipo identificación</a><i id="IcoidTipoPaisnombreId"  class="fa fa-chevron-up iconoOrden" onclick="redirect('idTipoPais.nombreId');"></i></th>
+                                        <!--<th><a onclick="redirect('clienteId');">Numero ID</a></th>-->
+                                        <th><a>Número identificación</a><i  id="IconumeroIdentificacionCliente" class="fa fa-chevron-up iconoOrden" onclick="redirect('numeroIdentificacionCliente');"></i></th>
+                                        <th><a >Razón social</a><i  id="IcorazonSocial" class="fa fa-chevron-up iconoOrden" onclick="redirect('razonSocial');"></i></th>
+                                        <!--<th><a onclick="redirect('nombreComercial');">Nombre Comercial</a></th>-->
+                                        <!--<th><a onclick="redirect('idDepartamentos')">Departamentos</a></th>-->
+                                        <!--<th><a onclick="redirect('idCiudad')">Ciudad</a></th>-->
+                                        <!--<th><a onclick="redirect('correoCliente')">Correo</a></th>-->
+                                        <!-- <th><a onclick="redirect('telefonoCliente')">Telefono</a></th>-->
+                                        <!--<th><a onclick="redirect('usuarioDirector')">Usuario Director</a></th>-->
+                                        <!--<th><a onclick="redirect('usuarioCalidad')">Usuario Calidad</a></th>-->
+                                        <!--<th><a onclick="redirect('direccionCliente')">Usuario Calidad</a></th>-->
+                                        <!--<th><a onclick="redirect('correoAlternativo')">Usuario Calidad</a></th>-->
+                                        <!--<th><a onclick="redirect('telefonoAlternativo')">Usuario Calidad</a></th>-->
+                                        <th><a >Estado</a><i id="Icoestado"  class="fa fa-chevron-up iconoOrden" onclick="redirect('estado')"></i></th>
+                                        <th style="color: #2b7f70 !important">Acciones</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:if="${listaClientes.getTotalElements()<1}">
+                                        <td colspan="100%"> No se encuentran resultados de clientes</td>
+                                    </tr>
+                                    <tr th:each="clientes : ${listaClientes}">
+                                        <td th:text="${clientes.idPais.nombrePais}"></td>
+                                        <td th:text="${clientes.idTipoPais.nombreId}"></td>
+                                        <!--<td th:text="${clientes.clienteId}"></td>-->
+                                        <td th:text="${clientes.numeroIdentificacionCliente}"></td>
+                                        <td th:text="${clientes.razonSocial.length() > 40 ? clientes.razonSocial.substring(0, 40)+'...': clientes.razonSocial }"></td>
+
+                                        <!--<td th:text="${clientes.nombreComercial}"></td>-->
+                                        <!--<td th:text="${clientes.idDepartamentos.nombreDepartamento}"></td>-->
+                                        <!--<td th:text="${clientes.idCiudad}"></td>-->
+                                        <!--<td th:text="${clientes.correoCliente}"></td>-->
+                                        <!--<td th:text="${clientes.telefonoCliente}"></td>-->
+                                        <!--<td th:text="${clientes.direccionCliente}"></td>-->
+                                        <!--<td th:text="${clientes.usuarioDirector}"></td>-->
+                                        <!--<td th:text="${clientes.usuarioCalidad}"></td>-->
+                                        <!--<td th:text="${clientes.correoAlternativo}"></td>-->
+                                        <!--<td th:text="${clientes.telefonoAlternativo}"></td>-->
+                                        <td th:text="${clientes.estado == false?'Inactivo':'Activo'}"></td>
+                                        <td>
+                                            <a sec:authorize="${hasAnyRole(T(com.proasecal.software.web.controller.seguridad.RolesAccess).permisosPermitidos('/clientes/editarCliente'))}"
+                                               th:href="@{/clientes/editarCliente/} + ${clientes.clienteId}"
+                                               class="btn btn-round btn-info btn-xs"><i class="fa fa-wrench"></i>
+                                                Editar
+                                            </a>
+                                            <a sec:authorize="${hasAnyRole(T(com.proasecal.software.web.controller.seguridad.RolesAccess).permisosPermitidos('/laboratorios/list'))}"
+                                               th:if="${clientes.laboratoriosSedesList.size()>=1}"
+                                               th:href="@{/laboratorios/list(cliente=${clientes.numeroIdentificacionCliente})}"
+                                               class="btn btn-round btn-default btn-xs"><i class="fa fa-search"></i>
+                                                Laboratorios</a>
+                                            <a sec:authorize="${hasAnyRole(T(com.proasecal.software.web.controller.seguridad.RolesAccess).permisosPermitidos('/clientes/delete'))}"
+                                               th:if="${clientes.laboratoriosSedesList.size()<1}"
+                                               th:onclick="'javascript:openDeleteModal(\''+${clientes.clienteId}+'\');'"
+                                               class="btn btn-round btn-danger btn-xs"><i class="fa fa-trash-o"></i>
+                                                Eliminar
+                                            </a>
+
+                                        </td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+                                <div class="form-group col-md-1">
+                                    <select class="form-control pagination" id="pageSizeSelect">
+                                        <option th:each="pageSize : ${pageSizes}" th:text="${pageSize}"
+                                                th:value="${pageSize}"
+                                                th:selected="${pageSize} == ${selectedPageSize}"></option>
+                                    </select>
+                                </div>
+                                <div th:if="${listaClientes.totalPages != 1}"
+                                     class="dataTables_paginate paging_simple_numbers pagination-centered">
+                                    <ul class="pagination">
+                                        <li th:class="${listaClientes.number == 0} ? hidden"><a
+                                                class="pageLink"
+                                                th:href="@{/clientes/list(size=${selectedPageSize}, page=1,paisFront=${paisFront},idTipoPais=${idTipoPais},razonSocial=${razonSocial},numeroid=${numeroid},nombreComercial=${nombreComercial},estado=${estado},nameColumn=${nameColumn},sortBy=${sort})}">&laquo;</a>
+                                        </li>
+                                        <li th:class="${listaClientes.number == 0} ? hidden"><a
+                                                class="pageLink"
+                                                th:href="@{/clientes/list(size=${selectedPageSize}, page=${listaClientes.number},paisFront=${paisFront},idTipoPais=${idTipoPais},razonSocial=${razonSocial},numeroid=${numeroid},nombreComercial=${nombreComercial},estado=${estado},nameColumn=${nameColumn},sortBy=${sort})}">&larr;</a>
+                                        </li>
+                                        <li
+                                                th:class="${listaClientes.number == (page - 1)} ? 'active pointer-disabled'"
+                                                th:each="page : ${#numbers.sequence(pager.startPage, pager.endPage)}">
+                                            <a class="pageLink"
+                                               th:href="@{/clientes/list(size=${selectedPageSize}, page=${page},paisFront=${paisFront},idTipoPais=${idTipoPais},razonSocial=${razonSocial},numeroid=${numeroid},nombreComercial=${nombreComercial},estado=${estado},nameColumn=${nameColumn},sortBy=${sort})}"
+                                               th:text="${page}"></a>
+                                        </li>
+                                        <li
+                                                th:class="${listaClientes.number + 1 == listaClientes.totalPages} ? hidden">
+                                            <a class="pageLink"
+                                               th:href="@{/clientes/list(size=${selectedPageSize}, page=${listaClientes.number + 2},paisFront=${paisFront},idTipoPais=${idTipoPais},razonSocial=${razonSocial},numeroid=${numeroid},nombreComercial=${nombreComercial},estado=${estado},nameColumn=${nameColumn},sortBy=${sort}  )}">&rarr;</a>
+                                        </li>
+                                        <li
+                                                th:class="${listaClientes.number + 1 == listaClientes.totalPages} ? hidden">
+                                            <a class="pageLink"
+                                               th:href="@{/clientes/list(size=${selectedPageSize}, page=${listaClientes.totalPages},paisFront=${paisFront},idTipoPais=${idTipoPais},razonSocial=${razonSocial},numeroid=${numeroid},nombreComercial=${nombreComercial},estado=${estado},nameColumn=${nameColumn},sortBy=${sort} )}">&raquo;</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--fin tabla para consultar existentes-->
+                                <!-- Modal -->
+                                <div class="modal fade" id="openDeleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" >
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLongTitle">Confirmacion</h5>
+                                            </div>
+
+                                            <div class="modal-body">
+                                                ¿Está seguro de eliminar el registro?</br>
+                                                <input type="hidden" th:id="idClienteM" value="idClienteM" />
+                                                    <div class="modal-body">
+                                                        <button type="button" class="btn btn-success" data-dismiss="modal">Cancelar</button>
+                                                        <button type="button" class="btn btn-danger" onclick="borrarClientes()" >Aceptar</button>
+                                                    </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div><!-- /.modal -->                  
+					<div layout:fragment="customjs">
+                        <script th:inline="javascript">
+                            /*<![CDATA[*/
+                            var sort = /*[[${sort}]]*/ 'ASC';
+                            var nameColumn = /*[[${nameColumn}]]*/ 'idPais';
+                            /*]]>*/
+                        </script>
+                        <script src="../../js/clientes/clientesList.js"></script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{web/fragments/main_layout}">
+<head>
+    <link href="../../../css/form.css" rel="stylesheet">
+    <title>Gestión de Sedes</title>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+<div layout:fragment="content" class="container mySpace">
+    <div class="right_col" role="main">
+        <div class="x_panel">
+            <div class="x_title formXTitle">
+                <h2 id="formTitle">Creación/Edicion de sedes</h2>
+                <a href="/laboratorios/sedes/list" class="btn btn-success pull-right">
+                    <span class="glyphicon glyphicon-chevron-left" style="color:#FFFFFF"></span>Atras</a>
+            </div>
+            <div class="x_content">
+                <!-- <br/>-->
+                <div class="col-md-12 ">
+
+                    <!-- Bloque de notificación  -->
+
+                    <div th:replace="web/fragments/notify :: notify"/>
+
+                    <!-- Fin bloque de notificación -->
+
+                    <form id="laboratorioForm" action="#" th:action="@{/laboratorios/save}" method="post"
+                          th:object="${laboratorioForm}">
+                        <input type="hidden" th:id="idLaboratoriosSedes" th:field="*{idLaboratoriosSedes}"/>
+                        <div class="form-group">
+                            <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                <input type="hidden" th:id="idLaboratoriosSedes" th:field="*{idLaboratoriosSedes}"/>
+                                <label th:for="desLab">Laboratorio<span class="required">*</span></label>
+
+                                <input type="text" class="form-control" th:id="desLab"
+                                       th:field="*{laboratoriosSedesId.razonSocial}"
+                                       placeholder="Ingrese el laboratorio">
+
+                                <p th:if="${#fields.hasErrors('laboratoriosSedesId')}"
+                                   class="label label-danger" th:errors="*{laboratoriosSedesId}">Incorrect</p>
+
+                                <input type="hidden" th:id="laboratoriosSedesId"
+                                       th:field="*{laboratoriosSedesId.idLaboratoriosSedes}"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                <label th:for="razonSocial">Nombre sede<span class="required">*</span></label>
+                                <input type="text" required="required" class="form-control" th:id="razonSocial"
+                                       th:name="razonSocial" th:field="*{razonSocial}">
+
+                                <p th:if="${#fields.hasErrors('razonSocial')}"
+                                   class="label label-danger" th:errors="*{razonSocial}">Incorrect</p>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-3 col-sm-12 col-xs-12 form-group">
+                                <label th:for="desPais">País<span
+                                        class="required">*</span></label>
+                                <input type="text" class="form-control" th:id="desPais" value=""
+                                       th:field="*{idPais.nombrePais}" placeholder="Ingrese Pais">
+                                <input type="hidden" th:id="idPais" th:field="*{idPais.idPais}"/>
+                            </div>
+                            <div class="col-md-3 col-sm-12 col-xs-12 form-group">
+                                <label th:for="desDepartamento">Departamento/Estado<span
+                                        class="required">*</span>
+                                </label>
+
+                                <select th:field="*{idDepartamentos}" required="required" class="form-control">
+                                    <option th:value="NULL" th:text="Seleccione... "></option>
+                                    <option th:fragment="models2" th:each="model : ${models2}"
+                                            th:value="${model.idDepartamentos}"
+                                            th:text="${model.nombreDepartamento}"/>
+                                </select>
+                            </div>
+
+                            <select th:field="*{idTipoPais}" required="required" hidden="hidden">
+                                <option th:fragment="models" th:each="model : ${models}"
+                                        th:value="${model.idTipoPais}"/>
+                            </select>
+
+                            <div class="col-md-3 col-sm-12 col-xs-12 form-group">
+                                <label th:for="txtCiudad">Ciudad<span class="required">*</span> </label>
+                                <select th:field="*{idCiudad}" class="form-control">
+                                    <option th:value="NULL" th:text="Seleccione... "></option>
+                                    <option th:fragment="models3" th:each="model : ${models3}"
+                                            th:value="${model.idCiudad}" th:text="${model.nombreCiudad}"/>
+                                </select>
+                            </div>
+                            <div class="col-md-3 col-sm-12 col-xs-12 form-group">
+                                <label th:for="direccion">Dirección<span class="required">*</span></label>
+
+                                <input type="text" required="required" class="form-control" th:id="direccion"
+                                       th:name="direccion" th:field="*{direccion}">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-3 col-sm-12 col-xs-12 form-group">
+                                <label th:for="correo">Correo<span class="required">*</span></label>
+                                <input type="email" required="required" class="form-control" th:id="correo"
+                                       th:name="correo" th:field="*{correo}">
+                            </div>
+                            <div class="col-md-3 col-sm-12 col-xs-12 form-group">
+                                <label th:for="correoAlternativo">Correo alternativo</label>
+                                <input type="email" class="form-control" th:id="correoAlternativo"
+                                       th:name="correoAlternativo" th:field="*{correoAlternativo}">
+                            </div>
+                            <div class="col-md-3 col-sm-12 col-xs-12 form-group">
+                                <label th:for="telefono">Telefóno<span class="required">*</span></label>
+                                <input type="text" required="required" class="form-control" th:id="telefono"
+                                       th:name="telefono" th:value="*{telefono}"
+                                       data-inputmask="'mask' : '(999) 999-9999'">
+                            </div>
+                            <div class="col-md-3 col-sm-12 col-xs-12 form-group">
+                                <label th:for="telefonoAlternativo">Telefóno alternativo</label>
+                                <input type="text" class="form-control" th:id="telefonoAlternativo"
+                                       th:name="telefonoAlternativo" th:field="*{telefonoAlternativo}"
+                                       data-inputmask="'mask' : '(999) 999-9999'">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-6 col-sm-12 col-xs-12 form-group">
+                                <label th:for="usuarioCalidad">Responsable de calidad<span
+                                        class="required">*</span></label>
+                                <input type="text" required="required" class="form-control" th:id="usuarioCalidad"
+                                       th:name="usuarioCalidad" th:field="*{usuarioCalidad}">
+                            </div>
+                            <div class="col-md-6 col-sm-12 col-xs-12 form-group">
+                                <label th:for="usuarioDirector">Director o cordinador<span
+                                        class="required">*</span></label>
+                                <input type="text" required="required" class="form-control" th:id="usuarioDirector"
+                                       th:name="usuarioDirector" th:field="*{usuarioDirector}">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>
+                                        <br>
+                                        <input type="checkbox" class="js-switch" th:id="imprimirResultados"
+                                               th:field="*{imprimirResultados}"/> Desactivar / Activar Impresión
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>
+                                        <br>
+                                        <input type="checkbox" class="js-switch" checked th:id="estadoLabSedes"
+                                               th:field="*{estadoLabSedes}"/> Desactivar / Activar Laboratorio
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <br>
+                                <button th:type="submit" th:id="save" class="btn btn-success"
+                                        th:name="action"
+                                        th:value="save">Guardar
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div layout:fragment="customjs">
+            <link rel="stylesheet" th:href="@{/css/gestion_clientes.css}">
+            <script src="../../js/laboratorios/sedesLaboratorio.js"></script>
+        </div>
+    </div>
+</div>
+</body>
+</html>

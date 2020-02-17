@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title>Error Page</title>
+</head>
+<body>
+
+<div class="col-md-12">
+    <div class="col-middle">
+        <div class="text-center" style="color: white; padding-top: 50px">
+            <div>
+                <img src="../../images/vectorBlanco.png" style="max-width: 400px; height: auto">
+            </div>
+
+            <h1 class="error-number" th:text="${nroError}" style="padding-top: 50px"></h1>
+            <h2 th:text="${errorMsg}"></h2>
+
+            <div class="mid_center" style="padding-top: 100px">
+                <form>
+                    <div>
+                        <a th:href="@{/}"> <h3 style="color:white">Volver al Inicio</h3></a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div layout:fragment="customjs">
+
+    <link rel="stylesheet" th:href="@{/vendors/bootstrap/dist/css/bootstrap.min.css}"
+          href="../../vendors/bootstrap/dist/css/bootstrap.min.css"/>
+
+    <link rel="stylesheet" th:href="@{/vendors/font-awesome/css/font-awesome.min.css}"
+          href="../../vendors/font-awesome/css/font-awesome.min.css"/>
+
+    <link rel="stylesheet" th:href="@{/vendors/nprogress/nprogress.css}"
+          href="../../vendors/nprogress/nprogress.css"/>
+
+    <link rel="stylesheet" th:href="@{/build/css/custom.min.css}"
+          href="../../build/css/custom.min.css"/>
+
+
+    <!-- jQuery -->
+    <script src="../../vendors/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="../../vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- FastClick -->
+    <script src="../../vendors/fastclick/lib/fastclick.js"></script>
+    <!-- NProgress -->
+    <script src="../../vendors/nprogress/nprogress.js"></script>
+
+    <!-- Custom Theme Scripts -->
+    <script src="../../build/js/custom.min.js"></script>
+</div>
+</body>
+</html>

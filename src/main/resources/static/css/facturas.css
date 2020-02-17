@@ -1,0 +1,33 @@
+@charset "utf-8";
+
+body {
+	font-family: sans-serif;
+	font-size: 12px;
+}
+
+.contenido .totales .detTotales {
+	float: left;
+}
+.contenido .totales .detInmueble {
+	float: left;
+}
+.cuerpo .cabezera p {
+	float: left;
+
+}
+.cuerpo .cabezera .datosCondominio {
+	float: left;
+}
+tr td #titulo {
+
+
+}
+tr td .detInmueble {
+	opacity: 1;
+	border-collapse: collapse;
+}
+
+tr td .detTotales {
+	opacity: 1;
+	border-collapse: collapse;
+}

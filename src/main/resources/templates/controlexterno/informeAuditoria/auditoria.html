@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{controlexterno/controlExternoFragments/ce_layout}">
+<head>
+    <link href="../../css/form.css" rel="stylesheet">
+    <title>Auditoria</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div layout:fragment="cont" style="padding: 0 10px 0 20px;min-height: 600px">
+
+    <span class="titulo">Programa: </span><span class="texto">PRUEBA DE EFICIENCIA EN QUÍMICA CLÍNICA</span>
+
+
+	
+	<center><h2 style="color:#000">Auditoria</h2></center>
+
+
+
+	<br>
+	<div class="row">
+		<div class="col-md-6">
+		<center>
+	       <span class="boldText"> Fecha desde</span>
+	      <input id="fechaDesde" class="datetimepicker" type="text"   style="width: 50%"  readonly>
+
+			</center>
+		</div>
+		<div class="col-md-6">
+		<center>
+                 <span class="boldText"> Fecha hasta</span>
+                 <input id="fechaHasta" class="datetimepicker" type="text"  style="width: 50%" readonly>
+                
+                      </center>
+                      
+                       <a class="btn btn" style="padding:10px;float: right;margin: 10% 25% 0 0;background: #bfbdbd;"  onclick="decargarAuditoria()">Descargar</a>
+                     
+                       
+  			</div>
+
+       </div>
+
+
+
+    <style>
+        .pdfobject-container {
+            height: 40rem;
+            border: 1rem solid rgba(0, 0, 0, .1);
+        }
+    </style>
+</div>
+
+
+
+
+
+    </div>
+
+    <div th:replace="controlExternoFragments/footer :: footer"/>
+</div>
+
+
+
+
+
+
+
+
+
+<style>
+    .pdfobject-container {
+        height: 40rem;
+        border: 1rem solid rgba(0, 0, 0, .1);
+    }
+</style>
+
+<div layout:fragment="customjs">
+    <!--<script>
+        $(document).ready(function () {
+            PDFObject.embed("../../controlexterno/pdf/instructivo.pdf", "#example1");
+            $('#myModal').modal({backdrop: 'static', keyboard: false});
+        });
+    </script>-->
+    <script src="../../controlexterno/js/auditoria.js"></script>
+    
+
+    <script th:inline="javascript">
+
+    </script>
+</div>
+</body>
+</html>
+

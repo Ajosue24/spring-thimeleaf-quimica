@@ -1,0 +1,66 @@
+<div th:fragment="consultaGeneral" xmlns:th="http://www.w3.org/1999/xhtml">
+
+    <!--<div th:if="${escenarios.isEmpty()}">
+        <p>No hay escenarios fijos</p>
+    </div>-->
+
+    <div id="consultaFrag" th:fragment="consultaFrag">
+
+        <div class="ajaxItemTitle" style="margin:0; font-weight: bold">RESUMEN GENERAL DE ESCENARIOS FIJOS</div>
+
+        <div th:each="noEscenario: ${noEscenario}">
+            <span>[[${noEscenario}]]</span>
+        </div>
+
+        <div th:each="escenario: ${escenarios}">
+            <div class="titFormSample tittle">
+                <span class="titulo"
+                      th:text="${escenario.mensurando.nombreMensurando}+' ('+${escenario.mensurando.idUnidadesMedidas.unidad}+')' "></span>
+                <span th:onclick="'javascript:seccion(event,\''+${escenario.mensurando.mensurandosId}+'\')'"
+                      th:id="btnEscenario+ ${escenario.mensurando.mensurandosId}"
+                      class="plusPosition plusStyle">+</span>
+            </div>
+
+            <div th:id="detalleEscenario+ ${escenario.mensurando.mensurandosId}" style="display: none">
+
+                <div th:each="metodo: ${escenario.escenariosMetodo}">
+                    <div class="porMetodo" style="padding: 15px 0px 0px 50px">
+                        <div class="filtroEscenario">
+                            <span class="boldText"> Filtro: </span>
+                            <span th:text="'Método -> '+${metodo.metodoId.codProasecal}+' - '+${metodo.metodoId.nombreMetodo}"></span>
+                        </div>
+                        <div class="detalleEscenario">
+                            <span class="padd">Asignado:</span><span th:text="${metodo.valorAsignado}"></span>
+                            <span class="padd">X:</span><span th:text="${metodo.mediaFiltro}"></span>
+                            <span class="padd">DS:</span><span th:text="${metodo.desviacionEstandar}"></span>
+                            <span class="padd">N:</span><span th:text="${metodo.totalValores}"></span>
+                            <span class="padd">#AB:</span><span th:text="${metodo.cantidadAberrantes}"></span>
+
+                            <a th:unless="${metodo.esVersion}" class="eliminarEscenario"
+                               th:onclick="'javascript:eliminarEscenario(\''+ ${metodo.idEscenarioFijo} +'\')'">Eliminar
+                                <img class="smallIcon" src="../../controlexterno/images/full_trash.svg">
+                            </a>
+                        </div>
+                    </div>
+
+                    <div th:each="detalleEscenario: ${metodo.escenariosFijosList}">
+                        <div class="porEquipo" style="padding: 15px 0px 0px 100px">
+                            <div class="filtroEscenario">
+                                <span class="boldText"> Filtro: </span>
+                                <span th:text="'Método -> '+${detalleEscenario.metodoId.codProasecal}+' - '+${detalleEscenario.metodoId.nombreMetodo.trim()}"></span>
+                                <span th:text="', Equipo -> '+${detalleEscenario.equipoId.codProasecal}+' - '+${detalleEscenario.equipoId.nombreEquipo}"></span>
+                            </div>
+                            <div class="detalleEscenario">
+                                <span class="padd">X:</span><span>[[${detalleEscenario.mediaFiltro}]]</span>
+                                <span class="padd">DS:</span><span>[[${detalleEscenario.desviacionEstandar}]]</span>
+                                <span class="padd">N:</span><span>[[${detalleEscenario.totalValores}]]</span>
+                                <span class="padd">#AB:</span><span>[[${detalleEscenario.cantidadAberrantes}]]</span>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

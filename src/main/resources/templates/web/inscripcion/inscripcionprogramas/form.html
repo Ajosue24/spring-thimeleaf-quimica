@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{web/fragments/main_layout}">
+<head>
+<link href="../../css/form.css" rel="stylesheet">
+	<title>Gestión de inscripción de programas</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+	<div layout:fragment="content" class="container mySpace">
+		<div class="right_col" role="main">
+			<div class="x_panel">
+            <div class="x_title formXTitle">
+                <h2 id="formTitle">Creación/Edicion de inscripción de programas</h2>
+                <a href="/inscripcionprogramas/list" class="btn btn-success pull-right">
+                    <span class="glyphicon glyphicon-chevron-left" style="color:#FFFFFF"></span>Atras</a>
+            </div>					
+				<div class="x_content">
+					<div class="col-md-10 col-md-offset-3">
+					<!-- Bloque de notificación  -->					
+					 <div th:replace="web/fragments/notify :: notify"/>
+					<!-- Fin bloque de notificación --> 
+                           <form id="form" class="form-horizontal form-label-left" action="#" th:action="@{/inscripcionprogramas/save}" th:object="${inscripcionprogramaForm}"  method="post"  style="display:none">
+
+							   <input type="hidden" th:id="inscripProgramaId" th:field="*{inscripProgramaId}"  />
+
+	                          	<div class="form-group">
+	                          		<div class="col-md-8 col-sm-12 col-xs-12">
+	                            		<label th:for="laboratorioId">Laboratorio<span	 class="required">*</span></label>
+										<br/>
+	                              		<select  th:field="*{idSedes.idLaboratoriosSedes}"   th:id="laboratorioId" class="form-control" required="required" style="width: 100%">
+	                                		<option th:value="NUll" th:text="Seleccione... "></option>
+											<option th:each="laboratorios,row : ${listLaboratorios}"
+													th:value="${{laboratorios}}" th:text="${laboratorios.numeroIdentificacion +' | '+laboratorios.razonSocial}"
+													th:id="${laboratorios.idLaboratoriosSedes}">
+											</option>
+	                                    </select>
+	                          		</div>
+	                          	</div>  
+	                          		                          	
+	                          	<div class="form-group">
+	                          		<div class="col-md-8 col-sm-12 col-xs-12">
+	                            		<label th:for="idSedes">Sede<span	 class="required">*</span></label>
+										<br/>
+										  <select th:field="*{idSedes}" th:id="idSedes" class="form-control" required="required" style="width: 100%">
+											  <option th:value="NULL" th:text="Seleccione..."></option>
+											  <option th:fragment="models2" th:each="model, row : ${models2}"
+											  th:value="${{model}}" th:text="${model.idLaboratoriosSedes.numeroIdentificacion + ' | ' + model.nombreSede}"
+											  th:id="${model.idSedes}">
+											  </option>
+										  </select>
+	                          		</div>
+	                          	</div>
+	                          	<div class="form-group">
+                                	<div class="col-md-8 col-sm-12 col-xs-12">
+	                            		<label th:for="usuario">Usuario<span	 class="required">*</span></label>
+										<br/>
+										<select th:field="*{idUsuarioLabSedes}" th:id="idUsuarioLabSedes" class="form-control" required="required" style="width: 100%">
+											<option th:value="NULL" th:text="Seleccione..."></option>
+											<option th:fragment="models3" th:each="model, row : ${models3}"
+													th:value="${{model}}" th:text="${model.usuarioId.nombreUsuario}"
+													th:id="${model.idUsuarioLabSedes}"></option>
+										</select>
+										  <p th:if="${#fields.hasErrors('idUsuarioLabSedes')}"
+										   class="label label-danger alerta" th:errors="*{idUsuarioLabSedes}">Incorrect</p>
+                               		 </div>
+                           		</div>
+
+                            	<div class="form-group">
+                               		 <div class="col-md-8 col-sm-12 col-xs-12">
+	                            		<label th:for="programaId">Programa<span	 class="required">*</span></label>
+										 <br/>
+	                              		<select  th:field="*{programaId}" th:id="programaId" class="form-control" required="required" style="width: 100%">
+	                                		<option th:value="NULL" th:text="Seleccione..." ></option>
+	                                		<option th:each="programas,row : ${listProgramas}"
+											th:value="${{programas}}" th:text="${programas.nombrePrograma}"
+											th:id="${programas.programaId}">
+											</option>
+	                                     </select>
+										  <p th:if="${#fields.hasErrors('programaId')}"
+										   class="label label-danger alerta" th:errors="*{programaId}">Incorrect</p>
+                                	</div>    
+                            	</div>     
+
+			                   <div class="col-md-12">
+			                       <div class="form-group">
+			                           <br>
+			                           <button type="submit" th:id="save" class="btn btn-success"
+			                                   name="action"
+			                                   value="Guardar">Guardar
+			                           </button>
+			                       </div>
+			                   </div>
+						</form>					
+					</div>
+				</div>
+			</div>					
+		</div>
+	</div>
+</body>
+        <div layout:fragment="customjs">
+           <script src="../../js/inscripcionprogramas/inscripcionprogramas.js"></script>
+        </div>
+</html>

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{controlexterno/controlExternoFragments/ce_layout}">
+<head>
+    <link href="../../css/form.css" rel="stylesheet">
+    <title>Listado de clientes</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div layout:fragment="cont" style="padding: 0 10px 0 20px;min-height: 600px">
+	<span class="preload">
+		<i class="fa fa-spinner fa-spin"></i>
+	</span>	
+	   <div th:if="${delete}">
+		    <script th:inline="javascript">	       
+       				 alert("Resultado eliminado correctamente");
+		    </script>
+		</div>  
+	<div th:if="${delete2}">
+	    <script th:inline="javascript">	       
+	     	 alert("No se puede eliminar el resultado porque ya hace parte de uno o varios escenarios fijos");
+	    </script>
+	</div> 
+    <div th:if="${save}">
+        <div class="successmsg">
+            <p style="font-weight: bolder; padding:10px 3px 0 10px; text-align:justify;">
+                Los datos han sido guardados satisfactoriamente
+            </p>
+        </div>
+        <br>
+    </div>
+    <span class="titulo">Programa: </span><span class="texto">PRUEBA DE EFICIENCIA EN QUÍMICA CLÍNICA</span>
+
+    <p class="titulo_sub"></p>
+    <div class="row" style="padding: 10px">
+        <div class="col-md-12 col-xs-12 form-group"  style="border-bottom:1px solid #F0F0F0;color:black;">
+             
+             <div class="col-md-3 col-xs-12" style="width: 150px;float:left">
+              <label  style="color:black;">Año</label>
+             </div>
+             <div class="col-md-3 col-xs-12" style="width: 400px;float:left" >
+
+	            <select th:id="ano" th:name="ano" style="color:black;">
+	                <option th:value="2018" th:selected="${ano==2018}" th:text="2018"></option>
+	                <option th:value="2019" th:selected="${ano==2019}" th:text="2019"></option>
+	                <option th:value="2020" th:selected="${ano==2020}" th:text="2020"></option>
+	                <option th:value="2021" th:selected="${ano==2021}" th:text="2021"></option>
+	                <option th:value="2022" th:selected="${ano==2022}" th:text="2022"></option>
+	                <option th:value="2023" th:selected="${ano==2023}" th:text="2023"></option>
+	                <option th:value="2024" th:selected="${ano==2024}" th:text="2024"></option>
+	                <option th:value="2025" th:selected="${ano==2025}" th:text="2025"></option>
+	                <option th:value="2026" th:selected="${ano==2026}" th:text="2026"></option>
+	                <option th:value="2027" th:selected="${ano==2027}" th:text="2027"></option>
+	                <option th:value="2028" th:selected="${ano==2028}" th:text="2028"></option>
+	                <option th:value="2029" th:selected="${ano==2029}" th:text="2029"></option>
+	                <option th:value="2030" th:selected="${ano==2030}" th:text="2030"></option>
+	            </select>
+			</div>
+		 <div class="col-md-4 col-xs-12" style="width: 100px;float:left">
+            <label >Muestra</label>
+            </div>
+            <div class="col-md-3 col-xs-12" style="width: 50px;float:left;margin-right: 200px">
+            <select th:id="muestra" th:name="muestra" style="color:black">
+                <option th:value="0" th:text="Seleccione... "></option>
+                <option th:fragment="models3"
+                        th:each="model : ${models3}"
+                        th:text="${model.numeroMuestra}"
+                        th:selected="(${model.muestraId} == ${muestra})"
+                        th:value="${{model}}" th:id="${model.muestraId}"/>
+            </select>
+                      </div>
+
+           	 	
+          		  <button formnovalidate="formnovalidate" th:id="buscar2" name="buscar2" class="buttonProasecal" >Buscar </button>
+	
+        	<br><br>
+        </div>
+
+    </div>
+
+
+    <div class="row" style="background:#F0F0F0">
+        <div class="col-md-3 col-sm-12 col-xs-12 form-group">
+            <div class="form-group">
+                <label class="col-md-3 col-sm-3 col-xs-3 form-group">Laboratorio</label>
+                <select th:id="laboratorio" th:name="laboratorio" style="color:black;max-width: 200px">
+                    <option th:value="NULL" th:text="Seleccione... "></option>
+                    <option th:fragment="modelsLab"
+                            th:each="modelLab : ${modelsLab}"
+                            th:text="${modelLab.numeroIdentificacion +' | '+modelLab.razonSocial}"
+                            th:selected="(${modelLab.idLaboratoriosSedes} == ${laboratorio})"
+                            th:value="${{modelLab}}" th:id="${modelLab.idLaboratoriosSedes}"/>
+                </select>
+
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-12 col-xs-12 form-group">
+            <div class="form-group">
+                <label class="col-md-3 col-sm-3 col-xs-3 form-group">Sede</label>
+                <select th:id="sede" th:name="sede" style="color:black;max-width: 200px">
+                    <option th:value="NULL" th:text="Seleccione... "></option>
+                    <option th:fragment="modelsSede"
+                            th:each="modelSede : ${modelsSede}"
+                            th:text="${modelSede.nombreSede}"
+                            th:selected="(${modelSede.idSedes} == ${sede})"
+                            th:value="${{modelSede}}" th:id="${modelSede.idSedes}"/>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-12 col-xs-12 form-group">
+            <div class="form-group">
+                <label class="col-md-3 col-sm-3 col-xs-3 form-group">Usuario</label>
+                <select th:id="usuario" th:name="usuario" style="color:black">
+                    <option th:value="NULL" th:text="Seleccione... "></option>
+                    <option th:fragment="modelsUsu"
+                            th:each="modelUsu : ${modelsUsu}"
+                            th:text="${modelUsu.nombreUsuario}"
+                            th:selected="(${modelUsu.idUsuario} == ${usuario})"
+                            th:value="${{modelUsu}}" th:id="${modelUsu.idUsuario}"/>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-12 col-xs-12 form-group">
+            <div class="form-group">
+                <label class="col-md-3 col-sm-3 col-xs-3 form-group">Estado</label>
+                <select th:id="estado" th:name="estado" style="color:black">
+                    <option th:value="Todos" th:selected="${estado.equalsIgnoreCase('Todos')?true:false}"
+                            th:text="Todos"></option>
+                    <option th:value="Informados" th:selected="${estado.equalsIgnoreCase('Informados')?true:false}"
+                            th:text="Informados"></option>
+                    <option value="No informados" th:selected="${estado.equalsIgnoreCase('No informados')?true:false}">
+                        No informados
+                    </option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <p class="titulo_sub">Detalle de la muestra</p>
+
+
+    <label id="mensajeResultado" style="color:black;">No hay detalles para la muestra seleccionada</label>
+
+    <table id="detalleMuestra" class="table table-striped" style="display:none">
+        <tr>
+            <td style="font-weight: bold;">Número de muestra:</td>
+            <td><label id="numeroM"></label></td>
+            <td style="font-weight: bold;">Tipo de muestra:</td>
+            <td><label id="tipoM"></label></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td style="font-weight: bold;"> Fecha de inicio:</td>
+            <td><label id="fechaIM"></label></td>
+            <td style="font-weight: bold;">Fecha de fin prevista:</td>
+            <td><label id="fechaFM"></label></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td style="font-weight: bold;"> Fecha de bloqueo:</td>
+            <td><label id="fechaBM"></label></td>
+            <td style="font-weight: bold;">Fecha de cierre:</td>
+            <td><label id="fechaCM"></label></td>
+            <td style="font-weight: bold;">Fecha de liberación de resultados:</td>
+            <td><label id="fechaLRM"></label></td>
+        </tr>
+        <tr>
+            <td style="font-weight: bold;"> Participantes inscritos:</td>
+            <td><label th:text="${Participantes}"></label></td>
+            <td style="font-weight: bold;">Participantes por reportar:</td>
+            <td><label th:text="${NoParticipantes}"></label></td>
+            <td>
+            
+                <button th:id="simularT" name="simularT" style="background: #fff;border:1px solid teal;padding: 2px;cursor:pointer">Simular tabulación</button>
+                <button th:id="auditoria" name="auditoria" style="background: #fff;border:1px solid teal;padding: 2px;cursor:pointer">Auditoria</button>
+            </td>
+            <td></td>
+        </tr>
+    </table>
+
+
+    <table id="detalleMuestraUsuarios" class="table table-striped" style="display:none">
+        <tr>
+            <th>Estado</th>
+            <th>Laboratorio</th>
+            <th>Sede</th>
+            <th>Usuario</th>
+            <th>UC <img src="../../controlexterno/images/info.png" title="Usuario que ingresó el resultado" width="18px"
+                        style="cursor: pointer"></th>
+            <th>Creación</th>
+            <th>UM <img src="../../controlexterno/images/info.png" title="Usuario que modifico el resultado"
+                        width="18px" style="cursor: pointer"></th>
+            <th>Modificación</th>
+            <th>Acciones</th>
+        </tr>
+
+        <tbody>
+
+
+        <tr th:each="listUsuarios, row  : ${modelsListUsuarios}">
+            <td>
+                <div th:if="${listUsuarios.resultadosList.size()==0}">
+                    <img src="../../controlexterno/images/offline.png" width="20px">
+                </div>
+
+            </td>
+            <td th:text="${listUsuarios.idUsuarios.idLaboratoriosSedes.razonSocial}"></td>
+            <td th:text="${listUsuarios.idUsuarios.idSedes.nombreSede}"></td>
+            <td th:text="${listUsuarios.idUsuarios.usuarioId.nombreUsuario}"></td>
+            <td>
+                <label th:each="resultado, row : ${listUsuarios.resultadosList}"
+                       th:text="${resultado.idUsuarios.nombreUsuario } ">
+                </label>
+            </td>
+            <td>
+                <label th:each="resultado, row : ${listUsuarios.resultadosList}"
+                       th:text="${#dates.format(resultado.fechaCreacion,'dd-MM-yyyy hh:mm') } ">
+                </label>
+            </td>
+            <td>
+                <div th:each="resultado, row : ${listUsuarios.resultadosList}">
+                    <div th:if="${resultado.idUsuarioModificacion!=null}"><label
+                            th:text="${resultado.idUsuarioModificacion.nombreUsuario }"></label></div>
+                </div>
+            </td>
+            <td>
+                <label th:each="resultado, row : ${listUsuarios.resultadosList}"
+                       th:text="${#dates.format(resultado.fechaModificacion,'dd-MM-yyyy hh:mm')} ">
+                </label>
+            </td>
+            <td>
+
+
+                  <div th:if="${listUsuarios.resultadosList.size()==0}">     
+                  	<div th:if="${muestras.fechaLibResultado==null}OR${muestras.fechaLibResultado!=null && muestras.fechaLibResultado.after(#temporals.createNow())}">
+            			  <a th:if="${mostrarBotonCrear[row.index]}"   th:href="@{/controlexterno/resultadosParticipante/} + ${listUsuarios.idInscripcionMuestras}"><img src="../../controlexterno/images/plus.svg"  width="18px" style="cursor: pointer"></a>
+            			  </div>	
+             	  </div>
+            
+                <div  style="float:left" th:if="${listUsuarios.resultadosList.size()>0}">
+					<a th:if="${mostrarBotonCrear[row.index]}"   th:href="@{/controlexterno/resultadosParticipante/} + ${listUsuarios.idInscripcionMuestras}"><img src="../../controlexterno/images/edit.png"  width="18px" style="cursor: pointer"></a>
+                </div> 
+
+                <div th:if="${listUsuarios.resultadosList.size()==0}and${muestras.fechaLibResultado!=null && muestras.fechaLibResultado.before(#temporals.createNow())}">       
+  
+            				<a   onclick="alert('La muestra está bloqueada.')" style="cursor:pointer"><i class="fa fa-lock"></i></a> 
+                </div>
+	        		
+	        	<!-- <a  th:if="!${mostrarBotonCrear[row.index]}"  onclick="alert('La muestra aun no esta disponible.')" style="cursor:pointer"><i class="fa fa-lock"></i></a>--> 
+        		<!-- 
+	        		 <div th:if="${listUsuarios.resultadosList.size()==0}&&">
+			        		<div th:if="${muestras.fechaBloqueo.before(#dates.createNow())}OR${muestras.fechaLibResultado.before(#dates.createNow())}">
+			        			<script>alert('La muestra está bloqueada.')</script>
+			        		</div>
+	        		</div>
+        		 -->
+        		
+                   <div style="float:left"  th:if="${listUsuarios.resultadosList.size()>0}">
+                    <div th:each="resultado, row : ${listUsuarios.resultadosList}">
+                             <a   th:onclick="'javascript:openDeleteModal(\''+${resultado.idResultados}+'\',\''+${resultado.idUsuarios.codProasecal}+'\');'"  data-toggle="modal" data-target="#openDeleteModal" >
+                                <img src="../../controlexterno/images/full_trash.svg"  width="18px" style="cursor: pointer">
+                        </a>
+          			  </div>
+				</div>
+
+            </td>
+        </tr>
+
+        </tbody>
+
+    </table>
+   <!-- Modal -->
+   <div class="modal fade" id="openDeleteModal" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalCenterTitle" aria-hidden="true" >
+       <div class="modal-dialog modal-dialog-centered" role="document" style="min-width: 50%">
+           <div class="modal-content">
+               <div class="modal-header">
+                   <h5 class="modal-title" id="exampleModalLongTitle">  </h5>
+    				<button type="button" class="close" data-dismiss="modal">&times;</button>
+               </div>
+
+               <div class="modal-body">
+               <form>
+               <table>
+                       <tbody>
+          <tr >
+              <td class="seccionForm " colspan="100">Justificación de la eliminación *</td>
+          </tr>
+          <tr >
+              <td colspan="100">
+                  <div class="input textarea"><textarea
+                          onkeypress="return check(event)"
+                          name="justificacion" id="justificacion" rows="5" required="required" ></textarea></div>
+               </td>
+           </tr>
+
+          <tr >
+               <td class="seccionForm " colspan="100">Autorizado por *</td>
+           </tr>
+           <tr >
+               <td colspan="100">
+                    <div class="input textarea"><textarea   id="autorizadoPor" name="autorizadoPor" th:text="${autorizadoPor}"  rows="1" required="required" ></textarea></div>
+               </td>
+           </tr>
+					</tbody>
+                </table>
+
+
+                    <input type="hidden" th:id="idResultadoD" value="idResultadoD"/>
+                    <div class="modal-body">
+
+                        <a class="btn btn-danger" onclick="borrarResultados()" style="float: right;color:#ffffff">Eliminar
+                       </a>
+                   </div>
+                   </form>
+               </div>
+           </div>
+       </div>
+   </div><!-- /.modal -->
+
+    <!--    <select  th:id="muestra2" th:name="muestra2" >
+             <option th:value="0" th:text="Seleccione... "></option>
+             <option th:fragment="muestrasForm"
+              th:selected="${muestra==muestrasForm.muestraId?true:false}"
+             th:each="model : ${muestrasForm}"
+                     th:text="${model.numeroMuestra}"
+                     th:value="${{model}}" th:id="${model.muestraId}"/>
+         </select> -->
+    <div>
+
+    </div>
+
+    <!-- The Modal -->
+    <div class="modal fade" id="myModal">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div id="example1"></div>
+                <!--Inicio de los otros div nuevos-->
+            </div>
+        </div>
+    </div>
+    <style>
+        .pdfobject-container {
+            height: 40rem;
+            border: 1rem solid rgba(0, 0, 0, .1);
+        }
+    </style>
+</div>
+
+
+
+
+
+    </div>
+
+    <div th:replace="controlExternoFragments/footer :: footer"/>
+</div>
+<!-- The Modal -->
+<div class="modal fade" id="myModal">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div id="example1"></div>
+            <!--Inicio de los otros div nuevos-->
+        </div>
+    </div>
+</div>
+
+<style>
+    .pdfobject-container {
+        height: 40rem;
+        border: 1rem solid rgba(0, 0, 0, .1);
+    }
+</style>
+
+<div layout:fragment="customjs">
+    <!--<script>
+        $(document).ready(function () {
+            PDFObject.embed("../../controlexterno/pdf/instructivo.pdf", "#example1");
+            $('#myModal').modal({backdrop: 'static', keyboard: false});
+        });
+    </script>-->
+    <script src="../../controlexterno/js/listResultadosDirector.js"></script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+
+        var save = /*[[${save}]]*/ 'true';
+        $(document).ready(function () {
+            if(save){
+                alert('Los datos han sido guardados satisfactoriamente');
+            }
+        });
+
+        
+        /*]]>*/    
+    </script>
+</div>
+</body>
+</html>
+

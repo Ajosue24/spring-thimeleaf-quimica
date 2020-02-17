@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{controlexterno/controlExternoFragments/ce_layout}">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Proasecal S.A.S:Results</title>
+</head>
+
+<body>
+<div layout:fragment="cont">
+	<span class="preload">
+		<i class="fa fa-spinner fa-spin"></i>
+	</span>
+    <div class="bbody">
+        <div class="tab">
+            <button id="MuestraTab" class="tablinks" onclick="abrir(event, 'Muestra')">Muestra</button>
+            <button id="ConsultaTab" class="tablinks" onclick="abrir(event, 'Consulta')">Consulta general de
+                <br>escenarios fijos
+            </button>
+        </div>
+
+        <div id="Muestra" class="tabcontent">
+            <div th:object="${muestraInfo}">
+                <div class="titFormSample">
+                    <span class="titulo">Muestra: </span>
+                    <input id="idMuestra" hidden="hidden" th:value="*{muestraId}">
+                    <span class="texto" th:text="*{numeroMuestra}"></span>
+                </div>
+
+                <table colspan="4">
+                    <tbody>
+                    <tr>
+                        <td colspan="4">
+                            <span class="boldText"> Programa </span> <span
+                                th:text="*{idPrograma.nombrePrograma}"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="25%">
+                            <span class="boldText"> Fecha de inicio</span>
+                        </td>
+                        <td width="25%">
+                            <span th:text="${#dates.format(muestraInfo.fechaInicial, 'dd-MMM-yyyy')}"></span>
+                        </td>
+                        <td width="25%">
+                            <span class="boldText"> Fecha de finalización estimada</span>
+                        </td>
+                        <td width="25%">
+                            <span th:text="${#dates.format(muestraInfo.fechaFinal, 'dd-MMM-yyyy')}"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="boldText"> Tipo de muestra</span>
+                        </td>
+                        <td colspan="2">
+                            <span th:text="*{idTipoMuestra.nombre}"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="boldText"> Participantes inscritos</span>
+                        </td>
+                        <td>
+                            <span th:text="*{inscripcionMuestrasList.size()}"></span>
+                        </td>
+                        <td>
+                            <span class="boldText"> Participantes por reportar</span>
+                        </td>
+                        <td>
+                            <span th:text="${pendientes}"></span>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="2">
+                            <span class="boldText"> Fecha de liberación de resultados</span>
+                            <input id="liberacion" class="datetimepicker" type="text"
+                                   th:value="${#dates.format(muestraInfo.fechaLibResultado, 'yyyy/MM/dd HH:mm')}"
+                                   style="width: 90%">
+                            <img id="liberacionImg" src="../../controlexterno/images/ok.svg" alt="Grabar"
+                                 class="smallIcon" title="Grabar">
+                        </td>
+
+                        <td colspan="2">
+                            <span class="boldText"> Fecha de cierre</span><br>
+                            <input id="cierre" class="datetimepicker" type="text"
+                                   th:value="${#dates.format(muestraInfo.fechaCierre, 'yyyy/MM/dd HH:mm')}"
+                                   style="width: 90%">
+                            <img id="cierreImg" src="../../controlexterno/images/ok.svg" alt="Grabar"
+                                 class="smallIcon" title="Grabar">
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="2"></td>
+                        <td colspan="2" style="vertical-align: middle; text-align: center;">
+                            <button th:if="*{fechaCierre != null}" id="revisionResultados" class="buttonProasecal">Resultados</button>
+                            <button  th:if="${T(com.proasecal.software.controlexterno.controller.ControlExternoController).nombreSede==''}" type="button" name="cancel" class="buttonProasecal cancel"
+                                     th:onclick="'javascript:regresarList(\''+*{muestraId}+'\');'"   >Regresar
+                            </button>
+                        </td>
+                    </tr>
+
+                    </tbody>
+                </table>
+
+                <div class="ajaxItemTitle" style="margin:0; cursor:pointer;">Informes generales
+                    <span id="btnInformesGenerales" class="plusPosition"  >+</span>
+                </div>
+
+                <div class="ajaxSimulatorOpen" id="seccionInformesGenerales" style="display: none"  >
+                    <a id="linkconsulta" class="simLink"  onclick="abrir(event, 'Consulta')">
+                        <img src="../../controlexterno/images/view_details.svg"
+                             alt="Consulta de general de escenarios fijos" class="smallIcon"
+                             title="Consulta de general de escenarios fijos">
+                        Consulta general de escenarios fijos
+                    </a>
+                </div>
+
+                <br>
+
+                <div class="ajaxItemTitle" style="margin:0; cursor:pointer;"> Participantes fuera de fecha
+                    <span th:text="'('+${fueraDeFecha}+')'"></span>
+                    <span id="btnParticipantesFuera" class="plusPosition">+</span>
+                </div>
+
+                <div class="ajaxSimulatorOpen" id="seccionParticipantesFuera" style="display: none">
+                    <table>
+                        <tbody>
+                        <tr>
+                            <th>Laboratorio</th>
+                            <th>Sede</th>
+                            <th>Usuario</th>
+                            <th>Fecha de ingreso</th>
+                        </tr>
+
+                        <tr th:each="fueraDeFechaList: ${fueraDeFechaList}" class="tableRow">
+                            <td th:text="${fueraDeFechaList.laboratorio}"></td>
+                            <td th:text="${fueraDeFechaList.sede}"></td>
+                            <td th:text="${fueraDeFechaList.usuario}"></td>
+                            <td th:text="${fueraDeFechaList.fecha}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <br>
+
+                <div class="ajaxItemTitle" style="margin:0; cursor:pointer;">Mensurandos por simular
+                    <span id="btnMensurandos" class="plusPosition">-</span>
+                </div>
+
+                <div class="ajaxSimulatorOpen" id="seccionMensurandos">
+                    <table>
+                        <tbody>
+                        <tr>
+                            <th width="5%" rowspan="2">Simulado</th>
+                            <th colspan="2" rowspan="2">Mensurando</th>
+                            <th colspan="3">Cantidad participantes</th>
+                            <th colspan="3" rowspan="2">Acciones</th>
+                        </tr>
+                        <tr>
+                            <th>Total</th>
+                            <th>Grupo base</th>
+                            <th>Fuera de fecha</th>
+                        </tr>
+
+                        <tr th:each="mensurandosXSimular: ${mensurandosXSimular}" class="tableRow">
+
+                            <td>
+                                <div th:if="${mensurandosXSimular.isSimulado()}" style="text-align: center">
+                                    <img src="../../controlexterno/images/ok.png">
+                                </div>
+                            </td>
+                            <td colspan="2"
+                                th:text="${mensurandosXSimular.mensurando.nombreMensurando}+' ('+${mensurandosXSimular.mensurando.idUnidadesMedidas.unidad}+')'"></td>
+                            <td th:text="${mensurandosXSimular.total}"></td>
+                            <td th:text="${mensurandosXSimular.grupoBase}"></td>
+                            <td th:text="${mensurandosXSimular.fueraFecha}"></td>
+                            <td>
+                                <a th:if="*{fechaCierre != null}"
+                                   th:href="@{/controlexterno/simulacion(muestra=${muestraInfo.muestraId}, mensurando=${mensurandosXSimular.mensurando.mensurandosId})}">
+                                    <img src="../../controlexterno/images/plus.svg"
+                                         class="smallIcon" title="Iniciar simulación del mensurando">
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <br>
+
+                <button th:onclick="'javascript:regresarList(\''+${muestraInfo.muestraId}+'\');'"
+                        formnovalidate="formnovalidate" class="buttonProasecal">Regresar
+                </button>
+            </div>
+        </div>
+
+        <div id="Consulta" class="tabcontent">
+
+            <div th:object="${muestraInfo}">
+                <div class="titFormSample">
+                    <span class="titulo">Muestra: </span>
+                    <span class="texto" th:text="*{numeroMuestra}"></span>
+                </div>
+
+                <table colspan="4">
+                    <tbody>
+                    <tr>
+                        <td colspan="4">
+                            <span class="boldText"> Programa </span> <span
+                                th:text="*{idPrograma.nombrePrograma}"></span>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td width="25%">
+                            <span class="boldText"> Tipo de muestra</span>
+                        </td>
+                        <td>
+                            <span th:text="*{idTipoMuestra.nombre}"></span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <br>
+
+            <div th:replace="controlexterno/simulacion/consultaGeneral :: consultaGeneral"/>
+
+        </div>
+    </div>
+</div>
+<div layout:fragment="customjs">
+    <script src="../../../controlexterno/js/gestionDeMuestras/gestionDeMuestras.js"></script>
+    <script src="../../../controlexterno/js/simulacion/moduloSimulacion.js"></script>
+    <script>
+        document.getElementById("MuestraTab").click(event, 'Muestra');
+    </script>
+</div>
+</body>
+</html>

@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{web/fragments/main_layout}">
+<head>
+    <title>Gestión de Sedes</title>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+<div layout:fragment="content" class="container mySpace">
+    <div class="right_col" role="main">
+        <div class="x_panel">
+            <div class="x_title formXTitle">
+                <h2 id="formTitle">Creación/Edicion de sedes</h2>
+                <a href="/sedes/list" class="btn btn-success pull-right">
+                    <span class="glyphicon glyphicon-chevron-left" style="color:#FFFFFF"></span>Atras</a>
+            </div>
+            <div class="x_content">
+                <!-- <br/>-->
+                <div class="col-md-12 ">
+                    <!-- Bloque de notificación  -->
+                    <div th:replace="web/fragments/notify :: notify"/>
+                    <!-- Fin bloque de notificación -->
+                    <form id="sedesForm" action="#" th:action="@{/sedes/save}" method="post"
+                          th:object="${sedesForm}" th:fragment="sedesFragment">
+                        <div layout:fragment="customjs">
+                            <script src="../../js/sedes/sedesForm.js"></script>
+                        </div>
+                        <div id="divForm" style="display:none">
+                        <input type="hidden" th:id="idSedes" th:field="*{idSedes}"/>
+                        <div class="form-group">
+                            <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                                <label th:for="idLaboratoriosSedes">Laboratorios<span class="required">*</span></label>
+                                <select th:field="*{idLaboratoriosSedes}" required="required" class="form-control"
+                                        style="width: 100%">
+                                    <option th:value="NULL" th:text="Seleccione... "></option>
+                                    <option th:each="laboratorios,row : ${laboratoriosList}"
+                                            th:value="${{laboratorios}}"
+                                            th:text="${laboratorios.numeroIdentificacion +' | '+laboratorios.razonSocial}"
+                                            th:id="${laboratorios.idLaboratoriosSedes}">
+                                    </option>
+                                </select>
+                                <p th:if="${#fields.hasErrors('idLaboratoriosSedes')}"
+                                   class="label label-danger alerta" th:errors="*{idLaboratoriosSedes}">Incorrect</p>
+                            </div>
+
+                            <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                                <label th:for="nombreSede">Nombre<span
+                                        class="required">*</span></label>
+                                <input type="text" class="form-control" th:id="nombreSede"
+                                       th:field="*{nombreSede}" placeholder="Nombre sede">
+                                <p th:if="${#fields.hasErrors('nombreSede')}"
+                                   class="label label-danger alerta" th:errors="*{nombreSede}">Incorrect</p>
+                            </div>
+
+                            <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                                <label th:for="desPais">País<span
+                                        class="required">*</span></label>
+
+                                <select th:field="*{idPais}" th:id="idPais" class="form-control" required="required"
+                                        style="width: 100%">
+                                    <option th:value="NULL" th:text="Seleccione... "></option>
+                                    <option th:each="pais : ${paisList}"
+                                            th:text="${pais.nombrePais}"
+                                            th:value="${pais.idPais}"/>
+                                </select>
+
+                                <p th:if="${#fields.hasErrors('idPais')}"
+                                   class="label label-danger alerta" th:errors="*{idPais}">Incorrect</p>
+
+                            </div>
+                        </div>
+                        <br><br><br><br>
+                        <div class="form-group">
+                            <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                                <label th:for="desDepartamento">Departamento/Estado<span
+                                        class="required">*</span>
+                                </label>
+
+                                <select th:field="*{idDepartamentos}" required="required" class="form-control"
+                                        style="width: 100%">
+                                    <option th:value="NULL" th:text="Seleccione... "></option>
+                                    <option th:fragment="models2" th:each="model : ${models2}"
+                                            th:value="${model.idDepartamentos}"
+                                            th:text="${model.nombreDepartamento}"/>
+                                </select>
+
+                            </div>
+                            <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                                <label th:for="txtCiudad">Ciudad<span class="required">*</span> </label>
+                                <select th:field="*{idCiudad}" required="required" class="form-control"
+                                        style="width: 100%">
+                                    <option th:value="NULL" th:text="Seleccione... "></option>
+                                    <option th:fragment="models3" th:each="model : ${models3}"
+                                            th:value="${model.idCiudad}" th:text="${model.nombreCiudad}"/>
+                                </select>
+                            </div>
+                            <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                                <label th:for="direccion">Dirección</label>
+                                <input type="text" class="form-control" th:id="direccion"
+                                       th:name="direccion" th:field="*{direccion}">
+           
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-3 col-sm-12 col-xs-12 form-group">
+                                <label th:for="correo">Correo</label>
+                                <input type="email" class="form-control" th:id="correo"
+                                       th:name="correo" th:field="*{correo}">
+
+                                <p id="correoLabel" class="label label-danger alerta"></p>
+                            </div>
+
+                            <div class="col-md-3 col-sm-12 col-xs-12 form-group">
+                                <label th:for="correo">Correo 2</label>
+                                <input type="email" class="form-control" th:id="correo2"
+                                       th:name="correo" th:field="*{correoAlternativo}">
+
+                                <p id="correoAlternativoLabel" class="label label-danger alerta"></p>
+                            </div>
+                            <div class="col-md-3 col-sm-12 col-xs-12 form-group">
+                                <label th:for="telefono">Telefóno</label>
+                                <input type="text" class="form-control" th:id="telefono"
+                                       th:name="telefono" th:value="*{telefono}">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-3 col-sm-12 col-xs-12 form-group">
+                                <label th:for="telefonoAlternativo">Telefóno 2</label>
+                                <input type="text" class="form-control" th:id="telefonoAlternativo"
+                                       th:name="telefonoAlternativo" th:field="*{telefonoAlternativo}">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-6 col-sm-12 col-xs-12 form-group">
+                                <label th:for="usuarioCalidad">Responsable de calidad<span
+                                        class="required">*</span></label>
+                                <input type="text" required="required" class="form-control" th:id="usuarioCalidad"
+                                       th:name="usuarioCalidad" th:field="*{usuarioCalidad}">
+                            </div>
+                            <div class="col-md-6 col-sm-12 col-xs-12 form-group">
+                                <label th:for="usuarioDirector">Director o cordinador<span
+                                        class="required">*</span></label>
+                                <input type="text" required="required" class="form-control" th:id="usuarioDirector"
+                                       th:name="usuarioDirector" th:field="*{usuarioDirector}">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-12 col-sm-12 col-xs-12 form-group" style="padding:20px">
+
+                                <label>
+                                    <input type="checkbox" class="js-switch" th:id="imprimirResultados"
+                                           th:name="imprimirResultados" th:field="*{imprimirResultados}"
+                                    /> Imprimir Resultados
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <br>
+                                <button sec:authorize="${hasAnyRole(T(com.proasecal.software.web.controller.seguridad.RolesAccess).permisosPermitidos('/sedes/usuarios'))}"
+                                        th:type="submit" th:id="save" class="btn btn-success"
+                                        th:name="action"
+                                        th:value="save">Guardar
+                                </button>
+                            </div>
+                        </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="row" th:if="${sedesForm.idSedes != 0}">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <!--inicio Formulario-->
+                <div class="x_panel">
+                    <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                        <ul class="nav navbar-left panel_toolbox">
+                            <li>
+                                <a class="collapse-link filtroColor">
+                                    <label></label>
+                                    <i class="fa fa-chevron-down"></i>
+                                </a>
+                            </li>
+                        </ul>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" onclick="loadModal();">
+                            Agregar Usuarios
+                        </button>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="x_content" style="margin-bottom: 0;">
+                        <table class="table table-dark table-striped table-bordered" style="margin-bottom: 0;">
+                            <thead>
+                            <tr>
+                                <th>Codigo Proasecal</th>
+                                <th>Acciones</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:if="${usuariosSedeList.size()<1}">
+                                <td colspan="100%"> No se encuentran usuarios</td>
+                            </tr>
+                            <tr th:each="usuarioSede,row : ${usuariosSedeList}">
+                                <td th:text="${usuarioSede.usuarioId.nombreUsuario}"></td>
+                                <td>
+                                    <input type="hidden"
+                                           th:name="nombreUsuarioHddn+${row.index}"
+                                           th:id="nombreUsuarioHddn+${row.index}"
+                                           th:value="${usuarioSede.usuarioId.nombreUsuario}"/>
+                                    <input type="hidden"
+                                           th:name="idUsuarioHddn+${row.index}" th:id="idUsuarioHddn+${row.index}"
+                                           th:value="${usuarioSede.usuarioId.idUsuario}"/>
+                                    <input type="hidden"
+                                           th:name="idSedesHdd+${row.index}" th:id="idSedesHdd+${row.index}"
+                                           th:value="${sedesForm.idSedes}"/>
+                                    <a sec:authorize="${hasAnyRole(T(com.proasecal.software.web.controller.seguridad.RolesAccess).permisosPermitidos('/sedes/usuarios'))}"
+                                       th:onclick="'loadModal(\'' + ${row.index} + '\');'"
+                                       class="btn btn-round btn-info btn-xs"><i class="fa fa-wrench"></i> Editar
+                                    </a>
+                                    <a th:if="${usuarioSede.inscripcionMuestrasList!=null && usuarioSede.inscripcionMuestrasList.size()<1}"
+                                       sec:authorize="${hasAnyRole(T(com.proasecal.software.web.controller.seguridad.RolesAccess).permisosPermitidos('/sedes/deleteUsuario'))}"
+                                       th:onclick="'openDeleteModal(\'' + ${row.index} + '\');'"
+                                       class="btn btn-round btn-danger btn-xs"><i class="fa fa-wrench"></i> Eliminar
+                                    </a>
+                                </td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                        <!-- Modal -->
+                        <div class="modal fade" id="modalUsuarios" tabindex="-1" role="dialog"
+                             aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" >Editar / Crear Usuario</h5>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form id="usuarioSedesForm" th:action="@{/sedes/usuarios}" method="post"
+                                              th:object="${usuarioSedesForm}" th:fragment="usuarioSedesForm">
+                                            <input type="hidden"
+                                                   th:name="sedesId" th:id="sedesId"
+                                                   th:value="${sedesForm.idSedes}"/>
+                                            <input type="hidden"
+                                                   th:name="usuarioIds" th:id="usuarioIds"
+                                                   th:field="*{usuarioId.idUsuario}"/>
+                                            <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                                                <label th:for="nombreUsuario">Codigo Proasecal</label>
+                                                <input type="number" class="form-control" th:id="nombreUsuario"
+                                                       th:name="nombreUsuario" required="required"
+                                                       th:field="*{usuarioId.nombreUsuario}" maxlength="8">
+                                                <p th:if="${#fields.hasErrors('usuarioId.nombreUsuario')}"
+                                                   class="label label-danger alerta"
+                                                   th:errors="*{usuarioId.nombreUsuario}"></p>
+                                                <p id="usuarioLbl" style="display:none"
+                                                   class="label label-danger alerta">El código Proasecal ya esta en
+                                                    uso</p>
+                                            </div>
+                                            <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                                                <label th:for="password">Contraseña</label>
+                                                <input type="password" class="form-control" th:id="password"
+                                                       maxlength="13"
+                                                       required="required"
+                                                       th:name="password"
+                                                       th:field="*{usuarioId.password}">
+                                                <p id="passwordLbl" style="display:none"
+                                                   class="label label-danger alerta">La contraseña debe ser mayor a 4
+                                                    caracteres</p>
+
+                                                <p th:if="${#fields.hasErrors('usuarioId.nombreUsuario')}"
+                                                   class="label label-danger alerta"
+                                                   th:errors="*{usuarioId.password}"></p>
+                                            </div>
+
+                                            <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                                                <label th:for="contraseña2">Confirmar contraseña<span
+                                                        class="required">*</span></label>
+                                                <input type="password" required="required" class="form-control"
+                                                       th:id="password2">
+
+                                                <p id="passwordLabel" class="label label-danger alerta"></p>
+                                            </div>
+
+                                            <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                                                <br/>
+
+                                            </div>
+
+                                            <div class="modal-body">
+                                                <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                                                    <button sec:authorize="${hasAnyRole(T(com.proasecal.software.web.controller.seguridad.RolesAccess).permisosPermitidos('/sedes/usuarios'))}"
+                                                            th:type="submit" th:id="saveUser" class="btn btn-success"
+                                                            th:name="saveUser"
+                                                            th:value="saveUser">Aceptar
+                                                    </button>
+                                                    <button type="button" class="btn btn-success" data-dismiss="modal">
+                                                        Cancelar
+                                                    </button>                                                    
+                                                </div>
+
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Fin modal-->
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="openDeleteModal" tabindex="-1" role="dialog"
+                             aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Confirmacion</h5>
+                                    </div>
+
+                                    <div class="modal-body">
+                                        ¿Está seguro de eliminar el registro?</br>
+                                        <input type="hidden" th:id="idUsuarioD" value="idUsuarioD"/>
+                                        <input type="hidden" th:id="idSedeD" value="idSedeD"/>
+                                        <div class="modal-body">
+                                            <button type="button" class="btn btn-success" data-dismiss="modal">Cancelar
+                                            </button>
+                                            <button type="button" class="btn btn-danger" onclick="borrarUsuario();">
+                                                Aceptar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.modal -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div layout:fragment="customjs">
+    <link href="../../../css/form.css" rel="stylesheet">
+    <script src="../../js/sedes/sedesForm.js"></script>
+</div>
+</body>
+</html>

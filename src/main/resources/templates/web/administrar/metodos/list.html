@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{web/fragments/main_layout}">
+<head>
+    <link href="../../css/form.css" rel="stylesheet">
+    <title>Listado de métodos</title>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+<div layout:fragment="content" class="container mySpace">
+    <!-- Bloque de notificación  -->
+    <div th:replace="web/fragments/notify :: notify"/>
+    <!-- Fin bloque de notificación -->
+    <div class="right_col" role="main">
+        <div class="row tile_count">
+            <div class="">
+                <div class="page-title">
+                    <div class="title_left">
+                        <h3>Listado de métodos</h3>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <!--inicio Formulario-->
+                        <div class="x_panel">
+                            <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                                <ul class="nav navbar-left panel_toolbox">
+                                    <li>
+                                        <a class="collapse-link filtroColor">
+                                            <label th:for="filtrosList">Filtro</label>
+                                            <i class="fa fa-chevron-down"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+
+                                <a sec:authorize="${hasAnyRole(T(com.proasecal.software.web.controller.seguridad.RolesAccess).permisosPermitidos('/metodos/create'))}"
+                                   th:href="@{/metodos/create}" class="btn btn-success pull-right">
+	                                               <span class="glyphicon glyphicon-plus-sign"
+                                                         style="color:#FFFFFF"></span> Añadir
+                                </a>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="x_content" style="display: none;margin-bottom: 0;">
+                                <form id="metodoForm" class="form-horizontal form-label-left" style="margin-bottom: 0;">
+                                    <div class="form-group" style="margin-bottom: 0;">
+                                        <div class="col-xs-12 form-group" style="margin-bottom: 0;">
+
+                                            <div class="form-group col-xs-4">
+                                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                                    <label>Programa</label>
+                               
+                                        			  <select  id="programaFront"  style="width: 100%" >
+						                                <option th:value="NULL" th:text="Seleccione... "></option>
+						                                <option th:each="programa : ${programasList}"
+						                                th:selected="${programaFront==programa.nombrePrograma?true:false}"
+						                                        th:text="${programa.nombrePrograma}"
+						                                        th:value="${programa.nombrePrograma}"/>						                                                           
+                                                    	</select>                                                              
+                                                </div>
+                                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                                    <label>Nombre</label>
+                                                    <input type="text" placeholder="Nombre metodo"
+                                                           class="form-control input-sm" th:id="nombreFront"
+                                                           th:name="nombreFront"
+                                                           
+                                                           th:value="${nombreFront}">
+                                                </div>
+                                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                                    <a class="btn btn-primary" id="buscar">
+                                                        <span class="glyphicon glyphicon-search"
+                                                              style="color:#FFFFFF"></span>
+                                                        Buscar
+                                                    </a>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-xs-4">
+                                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                                    <label>Mensurando</label>
+                       
+	                               			  <select  id="mensurandoFront"  style="width: 100%" >
+						                                <option th:value="NULL" th:text="Seleccione... "></option>
+						                                <option th:each="mensurando : ${mensurandoList}"
+						                                th:selected="${mensurandoFront==mensurando.nombreMensurando?true:false}"
+						                                        th:text="${mensurando.nombreMensurando}"
+						                                        th:value="${mensurando.nombreMensurando}"/>						                                                           
+                                                    	</select>                                                         
+
+                                                </div>
+                                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                                    <label>Grupo</label>
+                                                    <input type="number" placeholder="Grupo"
+                                                           class="form-control input-sm" th:id="grupoFront"
+                                                           th:name="grupoFront"
+                                                           th:value="${grupoFront}">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-xs-4">
+                                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                                    <label>Código Proasecal</label>
+                                                    <input type="number" placeholder="Cod Proasecal"
+                                                           class="form-control input-sm" th:id="codProsecalFront"
+                                                           th:name="codProsecalFront"
+                                                           th:value="${codProsecalFront}">
+                                                </div>
+                                                <div class="col-md-12 col-sm-12 col-xs-12 form-group"
+                                                     style="padding:20px">
+
+                                                    <input type="checkbox" class="js-switch"  th:id="estadoFront"
+                                                           th:checked="${estadoFront}"
+                                                    /> <label>Estado</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="x_panel">
+                            <div class="table-responsive">
+                                <p class="text-muted font-13 m-b-30">
+                                    Seleccione el método que desea editar
+                                </p>
+                                <table
+                                        class="table table-dark table-striped table-bordered" style="margin-bottom: 0;">
+                                    <thead>
+                                    <tr>
+                                        <th><a>Programa</a><i id="IcoidMensurandosidProgramanombrePrograma"  class="fa fa-chevron-up iconoOrden"  onclick="redirect('idMensurandos.idPrograma.nombrePrograma');"></i></th>
+                                        <th><a>Mensurando</a><i id="IcoidMensurandosnombreMensurando"  class="fa fa-chevron-up iconoOrden"  onclick="redirect('idMensurandos.nombreMensurando');"></i></th>
+                                        <th><a>Nombre</a><i id="IconombreMetodo"  class="fa fa-chevron-up iconoOrden"  onclick="redirect('nombreMetodo');"></i></th>
+                                        <th><a>Grupo</a><i id="Icogrupo"  class="fa fa-chevron-up iconoOrden"  onclick="redirect('grupo');"></i></th>
+                                        <th><a >Código proasecal</a><i id="IcocodProasecal"  class="fa fa-chevron-up iconoOrden" onclick="redirect('codProasecal');"></i></th>
+                                        <th><a >Estado</a><i id="Icoestado"  class="fa fa-chevron-up iconoOrden"  onclick="redirect('estado');"></i></th>
+                                        <th style="color: #2b7f70 !important">Acciones</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:if="${metodos.getTotalElements()<1}">
+                                        <td colspan="100%"> No se encuentran resultados de metodos</td>
+                                    </tr>
+                                    <tr th:each="metodo : ${metodos}">
+                                        <td th:text="${metodo.idMensurandos.idPrograma.nombrePrograma}"></td>
+                                        <td th:text="${metodo.idMensurandos.nombreMensurando}"></td>
+                                        <td th:text="${metodo.nombreMetodo}"></td>
+                                        <td th:text="${metodo.grupo}"></td>
+                                        <td th:text="${metodo.codProasecal}"></td>
+                                        <td th:text="${metodo.estado == false?'Inactivo':'Activo'}"></td>
+                                        <td>
+                                            <a sec:authorize="${hasAnyRole(T(com.proasecal.software.web.controller.seguridad.RolesAccess).permisosPermitidos('/metodos/edit'))}"
+                                               th:href="@{/metodos/edit/} + ${metodo.metodoId}"
+                                               class="btn btn-round btn-info btn-xs"><i class="fa fa-wrench"></i> Editar
+                                            </a>
+                                            <a sec:authorize="${hasAnyRole(T(com.proasecal.software.web.controller.seguridad.RolesAccess).permisosPermitidos('/metodos/delete'))}"
+                                               th:onclick="'javascript:openDeleteModal(\''+${metodo.metodoId}+'\');'"
+                                               class="btn btn-round btn-danger btn-xs"><i class="fa fa-trash-o"></i>
+                                                Eliminar
+                                            </a>
+                                        </td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+                                <div class="form-group col-md-1">
+                                    <select class="form-control pagination" id="pageSizeSelect">
+                                        <option th:each="pageSize : ${pageSizes}" th:text="${pageSize}"
+                                                th:value="${pageSize}"
+                                                th:selected="${pageSize} == ${selectedPageSize}"></option>
+                                    </select>
+                                </div>
+                                <div th:if="${metodos.totalPages != 1}"
+                                     class="dataTables_paginate paging_simple_numbers pagination-centered">
+                                    <ul class="pagination">
+                                        <li th:class="${metodos.number == 0} ? hidden"><a
+                                                class="pageLink"
+                                                th:href="@{/metodos/list(size=${selectedPageSize}, page=1,programaFront=${programaFront},mensurandoFront=${mensurandoFront},nombreFront=${nombreFront},grupoFront=${grupoFront},codProsecalFront=${codProsecalFront},estadoFront=${estadoFront},nameColumn=${nameColumn},sortBy=${sort} )}">&laquo;</a>
+                                        </li>
+                                        <li th:class="${metodos.number == 0} ? hidden"><a
+                                                class="pageLink"
+                                                th:href="@{/metodos/list(size=${selectedPageSize}, page=${metodos.number},programaFront=${programaFront},mensurandoFront=${mensurandoFront},nombreFront=${nombreFront},grupoFront=${grupoFront},codProsecalFront=${codProsecalFront},estadoFront=${estadoFront},nameColumn=${nameColumn},sortBy=${sort} )}">&larr;</a>
+                                        </li>
+                                        <li
+                                                th:class="${metodos.number == (page - 1)} ? 'active pointer-disabled'"
+                                                th:each="page : ${#numbers.sequence(pager.startPage, pager.endPage)}">
+                                            <a class="pageLink"
+                                               th:href="@{/metodos/list(size=${selectedPageSize}, page=${page},programaFront=${programaFront},mensurandoFront=${mensurandoFront},nombreFront=${nombreFront},grupoFront=${grupoFront},codProsecalFront=${codProsecalFront},estadoFront=${estadoFront},nameColumn=${nameColumn},sortBy=${sort} )}"
+                                               th:text="${page}"></a>
+                                        </li>
+                                        <li
+                                                th:class="${metodos.number + 1 == metodos.totalPages} ? hidden">
+                                            <a class="pageLink"
+                                               th:href="@{/metodos/list(size=${selectedPageSize}, page=${metodos.number + 2},programaFront=${programaFront},mensurandoFront=${mensurandoFront},nombreFront=${nombreFront},grupoFront=${grupoFront},codProsecalFront=${codProsecalFront},estadoFront=${estadoFront},nameColumn=${nameColumn},sortBy=${sort}   )}">&rarr;</a>
+                                        </li>
+                                        <li
+                                                th:class="${metodos.number + 1 == metodos.totalPages} ? hidden">
+                                            <a class="pageLink"
+                                               th:href="@{/metodos/list(size=${selectedPageSize}, page=${metodos.totalPages},programaFront=${programaFront},mensurandoFront=${mensurandoFront},nombreFront=${nombreFront},grupoFront=${grupoFront},codProsecalFront=${codProsecalFront},estadoFront=${estadoFront},nameColumn=${nameColumn},sortBy=${sort}   )}">&raquo;</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--fin tabla para consultar existentes-->
+                    <!-- Modal -->
+                    <div class="modal fade" id="openDeleteModal" tabindex="-1" role="dialog"
+                         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Confirmación</h5>
+                                </div>
+
+                                <div class="modal-body">
+                                    ¿Está seguro de eliminar el registro?</br>
+                                    <input type="hidden" th:id="idMetodoD" value="idMetodoD"/>
+                                    <div class="modal-body">
+                                        <button type="button" class="btn btn-success" data-dismiss="modal">Cancelar
+                                        </button>
+                                        <button type="button" class="btn btn-danger" onclick="borrarMetodos()">Aceptar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- /.modal -->
+                    <div layout:fragment="customjs">
+                        <script th:inline="javascript">
+	                        /*<![CDATA[*/
+	                        var sort = /*[[${sort}]]*/ 'ASC';
+	                        var nameColumn = /*[[${nameColumn}]]*/ 'idPrograma.nombrePrograma';
+	                        /*]]>*/
+                        </script>
+                        <script src="../../js/metodos/metodosList.js"></script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

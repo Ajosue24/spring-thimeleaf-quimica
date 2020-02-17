@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{controlexterno/controlExternoFragments/ce_layout}">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Proasecal S.A.S:Results</title>
+    <script src="../../../controlexterno/ckeditor/ckeditor.js"></script>
+</head>
+
+<body>
+<div layout:fragment="cont">
+    <span class="preload">
+		<i class="fa fa-spinner fa-spin"></i>
+	</span>
+    <div class="bbody">
+        <div class="tabcontent">
+            <div th:object="${muestraInfo}">
+                <div class="titFormSample">
+                    <span class="titulo">Muestra: </span>
+                    <input id="idMuestra" hidden="hidden" th:value="*{muestraId}">
+                    <span class="texto" th:text="*{numeroMuestra}"></span>
+                </div>
+
+                <table colspan="6">
+                    <tbody>
+                    <tr>
+                        <td colspan="6">
+                            <span class="boldText"> Programa </span><span th:text="*{idPrograma.nombrePrograma}"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6">
+                            <span class="boldText"> Tipo de muestra</span>
+                            <span th:text="*{idTipoMuestra.nombre}"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="boldText"> Fecha de bloqueo</span>
+                        </td>
+                        <td>
+                            <span th:text="${#dates.format(muestraInfo.fechaBloqueo, 'yyyy/MM/dd HH:mm')}"></span>
+                        </td>
+                        <td>
+                            <span class="boldText"> Fecha de cierre</span>
+                        </td>
+                        <td>
+                            <span th:text="${#dates.format(muestraInfo.fechaCierre, 'yyyy/MM/dd HH:mm')}"></span>
+                        </td>
+                        <td>
+                            <span class="boldText"> Fecha de liberación de resultados</span>
+                        </td>
+                        <td>
+                            <span th:text="${#dates.format(muestraInfo.fechaLibResultado, 'yyyy/MM/dd HH:mm')}"></span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!--filtro-->
+            <div style="border:solid; border-color:#6bb460; border-width:2px; padding:10px 30px; margin-bottom:15px">
+                <table>
+                    <thead>
+                    <tr>
+                        <th width="14%">Laboratorio</th>
+                        <th width="14%">Sede</th>
+                        <th width="14%">Usuario</th>
+                        <th width="14%">Estado resultados</th>
+                        <th width="14%">Estado proceso</th>
+                        <th width="16%"></th>
+                        <th width="14%"></th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr>
+                        <td>
+                            <select th:id="laboratorio" th:name="laboratorio"
+                                    style="color:black; width: 100%; margin-top:10px">
+                                <option th:value="NULL" th:text="Seleccione... "></option>
+                                <option th:fragment="modelsLab"
+                                        th:each="modelLab : ${modelsLab}"
+                                        th:text="${modelLab.razonSocial}"
+                                        th:selected="(${modelLab.idLaboratoriosSedes} == ${laboratorio})"
+                                        th:value="${{modelLab}}" th:id="${modelLab.idLaboratoriosSedes}"/>
+                            </select>
+                        </td>
+                        <td>
+                            <select th:id="sede" th:name="sede" style="color:black; width: 100%; margin-top:10px">
+                                <option th:value="NULL" th:text="Seleccione... "></option>
+                                <option th:fragment="modelsSede"
+                                        th:each="modelSede : ${modelsSede}"
+                                        th:text="${modelSede.nombreSede}"
+                                        th:selected="(${modelSede.idSedes} == ${sede})"
+                                        th:value="${{modelSede}}" th:id="${modelSede.idSedes}"/>
+                            </select>
+                        </td>
+                        <td>
+                            <select th:id="usuario" th:name="usuario" style="color:black; width: 100%; margin-top:10px">
+                                <option th:value="NULL" th:text="Seleccione... "></option>
+                                <option th:fragment="modelsUsu"
+                                        th:each="modelUsu : ${modelsUsu}"
+                                        th:text="${modelUsu.nombreUsuario}"
+                                        th:selected="(${modelUsu.idUsuario} == ${usuario})"
+                                        th:value="${{modelUsu}}" th:id="${modelUsu.idUsuario}"/>
+                            </select>
+                        </td>
+                        <td>
+                            <select th:id="resultado" style="color:black; width: 100%; margin-top:10px">
+                                <option th:value="NULL" th:text="Seleccione... "></option>
+                                <option th:value="false" th:selected="${resultado=='false'}"
+                                        th:text="'En fecha'"></option>
+                                <option th:value="true" th:selected="${resultado=='true'}"
+                                        th:text="'Fuera de fecha'"></option>
+                                <option th:value="'no'" th:selected="${resultado=='no'}"
+                                        th:text="'No informado'"></option>
+                            </select>
+                        </td>
+                        <td>
+                            <select th:id="proceso" style="color:black; width: 100%; margin-top:10px">
+                                <option th:value="NULL" th:text="Seleccione... "></option>
+                                <option th:value="1" th:selected="${proceso=='1'}"
+                                        th:text="'Revisión'"></option>
+                                <option th:value="2" th:selected="${proceso=='2'}"
+                                        th:text="'Versión generada'"></option>
+                            </select>
+                        </td>
+                        <td></td>
+                        <td>
+                            <button id=revisionFiltro class="buttonProasecal">Buscar</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!--Mensaje-->
+            <div class="formError" style="background: #FFDDDE;" th:if="${mensaje}">
+                <p style="font-weight: bolder; padding:3px; text-align:justify;">
+                    Se reconocen cambios en los escenarios fijos
+                </p>
+            </div>
+
+            <!--botones-->
+            <button type="button" name="cancel" class="buttonProasecal cancel"
+                    th:onclick="'javascript:regresarSimulacion(\''+*{muestraInfo.getMuestraId()}+'\');'">Regresar
+            </button>
+            <button th:onclick="'javascript:generarInformes(\''+${muestraInfo.muestraId}+'\')'" class="buttonProasecal">
+                Generar informes
+            </button>
+            <button th:if="${boton}"
+                    th:onclick="'javascript:generarVersionDefinitiva(\''+${muestraInfo.muestraId}+'\')'"
+                    class="buttonProasecal">Generar versiones definitivas
+            </button>
+
+            <!--Observaciones-->
+            <div class="titFormSample">
+                <br><span class="titulo">Observaciones generales de la muestra</span>
+            </div>
+            <!--Si todos los resultados estan en versión generada se habilita el "readOnly" para las observaciones-->
+            <input hidden="hidden" id="observacionReadOnly" th:value="${observacionReadOnly}">
+
+            <div th:each="observacion: *{observaciones}" style="margin-top: 15px">
+
+                <span class="observacion">[[${observacion.nombre}]]</span>
+                <span th:id="'btn'+${observacion.idTipo}"
+                      th:onclick="'javascript:seccionObservacion(event,\''+${observacion.idTipo}+'\')'"
+                      class="ajaxItemTitle" style="cursor:pointer; font-weight: bolder">+</span>
+
+                <img th:if="!${observacionReadOnly}" th:id="'img'+${observacion.idTipo}"
+                     th:onclick="'guardarObservacion('+${observacion.idTipo}+')'"
+                     th:title="'Guardar '+${observacion.nombre}"
+                     src="../../controlexterno/images/ok.svg" class="smallIcon"
+                     style="margin-left: 20px; display: none; cursor: pointer">
+
+                <br><br>
+
+                <div style="display: none" th:id="'secobservacion'+${observacion.idTipo}">
+                    <textarea th:name="'TA'+${observacion.idTipo}"
+                              th:id="'TA'+${observacion.idTipo}"
+                              th:text="${observacion.observacion}"
+                              rows="10" cols="80" ckeditor>
+                    </textarea>
+                </div>
+            </div>
+
+            <br>
+
+            <!--Información de los párticipantes-->
+            <div class="titFormSample">
+                <span class="titulo">Informacion de los participantes</span>
+            </div>
+
+            <table>
+                <thead>
+                <tr>
+                    <th>Laboratorio</th>
+                    <th>Sede</th>
+                    <th>Usuario</th>
+                    <th>Reportó</th>
+                    <th>Versión actual</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                    <th>Consolidado</th>
+                    <th>Revisión</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="infoParticipantes: ${modelsListUsuarios}">
+                    <td>[[${infoParticipantes.idUsuarios.idLaboratoriosSedes.razonSocial}]]</td>
+                    <td>[[${infoParticipantes.idUsuarios.idSedes.nombreSede}]]</td>
+                    <td>[[${infoParticipantes.idUsuarios.usuarioId.nombreUsuario}]]</td>
+
+                    <!--Reportó-->
+                    <td>
+                        <div th:if="${infoParticipantes.getResultadosList().size()<1}">
+                            <span style="color:black">No informado</span>
+                        </div>
+                        <div th:unless="${infoParticipantes.getResultadosList().size()<1}">
+                            <div th:switch="${infoParticipantes.getResultadosList().get(0).getResultadoFecha()}">
+                                <span th:case="${false}" style="color:green">En fecha</span>
+                                <span th:case="${true}" style="color: red;">Fuera de fecha</span>
+                            </div>
+                        </div>
+                    </td>
+
+                    <!--Versión-->
+                    <td>
+                        <div th:if="${infoParticipantes.getResultadosList().size()>0  && infoParticipantes.getResultadosList().get(0).informesList.size()>0 &&infoParticipantes.getResultadosList().get(0).getInformesList().get(infoParticipantes.getResultadosList().get(0).getInformesList().size()-1).esVersion}">
+                            <span th:text="${infoParticipantes.getResultadosList().get(0).getInformesList().get(infoParticipantes.getResultadosList().get(0).getInformesList().size()-1).numeroVersion}"> </span>
+                        </div>
+                    </td>
+
+                    <!--Estado-->
+                    <td>
+                        <div th:if="${infoParticipantes.getResultadosList().size()>0 && infoParticipantes.getResultadosList().get(0).informesList.size()>0 }">
+                            <div th:switch="${infoParticipantes.getResultadosList().get(0).getInformesList().get(infoParticipantes.getResultadosList().get(0).getInformesList().size()-1).estadoProceso}">
+                                <span th:case="1">Revisión</span>
+                                <span th:case="2">Versión generada</span>
+                            </div>
+                        </div>
+                    </td>
+
+                    <!--Acciones-->
+                    <td>
+                        <div th:if="${infoParticipantes.getResultadosList().size()>0 && infoParticipantes.getResultadosList().get(0).getResultadoFecha()}">
+                            <img th:onclick="'javascript:generarInformeFueraFecha(\''+${infoParticipantes.idInscripcionMuestras}+'\')'"
+                                 class="smallIcon" src="../../../controlexterno/images/start_process.svg"
+                                 title="Generar informe fuera de fecha" style="float: left;cursor: pointer">
+                        </div>
+
+                        <div th:if="${infoParticipantes.getResultadosList().size()>0&&infoParticipantes.getResultadosList().get(0).informesList.size()>0}">
+                            <div th:each="informeVersion: ${infoParticipantes.getResultadosList().get(0).informesList}">
+                                <div th:if="${informeVersion.esVersion}">
+                                    <img class="smallIcon" src="../../../controlexterno/images/approval.svg"
+                                         th:title="Versión+' '+${informeVersion.numeroVersion}"
+                                         style="float: left;cursor: pointer">
+                                </div>
+
+                            </div>
+                        </div>
+                        <div th:if="${infoParticipantes.getResultadosList().size()>0&&infoParticipantes.getResultadosList().get(0).informesList.size()>0}">
+                            <div th:if="${!infoParticipantes.getResultadosList().get(0).getInformesList().get(infoParticipantes.getResultadosList().get(0).getInformesList().size()-1).esVersion}">
+                                <img class="smallIcon" src="../../../controlexterno/images/fine_print.svg"
+                                     title="Consultar informe" style="float: left;cursor: pointer">
+                                <img th:onclick="'javascript:openModal(\''+${infoParticipantes.idInscripcionMuestras}+'\',\''+${infoParticipantes.resultadosList.get(0).idInscripcionMuestras.idUsuarios.usuarioId.codProasecal}+'\');'"
+                                     class="smallIcon" src="../../../controlexterno/images/add_row.svg"
+                                     title="Administrar observación individual" style="float: left;cursor: pointer">
+                            </div>
+                        </div>
+                    </td>
+
+                    <!--Consolidado-->
+                    <td>
+                        <div th:if="${infoParticipantes.getResultadosList().size()>0  && infoParticipantes.getResultadosList().get(0).informesList.size()>0 }">
+                            <img class="smallIcon" src="../../../controlexterno/images/todo_list.svg">
+                        </div>
+                    </td>
+
+                    <!--Revisión-->
+                    <td>
+                        <div th:if="${infoParticipantes.getResultadosList().size()>0 && infoParticipantes.getResultadosList().get(0).informesList.size()>0&&!infoParticipantes.getResultadosList().get(0).getInformesList().get(infoParticipantes.getResultadosList().get(0).getInformesList().size()-1).esVersion}">
+                            <div th:if="${!infoParticipantes.getResultadosList().get(0).getInformesList().get(infoParticipantes.getResultadosList().get(0).getInformesList().size()-1).revisionDirector}OR${!infoParticipantes.getResultadosList().get(0).getInformesList().get(infoParticipantes.getResultadosList().get(0).getInformesList().size()-1).revisionRevisor}">
+
+                                    <div sec:authorize="hasRole('ROLE_DIRECTOR DE PROGRAMA') Or hasRole('ROLE_ADMIN')" th:if="${!infoParticipantes.getResultadosList().get(0).getInformesList().get(infoParticipantes.getResultadosList().get(0).getInformesList().size()-1).revisionDirector}">
+                                        <input type="checkbox"
+                                               th:id="'RevisionDirector' + ${infoParticipantes.getResultadosList().get(0).getInformesList().get(infoParticipantes.getResultadosList().get(0).getInformesList().size()-1).getIdInformes()} +''"
+                                               th:checked="${infoParticipantes.getResultadosList().get(0).getInformesList().get(infoParticipantes.getResultadosList().get(0).getInformesList().size()-1).revisionDirector}"
+                                               th:onclick="'actualizarRevisionDirector('+${infoParticipantes.getResultadosList().get(0).getInformesList().get(infoParticipantes.getResultadosList().get(0).getInformesList().size()-1).getIdInformes()}+')'"
+                                               title="Director"/>
+                                    </div>
+                                    <div sec:authorize="hasRole('ROLE_ASESOR DE PROGRAMAS') Or hasRole('ROLE_ADMIN')" th:if="${infoParticipantes.getResultadosList().get(0).getInformesList().get(infoParticipantes.getResultadosList().get(0).getInformesList().size()-1).revisionDirector}">
+                                        <input type="checkbox"
+                                               th:id="'RevisionRevisor' + ${infoParticipantes.getResultadosList().get(0).getInformesList().get(infoParticipantes.getResultadosList().get(0).getInformesList().size()-1).getIdInformes()} +''"
+                                               th:checked="${infoParticipantes.getResultadosList().get(0).getInformesList().get(infoParticipantes.getResultadosList().get(0).getInformesList().size()-1).revisionRevisor}"
+                                               th:onclick="'actualizarRevisionRevisor('+${infoParticipantes.getResultadosList().get(0).getInformesList().get(infoParticipantes.getResultadosList().get(0).getInformesList().size()-1).getIdInformes()}+','+${infoParticipantes.getResultadosList().get(0).getResultadoFecha()}+')'"
+                                               title="Revisor"/>
+                                    </div>
+
+                            </div>
+
+                            <div th:if="${infoParticipantes.getResultadosList().get(0).getInformesList().get(infoParticipantes.getResultadosList().get(0).getInformesList().size()-1).revisionDirector}AND${infoParticipantes.getResultadosList().get(0).getInformesList().get(infoParticipantes.getResultadosList().get(0).getInformesList().size()-1).revisionRevisor}">
+                                <img class="smallIcon" src="../../../controlexterno/images/inspection.svg">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <!--Modal-->
+            <div class="modal fade" id="openDeleteModal" tabindex="-1" role="dialog"
+                 aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document" style="min-width: 95%">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle"></h5>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+
+                        <div class="modal-body">
+                            <label id="idInscripcionMuestra" hidden="hidden"></label>
+
+                            <textarea name="obsIndividual" id="obsIndividual" rows="10" cols="80"
+                                      style="max-width: 90%"></textarea>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button onclick="observacionIndividual()" id="saveObsIndividual" class="buttonProasecal">
+                                Guardar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div layout:fragment="customjs">
+    <script src="../../../controlexterno/js/revisionResultados/revisionResultados.js"></script>
+    <script src="../../../controlexterno/js/simulacion/moduloSimulacion.js"></script>
+</div>
+</body>
+</html>

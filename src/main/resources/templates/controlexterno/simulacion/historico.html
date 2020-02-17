@@ -1,0 +1,22 @@
+<div th:fragment="historico" xmlns:th="http://www.w3.org/1999/xhtml">
+
+    <div id="historicoFrag" th:fragment="historicoFrag">
+        <div class="titFormSample">
+            <span class="titulo">Historico</span>
+        </div><br>
+
+        <div th:each="noHistorico: ${noHistorico}">
+            <span>[[${noHistorico}]]</span>
+        </div>
+
+        <div th:each="historicoEscenarios: ${historico}">
+            <b> • &nbsp</b>
+            <b style="color:#6990F2"> > </b>
+            <span>[[${#dates.format(historicoEscenarios.fechaCreacion, 'yyyy-MM-dd HH:mm')}]]</span>
+            <b style="color:#4AB80C"
+               th:text="${historicoEscenarios.esVersion}?'(Version '+${historicoEscenarios.numeroVersion}+')':''"></b>
+            <b style="color:#624AFE"> → F: </b>
+            <span> Método: [[${historicoEscenarios.metodoId.codProasecal}+' - '+ ${historicoEscenarios.metodoId.nombreMetodo}]] </span>
+        </div>
+    </div>
+</div>

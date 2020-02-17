@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{web/fragments/main_layout}">
+<head>
+    <title>Gestión de reactivos (Crear)</title>
+
+    <!-- Custom Theme Style -->
+    <link href="../../build/css/custom.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/general.css}"
+          href="../../css/general.css"/>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+<div layout:fragment="content" class="container mySpace">
+    <div class="right_col" role="main">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2>
+                    Creación/Edicionón de reactivo
+                </h2>
+                <a href="/reactivos/list" class="btn btn-success pull-right"> <span
+                        class="glyphicon glyphicon-chevron-left" style="color: #FFFFFF"></span>Atras
+                </a>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <!-- <br/>-->
+                <div class="col-md-8 col-md-offset-2">
+                    <!-- Bloque de notificación  -->
+                    <div th:replace="web/fragments/notify :: notify"/>
+                    <!-- Fin bloque de notificación -->
+                    <form action="#" id="reactivoForm" th:action="@{/reactivos/save}"
+                          th:object="${reactivoForm}" method="post"  style="display:none">
+
+                        <input type="hidden" th:id="reactivoId"
+                               th:name="reactivoId" th:field="*{reactivoId}"
+                               class="form-control col-md-7 col-xs-12"/>
+
+                        <div class="form-group">
+                            <!-- <label class="control-label" for="nombre">Programa<span
+                                class="required">*</span>
+                            </label>
+                            <div class="">
+                                <select class="form-control" th:id="idPrograma"
+                                    th:name="idPrograma" th:field="*{idPrograma}">
+                                    <option value="1">Química</option>
+                                </select>
+                            </div>-->
+
+                            <label th:for="programa">Programa<span
+                                    class="required">*</span></label>
+                            <select th:field="*{idPrograma}" id="programas" class="form-control"  required="required" style="width: 100%">
+                                <option th:value="NULL" th:text="Seleccione... "></option>
+                                <option th:each="programa : ${programasList}"
+                                        th:text="${programa.nombrePrograma}"
+                                        th:value="${{programa}}" th:id="${programa.programaId}"/>
+                            </select>
+                            <p th:if="${#fields.hasErrors('idPrograma')}"
+                               class="label label-danger" th:errors="*{idPrograma}">Incorrect</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label" th:for="nombreReactivo">Nombre<span
+                                    class="required">*</span>
+                            </label>
+                            <div class="">
+                                <input type="text" th:id="nombreReactivo"
+                                       th:name="nombreReactivo" th:field="*{nombreReactivo}"
+                                       required="required" class="form-control col-md-7 col-xs-12"/>
+                            </div>
+                            <p th:if="${#fields.hasErrors('nombreReactivo')}"
+                               class="label label-danger" th:errors="*{nombreReactivo}">Incorrect</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label" th:for="grupo">Grupo</label>
+                            <div class="">
+                                <input type="number" th:id="grupo" th:name="grupo"
+                                       th:field="*{grupo}"
+                                       class="form-control col-md-7 col-xs-12"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="" th:for="codProasecal">Código proasecal<span
+                                    class="required">*</span>
+                            </label>
+                            <div class="">
+                                <input type="number" th:id="codProasecal" th:name="codProasecal"
+                                       th:field="*{codProasecal}" required="required"
+                                       class="form-control col-md-7 col-xs-12"/>
+                            </div>
+                            <p th:if="${#fields.hasErrors('codProasecal')}"
+                               class="label label-danger" th:errors="*{codProasecal}">Incorrect</p>
+                        </div>
+                        <br><br>
+                        <div class="form-group">
+                            <div class="col-xs-12 ">
+                                <label>
+											<!--cambio de " Desactivar / Activar" a "Estado" -->
+                                    <input type="checkbox" class="js-switch" checked th:id="estado"
+	                                              th:field="*{estado}"/> Estado
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <br>
+                                <button sec:authorize="${hasAnyRole(T(com.proasecal.software.web.controller.seguridad.RolesAccess).permisosPermitidos('/reactivos/save'))}"
+                                        class="btn btn-success" type="submit">Guardar
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div layout:fragment="customjs">
+    <script src="../../js/reactivos/reactivo.js"></script>
+</div>
+
+</body>
+
+</html>

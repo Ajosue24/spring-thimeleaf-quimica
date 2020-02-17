@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{web/fragments/main_layout}">
+<head>
+    <link href="../../css/form.css" rel="stylesheet">
+    <title>Lista de laboratorios</title>
+
+    <meta charset="UTF-8">
+</head>
+
+<body>
+<div layout:fragment="content" class="container mySpace">
+    <!-- Bloque de notificación  -->
+    <div th:replace="web/fragments/notify :: notify"/>
+    <!-- Fin bloque de notificación -->
+    <div class="right_col" role="main">
+        <div class="row tile_count">
+            <div class="">
+                <div class="page-title">
+                    <div class="title_left">
+                        <h3>Listado de laboratorios</h3>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <!--inicio Formulario-->
+                        <div class="x_panel">
+                            <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                                <ul class="nav navbar-left panel_toolbox">
+                                    <li>
+                                        <a class="collapse-link filtroColor">
+                                            <label th:for="filtrosList">Filtro</label>
+                                            <i class="fa fa-chevron-down"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+
+                                <a th:href="@{/laboratorios/form}" class="btn btn-success pull-right">
+                                                <span class="glyphicon glyphicon-plus-sign"
+                                                      style="color:#FFFFFF"></span> Añadir
+                                </a>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="x_content" style="display: none;margin-bottom: 0;">
+                                <form id="laboratorioForm" class="form-horizontal form-label-left"
+                                      style="margin-bottom: 0;">
+                                    <div class="form-group" style="margin-bottom: 0;">
+                                        <div class="col-xs-12 form-group" style="margin-bottom: 0;">
+
+                                            <div class="form-group col-xs-4">
+                                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                                    <label>País</label>
+                                                    <select class="form-control" id="pais" style="width: 100%;">
+                                                        <option th:value="NULL" th:text="Seleccione... "></option>
+                                                        <option th:each="pais2 : ${paisList}"
+                                                        		th:selected="${pais==pais2.nombrePais?true:false}"
+                                                                th:text="${pais2.nombrePais}"
+                                                                th:value="${pais2.nombrePais}"/>
+                                                    </select>                                                           
+                                                </div>
+                                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                                     <label>Razón social</label>
+                                                    <input type="text" placeholder="Razón social"
+                                                           class="form-control input-sm" id="razonSocial"
+                                                           th:value="${razonSocial}">
+                                                </div>
+                                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                                    <a class="btn btn-primary" id="buscar">
+                                                        <span class="glyphicon glyphicon-search"
+                                                              style="color:#FFFFFF"></span>
+                                                        Buscar
+                                                    </a>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-xs-4">
+                                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                                    <label>Tipo de identificación</label>                                                    
+                                        			  <select  th:id="tipoId" class="form-control" style="width: 100%">
+						                                <option th:value="NULL" th:text="Seleccione... "></option>
+						                                <option th:each="tipoDoc : ${tipoDocList}"
+						                                 th:selected="${tipoId==tipoDoc.nombreId?true:false}"
+						                                        th:text="${tipoDoc.nombreId}"
+						                                        th:value="${tipoDoc.nombreId}"/>						                                                           
+                                                    	</select>                                                       
+                                                </div>
+                                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                                    <label>Nombre comercial</label>
+                                                    <input type="text" placeholder="Nombre comercial"
+                                                           class="form-control input-sm" id="nombreComercial"
+                                                           th:value="${nombreComercial}">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-xs-4">
+                                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                                                                                       <label>Número de identificación</label>
+                                                    <input type="text" placeholder="Número de identificación"
+                                                           class="form-control input-sm" id="id"
+                                                           th:value="${id}">
+                                                </div>
+                                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                                    <label>Cliente</label>
+                                                    <select class="form-control" id="cliente" style="width: 100%;">
+                                                        <option th:value="NULL" th:text="_"></option>
+                                                        <option th:each="cliente2 : ${clientesList}"
+                                                                th:selected="${cliente==cliente2.numeroIdentificacionCliente?true:false}"
+                                                                th:text="${cliente2.numeroIdentificacionCliente +' | '+cliente2.razonSocial}"
+                                                                th:value="${cliente2.numeroIdentificacionCliente}"/>
+                                                    </select>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>                            
+
+                            </div>
+                        </div>
+
+                        <div class="x_panel">
+                            <div class="table-responsive">
+                                <p class="text-muted font-13 m-b-30">
+                                    Seleccione el laboratorio que desea editar
+                                </p>
+                                <table class="table table-dark table-striped table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th><a >País</a><i id="IcoidPaisnombrePais"  class="fa fa-chevron-up iconoOrden" onclick="redirect('idPais.nombrePais');"></i></th>
+                                        <th><a>Tipo identificación</a><i id="IcoidTipoPaisnombreId"  class="fa fa-chevron-up iconoOrden" onclick="redirect('idTipoPais.nombreId');"></i></th>
+                                        <th><a>Número identificación</a><i id="IconumeroIdentificacion"  class="fa fa-chevron-up iconoOrden"  onclick="redirect('numeroIdentificacion');"></i></th>
+                                        <th><a>Razón social</a><i id="IcorazonSocial"  class="fa fa-chevron-up iconoOrden"  onclick="redirect('razonSocial');"></i></th>
+                                        <th><a>Cliente</a><i id="IcoclienteIdrazonSocial"  class="fa fa-chevron-up iconoOrden" onclick="redirect('clienteId.razonSocial');"></i></th>
+                                        <th style="color: #2b7f70 !important">Acciones</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    <tr th:if="${listaLaboratorios.getTotalElements()<1}">
+                                        <td colspan="100%">No se encuentran resultados de Laboratorios.</td>
+                                    </tr>
+
+                                    <tr th:each="listaLaboratorios: ${listaLaboratorios}">
+                                        <td th:text="${listaLaboratorios.idPais.nombrePais}"></td>
+                                        <td th:text="${listaLaboratorios.idTipoPais.nombreId}"></td>
+                                        <td th:text="${listaLaboratorios.numeroIdentificacion}"></td>
+                                        <td th:text="${listaLaboratorios.razonSocial}"></td>
+                                        <td th:text="${listaLaboratorios.clienteId.razonSocial}"></td>
+                                        <td>
+                                            <a sec:authorize="${hasAnyRole(T(com.proasecal.software.web.controller.seguridad.RolesAccess).permisosPermitidos('/laboratorios/form'))}"
+                                               th:href="@{/laboratorios/form/} + ${listaLaboratorios.idLaboratoriosSedes}"
+                                               class="btn btn-round btn-info btn-xs"><i class="fa fa-edit"></i> Editar
+                                            </a>
+
+                                            <a sec:authorize="${hasAnyRole(T(com.proasecal.software.web.controller.seguridad.RolesAccess).permisosPermitidos('/sedes/list'))}"
+                                               th:if="${listaLaboratorios.laboratSedesList.size()>=1}"
+                                               th:href="@{/sedes/list(laboratorioFront=${listaLaboratorios.numeroIdentificacion}+' l '+${listaLaboratorios.razonSocial})}"
+                                               laboratorio=123456%20l%20Razón%20Prueba
+                                               class="btn btn-round btn-default btn-xs"><i class="fa fa-search"></i>Sedes
+                                            </a>
+
+                                            <a sec:authorize="${hasAnyRole(T(com.proasecal.software.web.controller.seguridad.RolesAccess).permisosPermitidos('/laboratorios/delete'))}"
+                                               th:if="${listaLaboratorios.laboratSedesList.size()<1}"
+                                               th:onclick="'javascript:openDeleteModal(\''+${listaLaboratorios.idLaboratoriosSedes}+'\');'"
+                                               class="btn btn-round btn-danger btn-xs"><i class="fa fa-trash-o"></i>Eliminar
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <div class="form-group col-md-1">
+                                    <select class="form-control pagination" id="pageSizeSelect">
+                                        <option th:each="pageSize : ${pageSizes}" th:text="${pageSize}"
+                                                th:value="${pageSize}"
+                                                th:selected="${pageSize} == ${selectedPageSize}"></option>
+                                    </select>
+                                </div>
+                                <div th:if="${listaLaboratorios.totalPages != 1}"
+                                     class="dataTables_paginate paging_simple_numbers pagination-centered">
+                                    <ul class="pagination">
+                                        <li th:class="${listaLaboratorios.number == 0} ? hidden"><a
+                                                class="pageLink"
+                                                th:href="@{/laboratorios/list(size=${selectedPageSize}, page=1, cliente=${cliente}, nombreComercial =${nombreComercial},razonSocial=${razonSocial}, pais =${pais}, tipoId=${tipoId}, id=${id},nameColumn=${nameColumn},sortBy=${sort})}">&laquo;</a>
+                                        </li>
+                                        <li th:class="${listaLaboratorios.number == 0} ? hidden"><a
+                                                class="pageLink"
+                                                th:href="@{/laboratorios/list(size=${selectedPageSize}, page=${listaLaboratorios.number}, cliente=${cliente}, nombreComercial =${nombreComercial},razonSocial=${razonSocial}, pais =${pais}, tipoId=${tipoId}, id=${id},nameColumn=${nameColumn},sortBy=${sort})}">&larr;</a>
+                                        </li>
+                                        <li
+                                                th:class="${listaLaboratorios.number == (page - 1)} ? 'active pointer-disabled'"
+                                                th:each="page : ${#numbers.sequence(pager.startPage, pager.endPage)}">
+                                            <a class="pageLink"
+                                               th:href="@{/laboratorios/list(size=${selectedPageSize}, page=${page},cliente=${cliente}, nombreComercial =${nombreComercial},razonSocial=${razonSocial}, pais =${pais}, tipoId=${tipoId}, id=${id},nameColumn=${nameColumn},sortBy=${sort})}"
+                                               th:text="${page}"></a>
+                                        </li>
+                                        <li
+                                                th:class="${listaLaboratorios.number + 1 == listaLaboratorios.totalPages} ? hidden">
+                                            <a class="pageLink"
+                                               th:href="@{/laboratorios/list(size=${selectedPageSize}, page=${listaLaboratorios.number + 2},cliente=${cliente}, nombreComercial =${nombreComercial},razonSocial=${razonSocial}, pais =${pais}, tipoId=${tipoId}, id=${id},nameColumn=${nameColumn},sortBy=${sort})}">&rarr;</a>
+                                        </li>
+                                        <li
+                                                th:class="${listaLaboratorios.number + 1 == listaLaboratorios.totalPages} ? hidden">
+                                            <a class="pageLink"
+                                               th:href="@{/laboratorios/list(size=${selectedPageSize}, page=${listaLaboratorios.totalPages},cliente=${cliente}, nombreComercial =${nombreComercial},razonSocial=${razonSocial}, pais =${pais}, tipoId=${tipoId}, id=${id},nameColumn=${nameColumn},sortBy=${sort})}">&raquo;</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--fin tabla para consultar existentes-->
+                    <!-- Modal -->
+                    <div class="modal fade" id="openDeleteModal" tabindex="-1" role="dialog"
+                         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Confirmación</h5>
+                                </div>
+
+                                <div class="modal-body">
+                                    ¿Está seguro de eliminar el laboratorio?</br>
+                                    <input type="hidden" th:id="idLabD" value="idLabD"/>
+                                    <div class="modal-body">
+                                        <button type="button" class="btn btn-success" data-dismiss="modal">Cancelar
+                                        </button>
+                                        <button type="button" class="btn btn-danger" onclick="eliminar()">Aceptar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div layout:fragment="customjs">
+                        <script th:inline="javascript">
+                            /*<![CDATA[*/
+                            var sort = /*[[${sort}]]*/ 'ASC';
+                            var nameColumn = /*[[${nameColumn}]]*/ 'idPais';
+                            /*]]>*/
+                        </script>
+                        <script src="../../js/laboratorios/laboratoriosList.js"></script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

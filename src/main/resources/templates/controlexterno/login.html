@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Proasecal S.A.S: Users </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <div th:replace="controlexterno/controlExternoFragments/listCss :: listCss"/>
+    <link rel="stylesheet" href="../../controlexterno/css/login.css">
+</head>
+
+<body>
+
+<div id="container">
+    <div id="header"><img src="../../controlexterno/images/proasecal.png" alt="CakePHP" width="200px"></div>
+    <div id="userInfo"></div>
+    <div id="menuProasec" class="clearDiv"></div>
+    <div id="userNotifications" class="clearDiv"></div>
+    <div id="ajaxErrContainer" class="clearDiv"></div>
+    <div id="content" style="clear: both;position:absolute;min-height: 100%">
+        <div th:if="${param.error}" class="message error">
+            datos de acceso incorrectos o el usuario no pertenece a ninguna sucursal
+        </div>
+
+        <h2 style="color:#000">Bienvenido a Proasecal</h2>
+        <div class="col-lg-7 col-md-9 col-sm-9 col-xs-12"  style="float:left;" >
+    <form th:action="@{/controlexterno/login}" method="post" name="controlExterno">
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+        <div >
+            <fieldset>
+            <legend>Por favor ingrese su usuario y contraseña</legend>
+                <div class="input text">
+                    <label for="username">Usuario</label>
+                    <input id="username" type="text" name="username" placeholder="Usuario" required="true" />
+                </div>
+                <div class="input password">
+                    <label for="password">Contraseña</label>
+                    <input id="password" type="password" name="password" placeholder="Contraseña" required="true" />
+                </div>
+            </fieldset>
+            <div>
+                <a href="http://controlexterno.proasecal.com/front/" class="controlExternoAnt"
+                   target="_blank">Ingreso a resultados históricos y muestras inscritas hasta diciembre de 2017
+                </a>
+            </div>
+  
+            <div class="submit">
+                <button class="buttonProasecal">Ingresar
+                </button>&nbsp;
+                <button name="cancel" class="buttonProasecal">Cancelar
+                </button>
+            </div>
+        </div>
+    </form>
+        </div>
+        <div class=" col-lg-5 col-md-3  col-sm-3 col-xs-12" style="float:left;">
+            <a href="https://www.proasecal.com/?page_id=757" title="ProgBAs">
+                <img src="../../controlexterno/images/botonprogba.png" alt="ProgBA" style="max-width: 100%;height: auto;margin-top:100px">
+            </a>
+        </div>
+    </div>
+
+    <div style="position: fixed;bottom: 0px; width: 100%;">
+        <div th:replace="controlexterno/controlExternoFragments/footer :: footer"/>
+    </div>
+</div>
+</body>
+</html>

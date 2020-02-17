@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{web/fragments/main_layout}">
+<head>
+    <link href="../../css/form.css" rel="stylesheet">
+    <title>Listado de periodos de vigencia</title>
+    <meta charset="UTF-8">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+</head>
+
+<body>
+<div layout:fragment="content" class="container mySpace">
+    <!-- Bloque de notificación  -->
+    <div th:replace="web/fragments/notify :: notify"/>
+    <!-- Fin bloque de notificación -->
+    <div class="right_col" role="main">
+        <div class="row tile_count">
+            <div class="">
+                <div class="page-title">
+                    <div class="title_left">
+                        <h3>Listado de periodos de vigencia</h3>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <!--inicio Formulario-->
+                        <div class="x_panel">
+                            <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                                <ul class="nav navbar-left panel_toolbox">
+                                    <li>
+                                        <a class="collapse-link filtroColor">
+                                            <label th:for="filtrosList">Filtro</label>
+                                            <i class="fa fa-chevron-down"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+
+                                <a th:id="add" class="btn btn-success pull-right">
+	                                               <span class="glyphicon glyphicon-plus-sign"
+                                                         style="color:#FFFFFF"></span> Añadir
+                                </a>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="x_content" style="display: none;margin-bottom: 0;">
+                                <form id="periodosprogramaForm" class="form-horizontal form-label-left"
+                                      style="margin-bottom: 0;">
+                                    <div class="form-group" style="margin-bottom: 0;">
+                                        <div class="col-xs-12 form-group" style="margin-bottom: 0;">
+
+                                            <div class="form-group col-xs-4">
+                                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                                    <label>Laboratorio</label>
+                                                    <select th:id="idLaboratoriosSedes" class="form-control"
+                                                            style="width: 100%">
+                                                        <option th:value="NULL" th:text="Seleccione... "></option>
+                                                        <option th:each="laboratorios,row : ${laboratoriosList}"
+                                                                th:value="${{laboratorios}}"
+                                                                th:selected="(${laboratorios.idLaboratoriosSedes} == ${idLaboratoriosSedes})"
+                                                                th:text="${laboratorios.numeroIdentificacion +' | '+laboratorios.razonSocial}"
+                                                                th:id="${laboratorios.idLaboratoriosSedes}">
+                                                        </option>
+                                                    </select>
+                                                </div>
+
+                                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                                    <label>Programa</label>
+
+                                                    <select id="inscripProgramaId" style="width: 100%">
+                                                        <option th:value="NULL" th:text="Seleccione... "></option>
+                                                        <option th:each="inscprograma : ${listProgramas}"
+                                                                th:selected="(${inscprograma.ProgramaId} == ${programa})"
+                                                                th:text="${inscprograma.nombrePrograma}"
+                                                                th:value="${{inscprograma.ProgramaId}}"/>
+                                                    </select>
+
+                                                </div>
+                                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                                    <label>Cliente patrocinador</label>
+
+
+                                                    <select id="clientePatrocinador" style="width: 100%">
+                                                        <option th:value="NULL" th:text="Seleccione... "></option>
+                                                        <option th:each="clientes : ${clientesList}"
+                                                                th:selected="(${clientes.clienteId} == ${clientePatrocinador})"
+                                                                th:text="${clientes.numeroIdentificacionCliente +' | '+clientes.razonSocial}"
+                                                                th:value="${{clientes}}"/>
+                                                    </select>
+
+
+                                                </div>
+                                                <div class="col-md-12 col-sm-12 col-xs-12 form-group"
+                                                     style="padding:20px">
+                                                    <a class="btn btn-primary" id="buscar">
+                                                        <span class="glyphicon glyphicon-search"
+                                                              style="color:#FFFFFF"></span>
+                                                        Buscar
+                                                    </a>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-xs-4">
+                                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                                    <label>Sede</label>
+
+                                                    <select th:id="idsedes" class="form-control" style="width: 100%">
+                                                        <option th:value="NULL" th:text="Seleccione... "></option>
+                                                        <option th:each="sedes,row : ${sedesList}"
+                                                                th:value="${{sedes}}"
+                                                                th:selected="(${sedes.idSedes} == ${sede})"
+                                                                th:text="${sedes.nombreSede}"
+                                                                th:id="${sedes.idLaboratoriosSedes}">
+                                                        </option>
+                                                    </select>
+
+                                                </div>
+                                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                                    <label>Modalidad</label>
+                                                    <select th:id="modalidad" th:name="modalidad" class="formntrol"
+                                                            style="width: 100%">
+                                                        <option th:value="NULL" th:text="Seleccione... "></option>
+                                                        <option th:value="Mensual"
+                                                                th:selected="${modalidad.equalsIgnoreCase('Mensual')?true:false}"
+                                                                th:text="Mensual"></option>
+                                                        <option th:value="Bimestral"
+                                                                th:selected="${modalidad.equalsIgnoreCase('Bimestral')?true:false}"
+                                                                th:text="Bimestral"></option>
+                                                        <option th:value="Trimestral"
+                                                                th:selected="${modalidad.equalsIgnoreCase('Trimestral')?true:false}"
+                                                                th:text="Trimestral"></option>
+                                                        <option th:value="Cuatrimestral"
+                                                                th:selected="${modalidad.equalsIgnoreCase('Cuatrimestral')?true:false}"
+                                                                th:text="Cuatrimestral"></option>
+                                                    </select>
+
+                                                </div>
+                                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+
+                                                    <label>Fecha inicio</label>
+                                                    <input type="date"
+                                                           class="form-control input-sm" th:id="fechaInicio"
+                                                           th:name="fechaInicio"
+                                                           th:value="${fechaInicio}">
+                                                </div>
+                                                <div class="col-md-12 col-sm-12 col-xs-12 form-group"
+                                                     style="padding:20px">
+
+                                                    <input type="checkbox" class="js-switch" th:id="enmora"
+                                                          th:checked="${enmora}"  th:value="${enmora}"
+                                                    /> <label>En mora</label>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="form-group col-xs-4">
+                                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                                    <label>Usuario</label>
+
+
+                                                    <select id="idusuarios" style="width: 100%">
+                                                        <option th:value="NULL" th:text="Seleccione... "></option>
+                                                        <option th:each="usuarioLabSed : ${usuarioLabSedesList}"
+                                                                th:selected="(${usuarioLabSed.idUsuarioLabSedes} == ${usuario})"
+                                                                th:text="${usuarioLabSed.usuarioId.nombreUsuario}"
+                                                                th:value="${usuarioLabSed.idUsuarioLabSedes}"/>
+                                                    </select>
+
+
+                                                </div>
+                                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                                    <label>Muestra</label>
+                                                    <select th:value="${muestra}" th:id="muestra"
+                                                            name="muestra" class="form-control" style="width: 100%">
+                                                        <option th:value="NULL" th:text="Seleccione... "></option>
+                                                        <option th:each="muestras,row : ${listMuestras}"
+                                                                th:selected="(${muestras.muestraId} == ${muestra})"
+                                                                th:value="${{muestras}}"
+                                                                th:text="${muestras.numeroMuestra}"
+                                                                th:id="${muestras.muestraId}">
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                                    <label>Fecha fin</label>
+                                                    <input type="date"
+                                                           class="form-control input-sm" th:id="fechaFin"
+                                                           th:name="fechaFin"
+                                                           th:value="${fechaFin}">
+                                                </div>
+                                                <div class="col-md-12 col-sm-12 col-xs-12 form-group"
+                                                     style="padding:20px">
+
+                                                    <input type="checkbox" class="js-switch"
+                                                           th:id="muestraPatrocinada"
+                                                           th:checked="${muestraPatrocinada}"
+                                                           th:value="${muestraPatrocinada}"/>
+                                                    <label>Patrocinada</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="x_panel">
+                            <div class="table-responsive">
+                                <p class="text-muted font-13 m-b-30">
+                                    Seleccione el periodo de vigencia que desea editar
+                                </p>
+                                <table
+                                        class="table table-dark table-striped table-bordered" style="margin-bottom: 0;">
+                                    <thead>
+                                    <tr>
+                                        <th><a>Usuario</a><i id="IcoinscripProgramaIdcodProasecal" class="fa fa-chevron-up iconoOrden"
+                                                             onclick="redirect('inscripProgramaId.codProasecal');" ></i></th>
+                                        <th><a>Programa</a></th>
+                                        <th><a>Periodo de Vigencia</a></th>
+                                        <th><a>Muestras</a></th>
+                                        <th><a>En mora</a><i id="IcoenMora" class="fa fa-chevron-up iconoOrden"
+                                                             onclick="redirect('enMora');"></i></th>
+                                        <th><a>Patrocinada</a><i id="IcomuestraPatrocinada"
+                                                                 class="fa fa-chevron-up iconoOrden"
+                                                                 onclick="redirect('muestraPatrocinada');"></i></th>
+                                        <th style="color: #2b7f70 !important">Acciones</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:if="${periodosVigencia.getTotalElements()<1}">
+                                        <td colspan="100%"> No se encuentran resultados de periodos de vigencia</td>
+                                    </tr>
+
+                                    <tr th:each="perVigencia,list : ${periodosVigencia}">
+                                        <td th:text="${perVigencia.inscripProgramaId.idUsuarioLabSedes.usuarioId.nombreUsuario}"></td>
+                                        <td th:text="${perVigencia.inscripProgramaId.programaId.nombrePrograma}"></td>
+                                        <td th:text="${#dates.format(perVigencia.fechaInicio,'dd-MM-yyyy')+' | '+#dates.format(perVigencia.fechaFin,'dd-MM-yyyy')}">
+                                        </td>
+                                        <td>
+                                            <div th:each="inscripcionMuestras,pag : ${muestrasListString[list.index]}"
+                                                 style="float:left">
+                                                <label th:each="text,row : ${inscripcionMuestras}"
+                                                       th:text="${text} + ${pag.last?'':','}"></label>
+                                            </div>
+                                        </td>
+                                        <td th:text="${perVigencia.enMora == false?'No':'Si'}"></td>
+                                        <td th:text="${perVigencia.muestraPatrocinada == false?'No':'Si'}"></td>
+                                        <td>
+                                            <input type="text" hidden="hidden"
+                                                   th:id="'programaHidden'+ ${perVigencia.getPeriodosvigenciaId()}+''"
+                                                   th:value="${perVigencia.inscripProgramaId.programaId.nombrePrograma}">
+                                            <input type="text" hidden="hidden"
+                                                   th:id="'usuarioHidden'+ ${perVigencia.getPeriodosvigenciaId()}+''"
+                                                   th:value="${perVigencia.inscripProgramaId.idUsuarioLabSedes.usuarioId.nombreUsuario}">
+                                            <input type="text" hidden="hidden"
+                                                   th:id="'fechaInicialHidden'+ ${perVigencia.getPeriodosvigenciaId()}+''"
+                                                   th:value="${#dates.format(perVigencia.fechaInicio,'dd-MM-yyyy')}">
+                                            <input type="text" hidden="hidden"
+                                                   th:id="'fechaFinalHidden'+ ${perVigencia.getPeriodosvigenciaId()}+''"
+                                                   th:value="${#dates.format(perVigencia.fechaFin,'dd-MM-yyyy')}">
+                                            <input type="text" hidden="hidden"
+                                                   th:id="'modalidadHidden'+ ${perVigencia.getPeriodosvigenciaId()}+''"
+                                                   th:value="${perVigencia.modalidad}">
+                                            <a th:href="@{/periodosvigencia/edit/} + ${perVigencia.periodosvigenciaId}"
+                                               class="btn btn-round btn-info btn-xs"><i class="fa fa-wrench"></i> Editar
+                                            </a>
+                                            <a th:onclick="'javascript:openDeleteModal(\''+${perVigencia.periodosvigenciaId}+'\');'"
+                                               class="btn btn-round btn-danger btn-xs"><i class="fa fa-trash-o"></i>
+                                                Eliminar
+                                            </a>
+                                            <a th:onclick="'javascript:loadModalPeriodoVigencia(\''+${perVigencia.periodosvigenciaId}+'\');'"
+                                               class="btn btn-round btn-info btn-xs"><span
+                                                    class="glyphicon glyphicon-plus-sign" style="color:#FFFFFF"></span>
+                                                Inscripción de muestras
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <div class="form-group col-md-1">
+                                    <select class="form-control pagination" id="pageSizeSelect">
+                                        <option th:each="pageSize : ${pageSizes}" th:text="${pageSize}"
+                                                th:value="${pageSize}"
+                                                th:selected="${pageSize} == ${selectedPageSize}"></option>
+                                    </select>
+                                </div>
+                                <div th:if="${periodosVigencia.totalPages != 1}"
+                                     class="dataTables_paginate paging_simple_numbers pagination-centered">
+                                    <ul class="pagination">
+                                        <li th:class="${periodosVigencia.number == 0} ? hidden"><a
+                                                class="pageLink"
+                                                th:href="@{/periodosvigencia/list(size=${selectedPageSize}, page=1,laboratorio=${idLaboratoriosSedes},sede=${idsedes},usuario=${idusuarios},programa=${programa},modalidad=${modalidad},muestra=${muestra},enmora=${enmora},patrocinada=${muestraPatrocinada},clientePatrocinador=${clientePatrocinador},fechaInicio=${fechaInicio},fechaFin=${fechaFin},nameColumn=${nameColumn},sortBy=${sort})}">&laquo;</a>
+                                        </li>
+                                        <li th:class="${periodosVigencia.number == 0} ? hidden"><a
+                                                class="pageLink"
+                                                th:href="@{/periodosvigencia/list(size=${selectedPageSize}, page=${periodosVigencia.number},laboratorio=${idLaboratoriosSedes},sede=${idsedes},usuario=${idusuarios},programa=${programa},modalidad=${modalidad},muestra=${muestra},enmora=${enmora},patrocinada=${muestraPatrocinada},clientePatrocinador=${clientePatrocinador},fechaInicio=${fechaInicio},fechaFin=${fechaFin},nameColumn=${nameColumn},sortBy=${sort})}">&larr;</a>
+                                        </li>
+                                        <li
+                                                th:class="${periodosVigencia.number == (page - 1)} ? 'active pointer-disabled'"
+                                                th:each="page : ${#numbers.sequence(pager.startPage, pager.endPage)}">
+                                            <a class="pageLink"
+                                               th:href="@{/periodosvigencia/list(size=${selectedPageSize}, page=${page},laboratorio=${idLaboratoriosSedes},sede=${idsedes},usuario=${idusuarios},programa=${programa},modalidad=${modalidad},muestra=${muestra},enmora=${enmora},patrocinada=${muestraPatrocinada},clientePatrocinador=${clientePatrocinador},fechaInicio=${fechaInicio},fechaFin=${fechaFin},nameColumn=${nameColumn},sortBy=${sort})}"
+                                               th:text="${page}"></a>
+                                        </li>
+                                        <li
+                                                th:class="${periodosVigencia.number + 1 == periodosVigencia.totalPages} ? hidden">
+                                            <a class="pageLink"
+                                               th:href="@{/periodosvigencia/list(size=${selectedPageSize}, page=${periodosVigencia.number + 2},laboratorio=${idLaboratoriosSedes},sede=${idsedes},usuario=${idusuarios},programa=${programa},modalidad=${modalidad},muestra=${muestra},enmora=${enmora},patrocinada=${muestraPatrocinada},clientePatrocinador=${clientePatrocinador},fechaInicio=${fechaInicio},fechaFin=${fechaFin},nameColumn=${nameColumn},sortBy=${sort})}">&rarr;</a>
+                                        </li>
+                                        <li
+                                                th:class="${periodosVigencia.number + 1 == periodosVigencia.totalPages} ? hidden">
+                                            <a class="pageLink"
+                                               th:href="@{/periodosvigencia/list(size=${selectedPageSize}, page=${periodosVigencia.totalPages},laboratorio=${idLaboratoriosSedes},sede=${idsedes},usuario=${idusuarios},programa=${programa},modalidad=${modalidad},muestra=${muestra},enmora=${enmora},patrocinada=${muestraPatrocinada},clientePatrocinador=${clientePatrocinador},fechaInicio=${fechaInicio},fechaFin=${fechaFin},nameColumn=${nameColumn},sortBy=${sort})}">&raquo;</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--fin tabla para consultar existentes-->
+                    <!-- Modal -->
+                    <div class="modal fade" id="openDeleteModal" tabindex="-1" role="dialog"
+                         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Confirmación</h5>
+                                </div>
+
+                                <div class="modal-body">
+                                    ¿Está seguro de eliminar el registro?</br>
+                                    <input type="hidden" th:id="idPerVigenciaD" value="idPerVigenciaD"/>
+                                    <div class="modal-body">
+                                        <button type="button" class="btn btn-success" data-dismiss="modal">Cancelar
+                                        </button>
+                                        <button type="button" class="btn btn-danger" onclick="borrarPerVigencia()">
+                                            Aceptar
+                                            *
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- /.modal -->
+
+                    <!-- modal Inscripción de muestras-->
+                    <div class="modal fade" id="openInscripcionModal" tabindex="-1" role="dialog"
+                         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content" style="text-align: center">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title"><b>Inscripcion de muestras</b></h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="modal-body">
+                                        <input type="text" id="idPeriodoModal" hidden="hidden">
+                                        <div class="row">
+                                            <label>Programa: </label>
+                                            <label id="programaModal"></label>
+                                            <input type="text" id="idProgramaModal" hidden="hidden">
+                                        </div>
+                                        <div class="row">
+                                            <label>Usuario: </label>
+                                            <label id="usuarioModal"></label>
+                                            <input type="text" id="idUsuarioModal" hidden="hidden">
+                                        </div>
+                                        <div class="row">
+                                            <label>Periodo de vigencia: </label>
+                                            <label id="fechaInicioModal"></label>
+                                            <label value="  "></label><label id="fechaFinalModal"></label>
+                                        </div>
+                                        <div class="row">
+                                            <label>Modalidad: </label>
+                                            <label id="modalidadModal"></label>
+                                        </div>
+                                        <br>
+
+                                        <div class="row">
+                                            <table style="width: 100%; align-content: center"
+                                                   class="table-hover" th:id="tablaMuestras">
+
+                                                <tbody th:fragment="tablaMuestras"
+                                                       class="col-md-4 col-lg-4 col-md-offset-4 col-lg-offset-4">
+                                                <tr th:each="row: ${muestras}">
+                                                    <td class="col-md-2 col-lg-2">
+                                                        <input type="checkbox" th:id="${row.idMuestra}+'chk'"
+                                                               onchange="save(this)" th:checked="${row.estado}">
+                                                    </td>
+                                                    <td class="col-md-2 col-lg-2">
+                                                        <label th:text="${row.nombreMuestra}"></label>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <br><br>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- modal Inscripción de muestras-->
+
+                    <div layout:fragment="customjs">
+                        <script th:inline="javascript">
+                            /*<![CDATA[*/
+                            var sort = /*[[${sort}]]*/ 'ASC';
+                            var nameColumn = /*[[${nameColumn}]]*/ 'idPrograma.nombrePrograma';
+                            /*]]>*/
+                        </script>
+                        <script src="../../js/periodosvigencia/periodosvigenciaList.js"></script>
+                        <script src="../../js/inscripcionMuestras/inscripcionMuestras.js"></script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

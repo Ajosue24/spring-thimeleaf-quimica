@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{web/fragments/main_layout}">
+<head>
+    <title>Roles</title>
+        <meta charset="UTF-8">
+</head>
+<body>
+
+<div layout:fragment="content" class="container mySpace">
+    <div class="right_col" role="main">
+        <!-- top tiles -->
+        <div class="row tile_count">
+            <div class="">
+                <div class="page-title">
+                    <div class="title_left">
+                        <h3>Administrador Roles</h3>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <!--inicio Formulario-->
+                        <div class="x_panel">
+                            <div class="x_title">
+                                <h2>Agregar / Editar Roles
+                                    <small>Administrar Roles</small>
+                                </h2>
+                                <ul class="nav navbar-right panel_toolbox">
+                                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+                                </ul>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="x_content">
+                            	<div class="col-md-10 col-md-offset-3">
+                                <form id="rolesAdminForm" class="form-horizontal form-label-left" action="#"
+                                      th:action="@{/roles/guardarRol}" th:object="${rolesForm}"
+                                      method="post">
+
+			                            <div class="col-md-8 col-sm-12 col-xs-12 form-group">
+                          					<input th:id="idRoles" th:type="hidden" th:field="*{idRoles}"/>			                            
+	                                        <label th:for="nombreRol">Nombre<span
+	                                                class="required">*</span></label>
+	                                        <input type="text" class="form-control" th:id="nombreRol"
+	                                               th:field="*{nombreRol}" required="required" >
+                                            <p th:if="${#fields.hasErrors('nombreRol')}"
+                                               class="label label-danger" th:errors="*{nombreRol}">Incorrect</p>	                                               
+	                                    </div>
+
+			                            <div class="col-md-8 col-sm-12 col-xs-12 form-group">
+	                                        <label th:for="descripcion">Descripción</label>
+	                                        <input type="text" class="form-control" th:id="descripcion"
+	                                               th:field="*{descripcion}">
+	                                    </div>	
+
+			                            <div class="col-md-10 col-sm-12 col-xs-12 form-group">
+	                                        <label>
+	                                                <input type="checkbox" class="js-switch" checked th:id="estado"
+	                                                       th:field="*{estado}"/> Desactivar / Activar Rol
+	                                            </label>                                           
+	                                    </div>	                                    
+
+
+                                    
+                                    
+			                            <div class="col-md-10 col-sm-12 col-xs-12 form-group">
+	                                        <label>
+	                                                <input type="checkbox" class="js-switch" checked th:id="codigoProasecalT"
+	                                                       th:field="*{codigoProasecal}"/>Aplica Codigo Proasecal
+	                                            </label>  
+    										<p th:if="${#fields.hasErrors('codigoProasecal')}"
+                                        class="col-md-offset-3 label label-danger" th:errors="*{codigoProasecal}">Incorrect</p>
+                                                                                                                        
+	                                    </div>
+
+
+	                                    <div class="form-group" sec:authorize="${hasAnyRole(T(com.proasecal.software.web.controller.seguridad.RolesAccess).permisosPermitidos('/roles/list'))}">
+	                                        <div class="col-md-6 col-sm-6 col-xs-12">
+	                                            <a th:href="@{/roles/list}" class="btn btn-primary">
+	                                                Volver
+	                                            </a>
+	                                            <button th:type="submit" th:id="save" class="btn btn-success"
+	                                                    th:name="action"
+	                                                    th:value="save">Guardar
+	                                            </button>
+	                                        </div>
+	                                    </div>
+                                </form>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Fin Formulario-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div layout:fragment="customjs">
+    <script>
+	    $(document).ready(function () {
+	        if ($("#idRoles").val() != '0') {
+	            document.getElementById("nombreRol").readOnly = true;
+
+	        }
+	    });
+
+    </script>
+</div>
+</body>
+</html>

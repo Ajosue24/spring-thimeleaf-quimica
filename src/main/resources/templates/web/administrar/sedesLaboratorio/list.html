@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{web/fragments/main_layout}">
+<head>
+    <link href="../../../css/form.css" rel="stylesheet">
+    <link href="../../../../../vendors/pnotify/dist/pnotify.css" rel="stylesheet">
+    <link href="../../../../../vendors/pnotify/dist/pnotify.buttons.css" rel="stylesheet">
+    <link href="../../../../../vendors/pnotify/dist/pnotify.nonblock.css" rel="stylesheet">
+    <title>Lista de sedes</title>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+<div layout:fragment="content" class="container mySpace">
+    <div class="right_col" role="main">
+        <div class="col-md-12">
+            <div class="page-title">
+                <div class="title_left">
+                    <h3 class="col-md-10">Listado de sedes</h3>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <!--tabla para consultar existentes-->
+                    <div class="x_panel">
+                        <div class="x_title col">
+
+                            <!-- Bloque de notificación  -->
+
+                            <div th:replace="web/fragments/notify :: notify"/>
+
+                            <!-- Fin bloque de notificación -->
+
+                            <form>
+                                <div class="form-group" col-md-12 col-sm-12 col-xs-12>
+                                    <label>Filtrar por:</label>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-md-3 col-sm-3 col-xs-12 form-group">
+                                        <select class="form-control" th:id="filtrosList" th:name="filtrosList"
+                                                required="">
+                                            <option th:each="filtro,row : ${filtrosList}"
+                                                    th:value="${{filtro}}"
+                                                    th:selected="(${filtro.bdNombre} == ${filtroSelected})"
+                                                    th:text="${filtro.nombre}"
+                                                    th:id="${filtro.bdNombre}">
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-3 col-sm-3 col-xs-12 form-group">
+                                        <input type="text" required="required" class="form-control" id="criterio"
+                                               th:value="${find}"
+                                               placeholder="Filtro" name="criterio">
+                                    </div>
+
+                                    <div class="col-md-3 col-sm-3 col-xs-12 form-group">
+                                        <a href="#" class="btn btn-primary" id="buscar">
+                                            <span class="glyphicon glyphicon-search" style="color:#FFFFFF"></span>
+                                            Buscar
+                                        </a>
+                                    </div>
+
+                                    <div class="col-md-3 col-sm-3 col-xs-12 form-group">
+                                        <a href="/laboratorios/sedes/form" class="btn btn-success pull-right">
+                                            <span class="glyphicon glyphicon-plus-sign" style="color:#FFFFFF"></span>
+                                            Añadir
+                                        </a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="table-responsive">
+                            <p class="text-muted font-13 m-b-30">
+                                Seleccione la sede que desea editar
+                            </p>
+
+                            <table class="table table-dark table-striped table-bordered">
+                                <thead>
+                                <tr>
+                                    <th><a onclick="redirect('idLaboratoriosSedes');">Numero ID</a></th>
+                                    <th><a onclick="redirect('razonSocial');">Nombre</a></th>
+                                    <th><a onclick="redirect('idPais');">Pais</a></th>
+                                    <th><a onclick="redirect('idCiudad');">Ciudad</a></th>
+                                    <th><a onclick="redirect('correo');">Correo</a></th>
+                                    <th><a onclick="redirect('estado');">Estado</a></th>
+                                    <th>Acciones</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                <tr th:each="listaLaboratorios: ${listaLaboratorios}">
+                                    <td th:text="${listaLaboratorios.idLaboratoriosSedes}"></td>
+                                    <td th:text="${listaLaboratorios.razonSocial}"></td>
+                                    <td th:text="${listaLaboratorios.idPais.nombrePais}"></td>
+                                    <td th:text="${listaLaboratorios.idCiudad.nombreCiudad}"></td>
+                                    <td th:text="${listaLaboratorios.correo}"></td>
+                                    <td th:text="${listaLaboratorios.estadoLabSedes == false?'Deshabilitado':'Habilitado'}"></td>
+                                    <td>
+                                        <a th:href="@{/laboratorios/sedes/form/} + ${listaLaboratorios.idLaboratoriosSedes}"
+                                           class="btn btn-round btn-info btn-xs"><i class="fa fa-wrench"></i> Editar
+                                        </a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+
+                             <div class="form-group col-md-1">
+                                <select class="form-control pagination" id="pageSizeSelect">
+                                    <option th:each="pageSize : ${pageSizes}" th:text="${pageSize}"
+                                            th:value="${pageSize}"
+                                            th:selected="${pageSize} == ${selectedPageSize}"></option>
+                                </select>
+                            </div>
+                            <div th:if="${listaLaboratorios.totalPages != 1}"
+                                 class="form-group col-md-11 pagination-centered">
+                                <ul class="pagination">
+                                    <li th:class="${listaLaboratorios.number == 0} ? disabled"><a
+                                            class="pageLink"
+                                            th:href="@{/laboratorios/sedes/list(size=${selectedPageSize}, page=1,find=${find})}">&laquo;</a>
+                                    </li>
+                                    <li th:class="${listaLaboratorios.number == 0} ? disabled"><a
+                                            class="pageLink"
+                                            th:href="@{/laboratorios/sedes/list(size=${selectedPageSize}, page=${listaLaboratorios.number},find=${find})}">&larr;</a>
+                                    </li>
+                                    <li
+                                            th:class="${listaLaboratorios.number == (page - 1)} ? 'active pointer-disabled'"
+                                            th:each="page : ${#numbers.sequence(pager.startPage, pager.endPage)}">
+                                        <a class="pageLink"
+                                           th:href="@{/laboratorios/sedes/list(size=${selectedPageSize}, page=${page},find=${find})}"
+                                           th:text="${page}"></a>
+                                    </li>
+                                    <li
+                                            th:class="${listaLaboratorios.number + 1 == listaLaboratorios.totalPages} ? disabled">
+                                        <a class="pageLink"
+                                           th:href="@{/laboratorios/sedes/list(size=${selectedPageSize}, page=${listaLaboratorios.number + 2},find=${find})}">&rarr;</a>
+                                    </li>
+                                    <li
+                                            th:class="${listaLaboratorios.number + 1 == listaLaboratorios.totalPages} ? disabled">
+                                        <a class="pageLink"
+                                           th:href="@{/laboratorios/sedes/list(size=${selectedPageSize}, page=${listaLaboratorios.totalPages},find=${find})}">&raquo;</a>
+                                    </li>
+                                </ul>
+                            </div> 
+                        </div>
+                    </div>
+                </div>
+                <!--fin tabla para consultar existentes-->
+            </div>
+        </div>
+    </div>
+</div>
+<div layout:fragment="customjs">
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var sort = /*[[${sort}]]*/ 'DESC';
+        $(document).ready(function () {
+            changePageAndSize();
+        });
+
+        function changePageAndSize() {
+            $('#pageSizeSelect').change(function (evt) {
+                window.location.replace("/laboratorios/sedes/list?size=" + this.value + "&page=1" + "&find=" + $('#criterio').val());
+            });
+        }
+
+        $(document).ready(function () {
+            $("#buscar").click(function () {
+                window.location.replace("/laboratorios/sedes/list" + "?find=" + $('#criterio').val() + "&findColumn=" + $('#filtrosList :selected').attr('id') +
+                    "&nameColumn=" + $('#filtrosList :selected').attr('id') + "&sortBy=DESC" + "&page=1" + "&size" + $('#pageSizeSelect').val());
+            });
+        });
+
+        function redirect(url) {
+            if (sort == "ASC") {
+                window.location.replace("/laboratorios/sedes/list" + "?find=" + $('#criterio').val() + "&findColumn=" + $('#filtrosList :selected').attr('id') +
+                    "&nameColumn=" + url + "&sortBy=DESC" + "&page=1" + "&size" + $('#pageSizeSelect').val());
+            } else if (sort == "DESC") {
+                window.location.replace("/laboratorios/sedes/list" + "?find=" + $('#criterio').val() + "&findColumn=" + $('#filtrosList :selected').attr('id') +
+                    "&nameColumn=" + url + "&sortBy=ASC" + "&page=1" + "&size" + $('#pageSizeSelect').val());
+            }
+        }
+
+        /*]]>*/
+    </script>
+</div>
+</body>
+</html>

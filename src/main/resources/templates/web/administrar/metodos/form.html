@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{web/fragments/main_layout}">
+<head>
+    <link href="../../css/form.css" rel="stylesheet">
+    <title>Gestión de métodos</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div layout:fragment="content" class="container mySpace">
+    <div class="right_col" role="main">
+        <div class="x_panel">
+            <div class="x_title formXTitle">
+                <h2 id="formTitle">Creación/Edicion de metodos</h2>
+                <a href="/metodos/list" class="btn btn-success pull-right">
+                    <span class="glyphicon glyphicon-chevron-left" style="color:#FFFFFF"></span>Atras</a>
+            </div>
+            <div class="x_content">
+                <div class="col-md-10 col-md-offset-3">
+                    <!-- Bloque de notificación  -->
+                    <div th:replace="web/fragments/notify :: notify"/>
+                    <!-- Fin bloque de notificación -->
+                    <form id="form" class="form-horizontal form-label-left" action="#" th:action="@{/metodos/save}"
+                          th:object="${metodosForm}" method="post"  style="display:none">
+                        <input type="hidden" th:id="metodoId" th:field="*{metodoId}"/>
+                        <div class="form-group">
+                            <div class="col-md-8 col-sm-12 col-xs-12">
+                                <label th:for="idPrograma">Programa<span class="required">*</span></label>
+                                <select th:field="*{idMensurandos.idPrograma}" th:id="idPrograma" style="width: 100%">
+                                    <option th:value="NULL" th:text="Seleccione... "></option>
+                                    <option th:fragment="idPrograma" th:each="programas : ${programas}"
+                                            th:text="${programas.nombrePrograma}"
+                                            th:value="${{programas}}" th:id="${programas.programaId}"/>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-8 col-sm-12 col-xs-12">
+                                <label th:for="idMensurandos">Mensurando<span class="required">*</span></label>
+                                <select th:field="*{idMensurandos}" th:id="idMensurandos" th:name="idMensurandos" style="width: 100%"
+                                        required="required">
+                                    <option th:value="NULL" th:text="Seleccione... "></option>
+                                    <option th:fragment="models3" th:each="model : ${models3}"
+                                            th:text="${model.nombreMensurando}"
+                                            th:value="${{model}}" th:id="${model.mensurandosId}"/>
+                                </select>
+                                <p th:if="${#fields.hasErrors('idMensurandos')}"
+                                   class="label label-danger" th:errors="*{idMensurandos}">Incorrect</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-8 col-sm-12 col-xs-12">
+                                <label th:for="nombreMetodo">Nombre<span class="required">*</span></label>
+                                <input type="text" class="form-control" th:id="nombreMetodo"
+                                       th:name="nombreMetodo"
+                                       th:field="*{nombreMetodo}"
+                                       required="required">
+                                <p th:if="${#fields.hasErrors('nombreMetodo')}"
+                                   class="label label-danger" th:errors="*{nombreMetodo}">Incorrect</p>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <div class="col-md-8 col-sm-12 col-xs-12">
+                                <label th:for="grupo">Grupo</label>
+                                <input type="number" class="form-control"
+                                       th:name="grupo"
+                                       th:id="grupo"
+                                       th:field="*{grupo}"/>
+                                <p th:if="${#fields.hasErrors('grupo')}"
+                                   class="label label-danger" th:errors="*{grupo}">Incorrect</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-8 col-sm-12 col-xs-12">
+                                <label th:for="codProasecal">Código proasecal<span
+                                        class="required">*</span>
+                                </label>
+                                <input type="number" class="form-control"
+                                       th:name="codProasecal"
+                                       th:id="codProasecal"
+                                       th:field="*{codProasecal}"
+                                       required="required"/>
+                                <p th:if="${#fields.hasErrors('codProasecal')}"
+                                   class="label label-danger" th:errors="*{codProasecal}">Incorrect</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-xs-12 ">
+                                <label>
+                                    <input type="checkbox" class="js-switch" checked th:id="estado"
+                                           th:field="*{estado}"/> Desactivar / Activar
+                                </label>
+                            </div>
+                        </div>
+
+                        <div th:if="${#fields.hasAnyErrors()}">
+                            <p th:each="err : ${#fields.allErrors()}" th:text="${err}">...</p>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <br>
+                                <button sec:authorize="${hasAnyRole(T(com.proasecal.software.web.controller.seguridad.RolesAccess).permisosPermitidos('/metodos/save'))}"
+                                        th:type="submit" th:id="save" class="btn btn-success"
+                                        th:name="action"
+                                        th:value="Guardar">Guardar
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<div layout:fragment="customjs">
+    <script src="../../js/metodos/metodos.js"></script>
+</div>
+</html>

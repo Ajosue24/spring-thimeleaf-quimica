@@ -1,0 +1,696 @@
+<div th:fragment="simulacion" xmlns:th="http://www.thymeleaf.org">
+
+	<div id="simReports" style="padding: 0">
+		<div class="titFormSample">
+			<span class="titulo">Consultas</span>
+		</div>
+		<a th:href="@{/controlexternoinforme/descargarResultados(muestra=${muestraInfo.muestraId},mensurando=${mensurando.mensurandosId})}">
+           <img src="../../controlexterno/images/download.svg" class="smallIcon"
+                title="descarga de resultados númericos"> Descarga de resultados numéricos informados</a>
+
+ <br>
+	</div>
+	<br>
+	<form id="simuladorForm" class="form-horizontal form-label-left"
+		action="#" th:object="${formSimulacion}" th:fragment="formSimulacion"
+		th:action="@{/controlexterno/simulacion}" method="post">
+		<!--Acciones-->
+		<div id="simAction" style="padding: 0 !important;">
+			<div class="titFormSample">
+				<span class="titulo">Acciones</span>
+			</div>
+			<input type="hidden" th:id="formMensurando"
+				th:field="*{escenariosFijos.idMensurandos.mensurandosId}" /> <input
+				type="hidden" th:id="formMuestra"
+				th:field="*{escenariosFijos.idMuestras.muestraId}" /> <br>
+			<button type="submit" name="calcular" id="calcular"
+				class="linkButton">
+				<img src="../../controlexterno/images/calculator.svg"
+					alt="Actualizar calculos" class="smallIcon"
+					title="Actualizar calculos"> Calcular
+			</button>
+			<span> </span> <a
+				th:href="@{/controlexterno/gestionMuestras/}+${muestraInfo.muestraId}"
+				name="cancel" class="linkButton"><img
+				src="../../controlexterno/images/undo.svg" alt="Regresar"
+				class="smallIcon" title="Regresar"> Regresar </a>
+		</div>
+		<!--Fin acciones-->
+		<br>
+		<!--Filtros-->
+		<div class="titFormSample">
+			<span class="titulo">Filtros</span>
+		</div>
+		<br>
+
+		<div id="filters" class="clearDiv">
+			<div class="input select">
+				<label th:for="idMetodos">Método</label> <select
+					class="selectForm inputForm" th:id="idMetodos" th:name="idMetodos"
+					th:field="*{escenariosFijos.metodoId}">
+					<option th:value="NULL" th:text="Seleccione... "></option>
+					<!--/*@thymesVar id="metodosList" type="com.proasecal.software.web.entity.administrar.Metodos"*/-->
+					<option th:each="metodo,row : ${metodosList}"
+						th:value="${{metodo}}"
+						th:text="${metodo.codProasecal+' - '+metodo.nombreMetodo}"
+						th:id="${metodo.metodoId}"></option>
+				</select>
+			</div>
+		</div>
+		<!--Fin filtros-->
+		<br>
+		<!--Valores asignados-->
+		<div id="simulatorRes" style="display: inline;">
+			<div class="row">
+				<div id="simValues">
+					<div class="simSectionTitle">
+						Valores asignados <span></span>
+					</div>
+
+					<div id="seccionValoresAsignados">
+						<table id="temp2" border="0">
+							<tbody>
+								<tr>
+									<td style="width: 5px; font-weight: bold;">VA:</td>
+									<td style="font-size: 0.8em;">
+										<div class="input text">
+											<input type="text" step="anResultadosDetalladosy"
+												class="inputNumeric inputForm" th:id="valorInformado"
+												th:name="valorInformado"
+												th:field="*{escenariosFijos.valorAsignado}"
+												onkeyup="this.value = this.value.replace(/,/g, '.')"
+												th:data-round="${mensurando.cantDecimales}"
+											>
+										</div>
+									</td>
+								</tr>
+								<tr>
+									<td colspan="4"><span class="simFixConfirmBoltText">Datos
+											simulados el dia:</span> <span class="simFixConfirmTealText"
+										id="fechaActual" th:if="*{escenariosFijoAnterior != null}"
+										th:text="${#dates.format(formSimulacion.escenariosFijoAnterior.fechaCreacion, 'dd-MM-yyyy HH:mm')}">29-01-2019
+											14:50</span> <span></span></td>
+								</tr>
+
+								<tr>
+									<td colspan="4"><span class="simFixConfirmBoltText">Escenario
+											fijo: </span> <span class="simFixConfirmTealText"
+										id="fixedMethodMsg" th:if="*{escenariosFijoAnterior != null}">
+												<img src="../../controlexterno/images/database.svg" onclick="openTabEscenario()" style="cursor: pointer"
+													alt="Mostrar escenario fijo" class="smallIcon" title="Mostrar escenario fijo">
+									</span> <span></span></td>
+								</tr>
+							</tbody>
+						</table>
+						<table id="temp">
+							<thead>
+								<tr>
+									<th>Consenso Inicial
+										<div class="htmlDescIconCont">
+											<img src="../../controlexterno/images/info.png" alt=""
+												class="smallIcon" title="" id="img15469540740">
+											<div id="15469540740" style="display: none;"
+												class="htmlDescIconChild">
+												<p>x: Media</p>
+												<p>SD: Desviación</p>
+												<p>V.Min. Rango mínimo</p>
+												<p>V.Max. Rango máximo</p>
+												<p>n: número de laboratorios procesados</p>
+												<p>AB: número de laboratorios excluidos del
+													procesamiento</p>
+											</div>
+
+										</div>
+									</th>
+									<th>Grubbs
+										<div class="htmlDescIconCont">
+											<img src="../../controlexterno/images/info.png" alt=""
+												class="smallIcon" title="" id="img15469540741">
+											<div id="15469540741" style="display: none;"
+												class="htmlDescIconChild">
+												<p>x: Media</p>
+												<p>SD: Desviación</p>
+												<p>V.Min. Rango mínimo</p>
+												<p>V.Max. Rango máximo</p>
+												<p>n: número de laboratorios procesados</p>
+												<p>AB: número de laboratorios excluidos del
+													procesamiento</p>
+											</div>
+
+										</div>
+									</th>
+									<th>Algortimo A.
+										<div class="htmlDescIconCont">
+											<img src="../../controlexterno/images/info.png" alt=""
+												class="smallIcon" title="" id="img15469540742">
+											<div id="15469540742" style="display: none;"
+												class="htmlDescIconChild">
+												<p>x: Media Robusta</p>
+												<p>SD: Desviación Robusta</p>
+												<p>V.Min. Rango mínimo de confianza</p>
+												<p>V.Max. Rango máximo de confianza</p>
+												<p>n: número de laboratorios procesados</p>
+												<p>R: número de remplazos del proceso</p>
+											</div>
+										</div>
+									</th>
+									<th><span>Desviaciones estándar
+											<div class="htmlDescIconCont">
+												<img src="../../controlexterno/images/info.png" alt=""
+													class="smallIcon" title="" id="img15469540744">
+												<div id="15469540744" style="display: none;"
+													class="htmlDescIconChild">
+													<p>x: Media</p>
+													<p>SD: Desviación</p>
+													<p>V.Min. Rango mínimo</p>
+													<p>V.Max. Rango máximo</p>
+													<p>n: número de laboratorios procesados</p>
+													<p>AB: número de laboratorios excluidos del
+														procesamiento</p>
+												</div>
+											</div>
+									</span> <span><input type="text" name="deviationValue"
+											class="simDS" id="deviationvalue" value="3"
+											style="width: 15% !important;"> </span></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>
+										<p>
+											<span><strong>x̄:</strong>[[${#numbers.formatDecimal(consensoInicialList[0].media,
+												1, 'COMMA',mensurando.cantDecimales, 'POINT')}]]</span><span>
+												<strong>SD:</strong>[[${#numbers.formatDecimal(consensoInicialList[0].desviacionEstandar,
+												1, 'COMMA',mensurando.cantDecimales, 'POINT')}]]
+											</span>
+										</p>
+										<p>
+											<span><strong>V.Min:</strong>[[${#numbers.formatDecimal(consensoInicialList[0].valorMinimo,
+												1, 'COMMA',mensurando.cantDecimales, 'POINT')}]]</span><span>
+												<strong>V.Max:</strong>[[${#numbers.formatDecimal(consensoInicialList[0].valorMaximo,
+												1, 'COMMA',mensurando.cantDecimales, 'POINT')}]]
+											</span>
+										</p>
+										<p>
+											<span><strong>n:</strong>
+												[[${#numbers.formatDecimal(consensoInicialList[0].totalElementos,
+												1, 'COMMA',mensurando.cantDecimales, 'POINT')}]] </span><span>
+												<strong>#AB:</strong>[[${#numbers.formatDecimal(consensoInicialList[0].totalAberrantes,
+												1, 'COMMA',mensurando.cantDecimales, 'POINT')}]]
+											</span>
+										</p>
+										<p></p>
+									</td>
+									<td>
+										<p>
+											<span><strong>x̄:</strong>[[${#numbers.formatDecimal(consensoInicialList[1].media,
+												1, 'COMMA',mensurando.cantDecimales, 'POINT')}]]</span><span>
+												<strong>SD:</strong>[[${#numbers.formatDecimal(consensoInicialList[1].desviacionEstandar,
+												1, 'COMMA',mensurando.cantDecimales, 'POINT')}]]
+											</span>
+										</p>
+										<p>
+											<span><strong>V.Min:</strong>[[${#numbers.formatDecimal(consensoInicialList[1].aberranteMin,
+												1, 'COMMA',mensurando.cantDecimales, 'POINT')}]]</span><span>
+												<strong>V.Max:</strong>[[${#numbers.formatDecimal(consensoInicialList[1].aberranteMax,
+												1, 'COMMA',mensurando.cantDecimales, 'POINT')}]]
+											</span>
+										</p>
+										<p>
+											<span><strong>n:</strong>
+												[[${#numbers.formatDecimal(consensoInicialList[1].totalElementos,
+												1, 'COMMA',mensurando.cantDecimales, 'POINT')}]] </span><span>
+												<strong>#AB:</strong>[[${#numbers.formatDecimal(consensoInicialList[1].totalAberrantes,
+												1, 'COMMA',mensurando.cantDecimales, 'POINT')}]]
+											</span>
+										</p>
+										<p></p>
+									</td>
+									<td>
+										<p>
+											<span><strong>x̄:</strong>[[${#numbers.formatDecimal(consensoInicialList[2].media,
+												1, 'COMMA',mensurando.cantDecimales, 'POINT')}]]</span><span>
+												<strong>SD:</strong>[[${#numbers.formatDecimal(consensoInicialList[2].desviacionEstandar,
+												1, 'COMMA',mensurando.cantDecimales, 'POINT')}]]
+											</span>
+										</p>
+										<p>
+											<span><strong>V.Min:</strong>[[${#numbers.formatDecimal(consensoInicialList[2].valorMinimo,
+												1, 'COMMA',mensurando.cantDecimales, 'POINT')}]]</span><span>
+												<strong>V.Max:</strong>[[${#numbers.formatDecimal(consensoInicialList[2].valorMaximo,
+												1, 'COMMA',mensurando.cantDecimales, 'POINT')}]]
+											</span>
+										</p>
+										<p>
+											<span><strong>n:</strong>
+												[[${#numbers.formatDecimal(consensoInicialList[2].totalElementos,
+												1, 'COMMA',mensurando.cantDecimales, 'POINT')}]] </span><span>
+												<strong>#R:</strong>[[${#numbers.formatDecimal(consensoInicialList[2].totalAberrantes,
+												1, 'COMMA',mensurando.cantDecimales, 'POINT')}]]
+											</span>
+										</p>
+										<p></p>
+									</td>
+									<td>
+										<p>
+											<span><strong>x̄:</strong>[[${#numbers.formatDecimal(consensoInicialList[3].media,
+												1, 'COMMA',mensurando.cantDecimales, 'POINT')}]]</span><span>
+												<strong>SD:</strong>[[${#numbers.formatDecimal(consensoInicialList[3].desviacionEstandar,
+												1, 'COMMA',mensurando.cantDecimales, 'POINT')}]]
+											</span>
+										</p>
+										<p>
+											<span><strong>V.Min:</strong>[[${#numbers.formatDecimal(consensoInicialList[3].valorMinimo,
+												1, 'COMMA',mensurando.cantDecimales, 'POINT')}]]</span><span>
+												<strong>V.Max:</strong>[[${#numbers.formatDecimal(consensoInicialList[3].valorMaximo,
+												1, 'COMMA',mensurando.cantDecimales, 'POINT')}]]
+											</span>
+										</p>
+										<p>
+											<span><strong>n:</strong>
+												[[${#numbers.formatDecimal(consensoInicialList[3].totalElementos,
+												1, 'COMMA',mensurando.cantDecimales, 'POINT')}]] </span><span>
+												<strong>#AB:</strong>[[${#numbers.formatDecimal(consensoInicialList[3].totalAberrantes,
+												1, 'COMMA',mensurando.cantDecimales, 'POINT')}]]
+											</span>
+										</p>
+										<p></p>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+
+			<fieldset
+				th:if="*{valoresConsensosList!=null}AND(*{valoresConsensosList.size()<1}AND*{valoresAtipicosList.size()<1})">
+				<script th:inline="javascript">
+					setTimeout(
+							function() {
+								alert('No hay resultados para el filtro seleccionado.');
+							}, 500);
+				</script>
+			</fieldset>
+			<fieldset
+				th:if="*{valoresConsensosList!=null}And(*{valoresConsensosList.size()>0}OR*{valoresAtipicosList.size()>0})And(*{escenariosFijos.metodoId!=null&&escenariosFijos.valorAsignado!=null}OR*{escenariosFijos.metodoId==null&&escenariosFijos.valorAsignado!=null})">
+				<!--Detalle-->
+				<div class="titFormSample">
+					<span class="titulo">Detalle</span>
+				</div>
+				<br>
+				<div id="detalle" class="clearDiv">
+					<div class="input select" style="padding: 0px;">
+						<ul class="ul-detalle">
+							<li><span><strong>Valor asignado para la
+										simulación:</strong>[[${#numbers.formatDecimal(formSimulacion.escenariosFijos.valorAsignado,
+									1, 'COMMA', mensurando.cantDecimales, 'POINT')}]]</span></li>
+							<li><span><strong>Nro. Laboratorios: </strong>[[${#numbers.formatDecimal(formSimulacion.escenariosFijos.totalValores
+									, 1, 'COMMA', mensurando.cantDecimales, 'POINT')}]]</span></li>
+							<li><span><strong>X </strong>[[${#numbers.formatDecimal(formSimulacion.escenariosFijos.mediaFiltro
+									, 1, 'COMMA', mensurando.cantDecimales, 'POINT')}]]</span></li>
+							<li><span><strong>DSC: </strong>[[${#numbers.formatDecimal(formSimulacion.escenariosFijos.desviacionEstandar
+									, 1, 'COMMA', mensurando.cantDecimales, 'POINT')}]]</span></li>
+							<li><span><strong>CV: </strong>[[${#numbers.formatDecimal(formSimulacion.escenariosFijos.coeficienteVariacion,
+									1, 'COMMA', mensurando.cantDecimales, 'POINT')}]]</span></li>
+							<li><span><strong>Incertidumbre de la
+										simulación: </strong>[[${#numbers.formatDecimal(formSimulacion.escenariosFijos.incertidumbreSimulacion,
+									1, 'COMMA', mensurando.cantDecimales, 'POINT')}]]</span></li>
+							<li><span><strong>Media general: </strong>[[${#numbers.formatDecimal(formSimulacion.escenariosFijos.mediaGeneral,
+									1, 'COMMA', mensurando.cantDecimales, 'POINT')}]]</span></li>
+							<li><span><strong>Incertidumbre general: </strong>[[${#numbers.formatDecimal(formSimulacion.escenariosFijos.incertidumbreGeneral,
+									1, 'COMMA', mensurando.cantDecimales, 'POINT')}]]</span></li>
+						</ul>
+					</div>
+
+				</div>
+
+				<!--Fin Detalle-->
+
+				<div
+					th:if="*{escenariosFijos.metodoId!=null}And(*{valoresConsensosList.size()>0}OR*{valoresAtipicosList.size()>0})">
+					<!--Acciones finales-->
+					<div id="simActionFinal" style="padding: 0 !important;">
+						<div class="titFormSample">
+							<span class="titulo">Acciones</span>
+						</div>
+						<br>
+						<button th:type="submit" th:name="tipoSubmit" th:id="tipoSubmit"
+							class="linkButton" th:value="fijarEscenario">
+							<img src="../../controlexterno/images/saveAlt.png"
+								alt="Fijar escenario" class="smallIcon" title="Fijar escenario">
+							Fijar escenario
+						</button>
+						<span> </span>
+						<button type="submit" name="tipoSubmit" class="linkButton"
+							value="excluir">
+							<img src="../../controlexterno/images/saveAlt.png"
+								alt="Excluir valores atípicos" class="smallIcon"
+								title="excluirValAtipicos"> Excluir valores atípicos
+						</button>
+					</div>
+					<!--Fin acciones finales-->
+					<!--Valores asignados candidatos-->
+					<div style="padding: 0 !important;">
+						<div class="titFormSample">
+							<span class="titulo">Valores asignados candidatos</span>
+						</div>
+						<br>
+						<table colspan="4">
+							<tbody>
+								<tr>
+									<td><span class="boldText">Grubbs</span></td>
+									<td><span></span></td>
+									<td><span class="boldText">Alg A</span></td>
+									<td><span></span></td>
+									<td><span class="boldText">Desviaciones estándar</span></td>
+
+
+								</tr>
+								<tr>
+									<td><span>VA</span></td>
+									<td><span>[[${#numbers.formatDecimal(consensoInicialList[1].media,
+											1, 'COMMA', mensurando.cantDecimales, 'POINT')}]]</span></td>
+									<td><span>VA</span></td>
+									<td><span>[[${#numbers.formatDecimal(consensoInicialList[2].media,
+											1, 'COMMA', mensurando.cantDecimales, 'POINT')}]]</span></td>
+									<td><span>VA</span></td>
+									<td><span>[[${#numbers.formatDecimal(consensoInicialList[3].media,
+											1, 'COMMA', mensurando.cantDecimales, 'POINT')}]]</span></td>
+
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<!--Fin valores asignados candidatos-->
+					<!--Valores en conseso-->
+					<div style="padding: 0 !important;">
+						<div class="titFormSample">
+							<span class="titulo">Valores en consenso</span>
+						</div>
+						<br>
+					</div>
+					<div style="padding: 0 !important;">
+						<table style="margin-bottom: 0;" id="tablaValoresConsenso">
+							<thead>
+								<tr>
+									<th colspan="8" style="border-bottom: none;"></th>
+									<th colspan="3" style="border-bottom: 1px solid #333333;">CLIA</th>
+									<th colspan="2" style="border-bottom: 1px solid #333333;">Grb</th>
+									<th colspan="2" style="border-bottom: 1px solid #333333;">AlgA</th>
+									<th colspan="2" style="border-bottom: 1px solid #333333;">SD</th>
+								</tr>
+								<tr>
+									<th>Ab</th>
+									<th>Laboratorio</th>
+									<th>Sede</th>
+									<th>Usuario</th>
+
+
+									<th><div class="td-horizontal">
+											VR
+											<div class="htmlDescIconCont">
+												<img src="../../controlexterno/images/info.png" alt=""
+													class="smallIcon" title="" id="img1546954074011123">
+												<div id="1546954074011123" style="display: none;"
+													class="htmlDescIconChild">
+													<p>valor informado por el participante</p>
+												</div>
+											</div>
+										</div></th>
+									<th>
+										<div class="td-horizontal">
+											DA
+											<div class="htmlDescIconCont">
+												<img src="../../controlexterno/images/info.png" alt=""
+													class="smallIcon" title="" id="img15469540740232">
+												<div id="15469540740232" style="display: none;"
+													class="htmlDescIconChild">
+													<p>desviación aceptable del mensurando a partir del CLIA</p>
+												</div>
+											</div>
+										</div>
+									</th>
+									<th>
+										<div class="td-horizontal">
+											L.Inf
+											<div class="htmlDescIconCont">
+												<img src="../../controlexterno/images/info.png" alt=""
+													class="smallIcon" title="" id="img15469540740222">
+												<div id="15469540740222" style="display: none;"
+													class="htmlDescIconChild">
+													<p>Límite inferior</p>
+												</div>
+											</div>
+										</div>
+									</th>
+									<th>
+										<div class="td-horizontal">
+											L.Sup
+											<div class="htmlDescIconCont">
+												<img src="../../controlexterno/images/info.png" alt=""
+													class="smallIcon" title="" id="img1546951240740">
+												<div id="1546951240740" style="display: none;"
+													class="htmlDescIconChild">
+													<p>Límite superior</p>
+												</div>
+											</div>
+										</div>
+									</th>
+									<th>
+										<div class="td-horizontal">
+											DVA
+											<div class="htmlDescIconCont">
+												<img src="../../controlexterno/images/info.png" alt=""
+													class="smallIcon" title="" id="img15469564340740">
+												<div id="15469564340740" style="display: none;"
+													class="htmlDescIconChild">
+													<p>Desviación del valor asignado</p>
+												</div>
+											</div>
+										</div>
+									</th>
+									<th>
+										<div class="td-horizontal">
+											IV
+											<div class="htmlDescIconCont">
+												<img src="../../controlexterno/images/info.png" alt=""
+													class="smallIcon" title="" id="img15461119540740">
+												<div id="15461119540740" style="display: none;"
+													class="htmlDescIconChild">
+													<p>índice de varianza</p>
+												</div>
+											</div>
+										</div>
+									</th>
+									<th>
+										<div class="td-horizontal">
+											SDI
+											<div class="htmlDescIconCont">
+												<img src="../../controlexterno/images/info.png" alt=""
+													class="smallIcon" title="" id="img15469563240740">
+												<div id="15469563240740" style="display: none;"
+													class="htmlDescIconChild">
+													<p>índice de desviación estandar</p>
+												</div>
+											</div>
+										</div>
+									</th>
+									<th>
+										<div class="td-horizontal">
+											DVA
+											<div class="htmlDescIconCont">
+												<img src="../../controlexterno/images/info.png" alt=""
+													class="smallIcon" title="" id="img15469540216740">
+												<div id="15469540216740" style="display: none;"
+													class="htmlDescIconChild">
+													<p>Desviación del valor asignado</p>
+												</div>
+											</div>
+										</div>
+									</th>
+									<th>
+										<div class="td-horizontal">
+											IV
+											<div class="htmlDescIconCont">
+												<img src="../../controlexterno/images/info.png" alt=""
+													class="smallIcon" title="" id="img15469540745540">
+												<div id="15469540745540" style="display: none;"
+													class="htmlDescIconChild">
+													<p>índice de varianza</p>
+												</div>
+											</div>
+										</div>
+									</th>
+									<th>
+										<div class="td-horizontal">
+											DVA
+											<div class="htmlDescIconCont">
+												<img src="../../controlexterno/images/info.png" alt=""
+													class="smallIcon" title="" id="img154695407892340">
+												<div id="154695407892340" style="display: none;"
+													class="htmlDescIconChild">
+													<p>Desviación del valor asignado</p>
+												</div>
+											</div>
+										</div>
+									</th>
+									<th>
+										<div class="td-horizontal">
+											IV
+											<div class="htmlDescIconCont">
+												<img src="../../controlexterno/images/info.png" alt=""
+													class="smallIcon" title="" id="img15499769540740">
+												<div id="15499769540740" style="display: none;"
+													class="htmlDescIconChild">
+													<p>índice de varianza</p>
+												</div>
+											</div>
+										</div>
+									</th>
+									<th>
+										<div class="td-horizontal">
+											DVA
+											<div class="htmlDescIconCont">
+												<img src="../../controlexterno/images/info.png" alt=""
+													class="smallIcon" title="" id="img15333740">
+												<div id="15333740" style="display: none;"
+													class="htmlDescIconChild">
+													<p>Desviación del valor asignado</p>
+												</div>
+											</div>
+										</div>
+									</th>
+									<th>
+										<div class="td-horizontal">
+											IV
+											<div class="htmlDescIconCont">
+												<img src="../../controlexterno/images/info.png" alt=""
+													class="smallIcon" title="" id="img15555540">
+												<div id="15555540" style="display: none;"
+													class="htmlDescIconChild">
+													<p>índice de varianza</p>
+												</div>
+											</div>
+										</div>
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="valoresConsenso,row : *{valoresConsensosList}">
+									<td data-type="Ab"><input type="checkbox" name="active"
+										th:field="*{valoresConsensosList[__${row.index}__].isAberrante}" /><br>
+										<input type="hidden" th:id="idResultadoDetallado"
+										th:field="*{valoresConsensosList[__${row.index}__].resultadosDetallados.idResultadosDetallados}" /></td>
+									<td th:text="${valoresConsenso.nombreLaboratorio}"></td>
+									<td th:text="${valoresConsenso.nombreSede}"></td>
+									<td th:text="${valoresConsenso.nombreUsuario}"></td>
+									<td
+										th:text="${valoresConsenso.resultadosDetallados.valorReportado}"></td>
+									<td
+										th:text="${valoresConsenso.valorAceptable}+${valoresConsenso.unidadMedida}"></td>
+									<td
+										th:text="${#numbers.formatDecimal(formSimulacion.escenariosFijos.limiteInferior, 1, 'COMMA', mensurando.cantDecimales, 'POINT')}"></td>
+									<td
+										th:text="${#numbers.formatDecimal(formSimulacion.escenariosFijos.limiteSuperior, 1, 'COMMA', mensurando.cantDecimales, 'POINT')}"></td>
+									<td
+										th:text="${#numbers.formatDecimal(valoresConsenso.desviacionValorAsignadoClia, 1, 'COMMA', mensurando.cantDecimales, 'POINT')}"></td>
+									<td
+										th:text="${#numbers.formatDecimal(valoresConsenso.indiceVarianzaClia, 1, 'COMMA', mensurando.cantDecimales, 'POINT')}"
+										data-type="IV-CLIA"></td>
+									<td
+										th:text="${#numbers.formatDecimal(valoresConsenso.indiceDesviacionEstandarClia, 1, 'COMMA', mensurando.cantDecimales, 'POINT')}"></td>
+									<td
+										th:text="${#numbers.formatDecimal(valoresConsenso.desviacionValorAsignadoGrb, 1, 'COMMA', mensurando.cantDecimales, 'POINT')}+${valoresConsenso.resultadosDetallados.aberranteGrubbs?'AB':' '}"></td>
+									<td
+										th:text="${#numbers.formatDecimal(valoresConsenso.indiceVarianzaGrb, 1, 'COMMA', mensurando.cantDecimales, 'POINT')}"
+										data-type="IV-GRB"></td>
+									<td
+										th:text="${#numbers.formatDecimal(valoresConsenso.desviacionValorAsignadoAlgA, 1, 'COMMA', mensurando.cantDecimales, 'POINT')}+${valoresConsenso.resultadosDetallados.aberranteA?'R':' '}"></td>
+									<td
+										th:text="${#numbers.formatDecimal(valoresConsenso.indiceVarianzaAlgA, 1, 'COMMA', mensurando.cantDecimales, 'POINT')}"
+										data-type="IV-ALGA"></td>
+									<td
+										th:text="${#numbers.formatDecimal(valoresConsenso.desviacionValorAsignadoSd, 1, 'COMMA', mensurando.cantDecimales, 'POINT')}+(${valoresConsenso.resultadosDetallados.aberranteDs}?'AB':' ')"></td>
+									<td
+										th:text="${#numbers.formatDecimal(valoresConsenso.indiceVarianzaSd, 1, 'COMMA', mensurando.cantDecimales, 'POINT')}"
+										data-type="IV-SD"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<!--Fin Valores en conseso-->
+					<br>
+					<!--Valores Atipicos-->
+					<div style="padding: 0 !important;">
+						<div class="titFormSample">
+							<span class="titulo">Valores atípicos</span>
+						</div>
+						<br>
+					</div>
+					<button type="submit" name="tipoSubmit" value="incluir"
+						class="linkButton">
+						<img src="../../controlexterno/images/saveAlt.png"
+							alt="Incluir valores atipicos" class="smallIcon"
+							title="Incluir valores atipicos"> Incluir valores atípicos
+					</button>
+					<br> <span> </span>
+					<div style="padding: 0 !important;">
+						<table style="margin-bottom: 0;">
+							<thead>
+								<tr>
+									<th>Consenso</th>
+									<th>Laboratorio</th>
+									<th>Sede</th>
+									<th>Usuario</th>
+									<th>DA</th>
+									<th>VR</th>
+									<th>L.Inf</th>
+									<th>L.Sup</th>
+									<th>DVA</th>
+									<th>IV</th>
+									<th>SDI</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="valoresAtipicos,gnb : *{valoresAtipicosList}">
+									<td><input type="checkbox" name="active"
+										th:field="*{valoresAtipicosList[__${gnb.index}__].isAberrante}" /><br>
+										<input type="hidden" th:id="idResultadoDetallado"
+										th:field="*{valoresAtipicosList[__${gnb.index}__].resultadosDetallados.idResultadosDetallados}" /></td>
+									<td th:text="${valoresAtipicos.nombreLaboratorio}"></td>
+									<td th:text="${valoresAtipicos.nombreSede}"></td>
+									<td th:text="${valoresAtipicos.nombreUsuario}"></td>
+									<td
+										th:text="${valoresAtipicos.valorAceptable}+${valoresAtipicos.unidadMedida}"></td>
+									<td
+										th:text="${valoresAtipicos.resultadosDetallados.valorReportado}"></td>
+									<td
+										th:text="${#numbers.formatDecimal(formSimulacion.escenariosFijos.limiteInferior, 1, 'COMMA', mensurando.cantDecimales, 'POINT')}"></td>
+									<td
+										th:text="${#numbers.formatDecimal(formSimulacion.escenariosFijos.limiteSuperior, 1, 'COMMA', mensurando.cantDecimales, 'POINT')}"></td>
+									<td
+										th:text="${#numbers.formatDecimal(valoresAtipicos.desviacionValorAsignadoClia, 1, 'COMMA', mensurando.cantDecimales, 'POINT')}"></td>
+									<td
+										th:text="${#numbers.formatDecimal(valoresAtipicos.indiceVarianzaClia, 1, 'COMMA', mensurando.cantDecimales, 'POINT')}"></td>
+									<td
+										th:text="${#numbers.formatDecimal(valoresAtipicos.indiceDesviacionEstandarClia, 1, 'COMMA', mensurando.cantDecimales, 'POINT')}"></td>
+								</tr>
+
+							</tbody>
+						</table>
+					</div>
+					<!--Fin Valores Atipicos-->
+				</div>
+				<br> <a
+					th:href="@{/controlexterno/gestionMuestras/}+${muestraInfo.muestraId}"
+					id="regresar" class="linkButton"><img
+					src="../../controlexterno/images/undo.svg" alt="Regresar"
+					class="smallIcon" title="Regresar">Regresar </a>
+			</fieldset>
+		</div>
+
+	</form>
+	<!--Fin de plantilla-->
+
+</div>

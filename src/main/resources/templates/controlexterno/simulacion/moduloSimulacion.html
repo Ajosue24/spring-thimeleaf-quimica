@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{controlexterno/controlExternoFragments/ce_layout}">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Proasecal S.A.S: Simulation</title>
+</head>
+
+<body>
+<div layout:fragment="cont">
+	<span class="preload">
+		<i class="fa fa-spinner fa-spin"></i>
+	</span>
+    <div class="bbody">
+        <div class="tab">
+            <button id="SimulacionTab" class="tablinks" onclick="abrir(event, 'Simulacion')">Simulación</button>
+            <button id="HistoricoTab" class="tablinks" onclick="abrir(event, 'Historico')">Historico</button>
+            <button id="ConsultaTab" class="tablinks" onclick="abrir(event, 'Consulta')">Consulta general de
+                <br> escenarios fijos
+            </button>
+            <button id="EscenarioTab" class="tablinks" onclick="abrir(event, 'Escenario')">Escenario fijo</button>
+        </div>
+
+        <div th:object="${muestraInfo}" style="padding: 10px 20px 10px 20px">
+            <div class="titFormSample">
+                <span class="titulo">Muestra: </span>
+                <span class="texto" th:text="*{numeroMuestra}"></span>
+                <input th:type="hidden" th:id="idMuestra" th:value="*{muestraId}">
+            </div>
+
+            <table colspan="4">
+                <tbody>
+                <tr>
+                    <td colspan="4">
+                        <span class="boldText"> Programa </span> <span
+                            th:text="*{idPrograma.nombrePrograma}"></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td width="25%">
+                        <span class="boldText"> Tipo de muestra</span>
+                    </td>
+                    <td>
+                        <span th:text="*{idTipoMuestra.nombre}"></span>
+                    </td>
+                    <td>
+                        <span class="boldText">Fecha de simulación</span>
+                    </td>
+                    <td>
+                        <span th:text="${#calendars.format(#calendars.createNow(), 'dd-MM-yyyy HH:mm')}"></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td width="25%" style="background-color: teal; color: white">
+                        <span class="boldText">Mensurando</span>
+                    </td>
+                    <td colspan="3" class="detalleEscenario">
+                        <span th:text="${mensurando.nombreMensurando}+' ('+${mensurando.idUnidadesMedidas.unidad}+')'"></span>
+                        <input th:type="hidden" id="mensurandosId" th:value="${mensurando.mensurandosId}">
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="Simulacion" class="tabcontent">
+            <div th:replace="controlexterno/simulacion/simulacion :: simulacion"/>
+        </div>
+
+        <div id="Historico" class="tabcontent">
+            <div th:replace="controlexterno/simulacion/historico :: historico"/>
+        </div>
+
+        <div id="Consulta" class="tabcontent">
+            <div th:replace="controlexterno/simulacion/consultaGeneral :: consultaGeneral"/>
+        </div>
+
+        <div id="Escenario" class="tabcontent">
+            <div th:replace="controlexterno/simulacion/escenarioFijo :: escenarioFijo"/>
+        </div>
+    </div>
+</div>
+
+<div layout:fragment="customjs">
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var red = JSON.parse(/*[[${red}]]*/ '{}');
+        var yellow = JSON.parse(/*[[${yellow}]]*/ '{}');
+        /*]]>*/
+    </script>
+    <script src="../../../controlexterno/js/simulacion/moduloSimulacion.js"></script>
+    <script src="../../controlexterno/js/resultadosParticipante/resultadosParticipante.js"></script>
+    <script>
+        document.getElementById("SimulacionTab").click(event, 'Simulacion');
+        (() => applySignaling())();
+    </script>
+</div>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="modal fade" id="openDeleteModal" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Inscripcion de muestras</h5>
+            </div>
+
+            <div class="modal-body">
+                <!--<input type="hidden" th:id="idPerVigenciaD" value="idPerVigenciaD"/>-->
+                <div class="modal-body">
+                    <div class="row">
+                        <label>Programa: </label>
+                        <label id="programa">Quimica</label>
+                    </div>
+                    <div class="row">
+                        <label>Usuario: </label>
+                        <label id="usuario">001</label>
+                    </div>
+                    <div class="row">
+                        <label>Periodo de vigencia: </label>
+                        <label id="periodo">01-01-2018 31-12-1208</label>
+                    </div>
+                    <div class="row">
+                        <label>Modalidad: </label>
+                        <label id="modalidad">Trimestral</label>
+                    </div>
+
+                    <button type="button" class="btn btn-info" data-dismiss="modal">Cancelar
+                    </button>
+
+                    <!--<button type="button" class="btn btn-danger" onclick="borrarPerVigencia()">
+                        Aceptar
+                    </button>-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{web/fragments/main_layout}">
+<head>
+    <link href="../../../css/form.css" rel="stylesheet">
+    <title>Gestión de laboratorios</title>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+<div layout:fragment="content" class="container mySpace">
+    <div class="right_col" role="main">
+        <div class="x_panel">
+            <div class="x_title formXTitle">
+                <h2 id="formTitle">Creación de laboratorios</h2>
+                <a href="/laboratorios/list" class="btn btn-success pull-right">
+                    <span class="glyphicon glyphicon-chevron-left" style="color:#FFFFFF"></span>Atras</a>
+            </div>
+            <div class="x_content">
+                <!-- <br/>-->
+                <div class="col-md-12 ">
+
+                    <!-- Bloque de notificación  -->
+
+                    <div th:replace="web/fragments/notify :: notify"/>
+
+                    <!-- Fin bloque de notificación -->
+
+                    <form id="laboratorioForm" action="#" th:action="@{/laboratorios/save}" method="post"
+                          th:object="${laboratorioForm}" th:fragment="labFormFragment" >
+                        <div layout:fragment="customjs">
+                            <script src="../../js/laboratorios/laboratorios.js"></script>
+                        </div>
+                        <div id="divForm" style="display:none">
+                        <div class="form-group">
+                            <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                                <input type="hidden" th:id="idLaboratoriosSedes" th:field="*{idLaboratoriosSedes}"/>
+                                <label th:for="desCliente">Cliente<span class="required">*</span></label>
+                                <!--<input type="text" class="form-control" th:id="desCliente"
+                                       th:field="*{clienteId.nombreComercial}" placeholder="Ingrese el cliente">
+                                -->
+                                <select th:field="*{clienteId}" class="form-control" id="clienteId" required="required"
+                                        style="width: 100%;">
+                                    <option th:value="NULL" th:text="_"></option>
+                                    <option th:each="cliente2 : ${clientesList}"
+                                            th:text="${cliente2.numeroIdentificacionCliente +' | '+cliente2.razonSocial}"
+                                            th:value="${cliente2.clienteId}"/>
+                                </select>
+
+                                <!--  <select class="form-control select-sm"
+                                           th:id="desCliente" th:field="*{nombreComercial}" name="desCliente"
+                                           style="width: 100%; height: 50px">
+                                       <option th:fragment="models5" th:each="model : ${models5}"
+                                               th:value="${model.clienteId}"
+                                               th:text="${model.nombreComercial}"/>
+                                   </select> -->
+
+                                <p th:if="${#fields.hasErrors('clienteId')}"
+                                   class="label label-danger alerta" th:errors="*{clienteId}">Incorrect</p>
+                            </div>
+
+                            <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                                <label th:for="desPais">País<span
+                                        class="required">*</span></label>
+
+                                <select class="form-control" th:field="*{idPais}" th:id="desPais" name="desPais"
+                                        required="required" style="width: 100%;">
+                                    <option th:value="NULL" th:text="_"></option>
+                                    <option th:each="pais2 : ${paisList}"
+                                            th:text="${pais2.nombrePais}"
+                                            th:value="${{pais2}}"/>
+                                </select>
+                                <!--
+                                                              <select class="form-control select-sm"
+                                                                      th:field="*{idPais}" th:id="desPais" name="desPais"
+                                                                      style="width: 100%;">
+                                                                  <option th:fragment="models4" th:each="model : ${models4}"
+                                                                          th:value="${model.idPais}"
+                                                                          th:text="${model.nombrePais}"/>
+                                                              </select>
+                              -->
+                                <input type="hidden" th:id="idPais" th:field="*{idPais.idPais}"/>
+                            </div>
+                            <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                                <label th:for="idTipoPais">Tipo de identificación</label>
+                                <select th:field="*{idTipoPais}" required="required" class="form-control"
+                                        style="width: 100%;"
+                                        th:id="idTipoPais" name="idTipoPais">
+                                    <option th:value="NULL" th:text="Seleccione... "></option>
+                                    <option th:fragment="models" th:each="model : ${models}"
+                                            th:value="${model.idTipoPais}"
+                                            th:text="${model.nombreId}"/>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                                <label th:for="numeroIdentificacion">Número de identificación<span
+                                        class="required">*</span></label>
+                                <input type="text" required="required" class="form-control"
+                                       th:id="numeroIdentificacion"
+                                       th:name="numeroIdentificacion" th:field="*{numeroIdentificacion}">
+
+                                <p th:if="${#fields.hasErrors('numeroIdentificacion')}"
+                                   class="label label-danger alerta" th:errors="*{numeroIdentificacion}">Incorrect</p>
+
+                            </div>
+
+                            <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                                <label th:for="razonSocial">Razón social<span class="required">*</span></label>
+                                <input type="text" required="required" class="form-control" th:id="razonSocial"
+                                       th:name="razonSocial" th:field="*{razonSocial}">
+
+                            </div>
+                            <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                                <label th:for="nombreComercial">Nombre comercial</label>
+                                <input type="text" class="form-control" th:id="nombreComercial"
+                                       th:name="nombreComercial" th:field="*{nombreComercial}">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                                <label th:for="desDepartamento">Departamento/Estado<span
+                                        class="required">*</span>
+                                </label>
+
+                                <select th:field="*{idDepartamentos}" required="required" class="form-control select-sm"
+                                        th:id="idDepartamentos" name="idDepartamentos" style="width: 100%">
+                                    <option th:value="NULL" th:text="Seleccione... "></option>
+                                    <option th:fragment="models2" th:each="model : ${models2}"
+                                            th:value="${model.idDepartamentos}"
+                                            th:text="${model.nombreDepartamento}"/>
+                                </select>
+                            </div>
+
+                            <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                                <label th:for="txtCiudad">Ciudad<span class="required">*</span> </label>
+                                <select th:field="*{idCiudad}" required="required" class="form-control select-sm"
+                                        th:id="idCiudad" name="idCiudad" style="width: 100%">
+                                    <option th:value="NULL" th:text="Seleccione... "></option>
+                                    <option th:fragment="models3" th:each="model : ${models3}"
+                                            th:value="${model.idCiudad}" th:text="${model.nombreCiudad}"/>
+                                </select>
+                            </div>
+                            <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                                <label th:for="direccion">Dirección</label>
+                                <input type="text" class="form-control" th:id="direccion"
+                                       th:name="direccion" th:field="*{direccion}">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                                <label th:for="correo">Correo electronico 1</label>
+                                <input type="email" class="form-control" th:id="correo"
+                                       th:name="correo" th:field="*{correo}">
+
+                                <p id="correoLabel" class="label label-danger alerta"></p>
+
+                            </div>
+                            <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                                <label th:for="correoAlternativo">Correo electronico 2</label>
+                                <input type="email" class="form-control" th:id="correoAlternativo"
+                                       th:name="correoAlternativo" th:field="*{correoAlternativo}">
+
+                                <p id="correoAlternativoLabel" class="label label-danger alerta"></p>
+
+                            </div>
+                            <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                                <label th:for="telefono">Telefóno 1</label>
+                                <input type="text" class="form-control" th:id="telefono"
+                                       th:name="telefono" th:value="*{telefono}">
+                            </div>
+
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                                <label th:for="telefonoAlternativo">Telefóno 2</label>
+                                <input type="text" class="form-control" th:id="telefonoAlternativo"
+                                       th:name="telefonoAlternativo" th:field="*{telefonoAlternativo}">
+                            </div>
+                            <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                                <label th:for="usuarioCalidad">Responsable calidad<span
+                                        class="required">*</span></label>
+                                <input type="text" required="required" class="form-control" th:id="usuarioCalidad"
+                                       th:name="usuarioCalidad" th:field="*{usuarioCalidad}">
+                            </div>
+                            <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                                <label th:for="usuarioDirector">Director o cordinador<span
+                                        class="required">*</span></label>
+                                <input type="text" required="required" class="form-control" th:id="usuarioDirector"
+                                       th:name="usuarioDirector" th:field="*{usuarioDirector}">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                                <input type="hidden" th:id="idUsuario" th:field="*{idUsuario}"/>
+                                <label th:for="nombreUsuario">Nombre de usuario<span
+                                        class="required">*</span></label>
+                                <input type="text" required="required" class="form-control"
+                                       th:id="usuario" th:name="usuario" th:value="*{usuario}">
+
+                                <p th:if="${#fields.hasErrors('usuario')}"
+                                   class="label label-danger alerta" th:errors="*{usuario}">Incorrect</p>
+                            </div>
+
+                            <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                                <label th:for="password">Contraseña<span
+                                        class="required">*</span></label>
+                                <input type="password" required="required" class="form-control"
+                                       th:id="password" th:name="password" th:value="*{password}">
+
+                                <p th:if="${#fields.hasErrors('password')}"
+                                   class="label label-danger alerta" th:errors="*{password}">Incorrect</p>
+                            </div>
+
+                            <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                                <label th:for="contraseña2">Confirmar contraseña<span
+                                        class="required">*</span></label>
+                                <input type="password" required="required" class="form-control"
+                                       th:id="password2">
+
+                                <p id="passwordLabel" class="label label-danger alerta"></p>
+
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <br>
+                                <button sec:authorize="${hasAnyRole(T(com.proasecal.software.web.controller.seguridad.RolesAccess).permisosPermitidos('/laboratorios/save'))}"
+                                        th:type="submit" th:id="save" class="btn btn-success"
+                                        th:name="action"
+                                        th:value="save">Guardar
+                                </button>
+                            </div>
+                        </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

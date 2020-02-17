@@ -1,0 +1,39 @@
+<div th:fragment="navBar" xmlns:th="http://www.thymeleaf.org">
+    <div id="menuProasec" class="clearDiv">
+
+        <link rel="stylesheet" href="../../controlexterno/css/navBar.css">
+
+        <nav class="navbar-inverse" role="navigation">
+            <div class="navbar-header">
+                <ul class="ul">
+                    <li class="li">
+                        <a class="a" href="#">Inicio</a>
+                    </li>
+                    <li class="li">
+                        <a class="a" href="#">Mis programas</a>
+                    </li>
+                    <li class="li">
+                        <a class="a" href="#">Comunicaciones a participantes</a>
+                    </li>
+                    <li class="li" sec:authorize="!hasRole('ROLE_PARTICIPANTE')">
+                        <a class="a" th:href="@{/web/index}">Configuración</a>
+                    </li>
+                    <li class="li">
+                        <a class="a" href="#">Encuestas</a>
+                    </li>
+                    <li class="li">
+                        <form th:action="@{/controlexterno/logout}" method="post">
+                            <button class="a" style="cursor: pointer">Finalizar Sesión</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+    <br>
+</div>
+<div th:fragment="welcomeBar">
+    Bienvenido(a): <span sec:authentication="name">Usuario</span> <span
+        th:if="${(T(com.proasecal.software.controlexterno.controller.ControlExternoController).nombreSede)!=''}">Sede</span>
+    <span th:text="${(T(com.proasecal.software.controlexterno.controller.ControlExternoController).nombreSede)}"></span>
+</div>

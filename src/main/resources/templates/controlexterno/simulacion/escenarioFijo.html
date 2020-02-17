@@ -1,0 +1,145 @@
+<div th:fragment="escenarioFijo" xmlns:th="http://www.w3.org/1999/xhtml">
+
+    <div id="escenarioFijoFrag" th:fragment="escenarioFijoFrag">
+        <div th:each="escenarioFijo: ${escenarioFijo}" class="summaryDetail" style="margin-bottom: 0px !important;">
+            <div class="titFormSample">
+                <span class="titulo">Escenario de simulación</span>
+            </div>
+            <br>
+
+            <p><strong>Fecha de creación escenario fijo:</strong>&nbsp[[${#dates.format(escenarioFijo.fechaCreacion, 'yyyy-MM-dd HH:mm')}]]</p>
+            <p><strong>Valor asignado para simulación:</strong>&nbsp[[${#numbers.formatDecimal(escenarioFijo.valorAsignado,1, 'COMMA',escenarioFijo.idMensurandos.cantDecimales, 'POINT')}]]</p>
+            <p><strong>Nro. laboratorios:</strong>&nbsp[[${#numbers.formatDecimal(escenarioFijo.totalValores,1, 'COMMA',escenarioFijo.idMensurandos.cantDecimales, 'POINT')}]]</p>
+            <p><strong>x̄:</strong>&nbsp[[${#numbers.formatDecimal(escenarioFijo.mediaFiltro,1, 'COMMA',escenarioFijo.idMensurandos.cantDecimales, 'POINT')}]]</p>
+            <p><strong>DSC:</strong>&nbsp[[${#numbers.formatDecimal(escenarioFijo.desviacionEstandar,1, 'COMMA',escenarioFijo.idMensurandos.cantDecimales, 'POINT')}]]</p>
+            <p><strong>CV:</strong>&nbsp[[${#numbers.formatDecimal(escenarioFijo.coeficienteVariacion,1, 'COMMA',escenarioFijo.idMensurandos.cantDecimales, 'POINT')}]]</p>
+            <p><strong>Incertidumbre de la simulación:</strong>&nbsp[[${#numbers.formatDecimal(escenarioFijo.incertidumbreSimulacion,1, 'COMMA',escenarioFijo.idMensurandos.cantDecimales, 'POINT')}]]</p>
+            <p><strong>Media general:</strong>[[${#numbers.formatDecimal(escenarioFijo.mediaGeneral,1, 'COMMA',escenarioFijo.idMensurandos.cantDecimales, 'POINT')}]]</p>
+            <p><strong>Incertidumbre general:</strong>[[${#numbers.formatDecimal(escenarioFijo.incertidumbreGeneral,1, 'COMMA',escenarioFijo.idMensurandos.cantDecimales, 'POINT')}]]</p>
+        </div>
+        <br>consenso
+
+        <div class="titFormSample">
+            <span class="titulo">Valores en consenso</span>
+        </div>
+
+        <table>
+            <thead>
+            <tr>
+                <td colspan="8"></td>
+                <th colspan="2">CLIA</th>
+            </tr>
+            <tr>
+                <th width="30%">Laboratorio</th>
+                <th width="20%">Sede</th>
+                <th width="6%">Usuario</th>
+                <th width="6%">VR
+                    <img src="../../controlexterno/images/info.png" class="smallIcon"
+                         title="Valor informado por el participante">
+                </th>
+                <th width="6%">DA
+                    <img src="../../controlexterno/images/info.png" class="smallIcon"
+                         title="Desviación aceptable del mensurando a partir de CLIA">
+                </th>
+                <th width="6%">L.Inf
+                    <img src="../../controlexterno/images/info.png" class="smallIcon"
+                         title="Límite inferior">
+                </th>
+                <th width="6%">L.Sup
+                    <img src="../../controlexterno/images/info.png" class="smallIcon"
+                         title="Límite superior">
+                </th>
+                <th width="6%">DVA
+                    <img src="../../controlexterno/images/info.png" class="smallIcon"
+                         title="Desviación del valor asignado">
+                </th>
+                <th width="6%">IV
+                    <img src="../../controlexterno/images/info.png" class="smallIcon"
+                         title="Índice de varianza">
+                </th>
+                <th width="6%">SDI
+                    <img src="../../controlexterno/images/info.png" class="smallIcon"
+                         title="Índice de desviación estándar">
+                </th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr class="data_row" th:each="consenso: ${consenso}">
+                <td th:text="${consenso.laboratorio}"></td>
+                <td th:text="${consenso.sede}"></td>
+                <td th:text="${consenso.usuario}"></td>
+                <td th:text="${consenso.valorReportado}"></td>
+                <td th:text="${consenso.aceptabilidad}"></td>
+                <td th:text="${#numbers.formatDecimal(consenso.limiteInferior, 1, 'COMMA', escenarioFijo.idMensurandos.cantDecimales, 'POINT')}"></td>
+                <td th:text="${#numbers.formatDecimal(consenso.limiteSuperior, 1, 'COMMA', escenarioFijo.idMensurandos.cantDecimales, 'POINT')}"></td>
+                <td th:text="${#numbers.formatDecimal(consenso.desviacionValorAsignado, 1, 'COMMA', escenarioFijo.idMensurandos.cantDecimales, 'POINT')}"></td>
+                <td th:text="${#numbers.formatDecimal(consenso.varianza, 1, 'COMMA', escenarioFijo.idMensurandos.cantDecimales, 'POINT')}" data-type="IV-CLIA-EF"></td>
+                <td th:text="${#numbers.formatDecimal(consenso.desviacionEstandar, 1, 'COMMA', escenarioFijo.idMensurandos.cantDecimales, 'POINT')}"></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <br>
+
+        <div class="titFormSample">
+            <span class="titulo">Valores atípicos</span>
+        </div>
+
+        <table>
+            <thead>
+            <tr>
+                <td colspan="8"></td>
+            </tr>
+            <tr>
+                <th width="30%">Laboratorio</th>
+                <th width="20%">Sede</th>
+                <th width="6%">Usuario</th>
+                <th width="6%">VR
+                    <img src="../../controlexterno/images/info.png" class="smallIcon"
+                         title="Valor informado por el participante">
+                </th>
+                <th width="6%">DA
+                    <img src="../../controlexterno/images/info.png" class="smallIcon"
+                         title="Desviación aceptable del mensurando a partir de CLIA">
+                </th>
+                <th width="6%">L.Inf
+                    <img src="../../controlexterno/images/info.png" class="smallIcon"
+                         title="Límite inferior">
+                </th>
+                <th width="6%">L.Sup
+                    <img src="../../controlexterno/images/info.png" class="smallIcon"
+                         title="Límite superior">
+                </th>
+                <th width="6%">DVA
+                    <img src="../../controlexterno/images/info.png" class="smallIcon"
+                         title="Desviación del valor asignado">
+                </th>
+                <th width="6%">IV
+                    <img src="../../controlexterno/images/info.png" class="smallIcon"
+                         title="Índice de varianza">
+                </th>
+                <th width="6%">SDI
+                    <img src="../../controlexterno/images/info.png" class="smallIcon"
+                         title="Índice de desviación estándar">
+                </th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr class="data_row" th:each="atipico: ${atipico}">
+                <td th:text="${atipico.laboratorio}"></td>
+                <td th:text="${atipico.sede}"></td>
+                <td th:text="${atipico.usuario}"></td>
+                <td th:text="${atipico.valorReportado}"></td>
+                <td th:text="${atipico.aceptabilidad}"></td>
+                <td th:text="${#numbers.formatDecimal(atipico.limiteInferior, 1, 'COMMA', escenarioFijo.idMensurandos.cantDecimales, 'POINT')}"></td>
+                <td th:text="${#numbers.formatDecimal(atipico.limiteSuperior, 1, 'COMMA', escenarioFijo.idMensurandos.cantDecimales, 'POINT')}"></td>
+                <td th:text="${#numbers.formatDecimal(atipico.desviacionValorAsignado, 1, 'COMMA', escenarioFijo.idMensurandos.cantDecimales, 'POINT')}"></td>
+                <td th:text="${#numbers.formatDecimal(atipico.varianza, 1, 'COMMA', escenarioFijo.idMensurandos.cantDecimales, 'POINT')}"></td>
+                <td th:text="${#numbers.formatDecimal(atipico.desviacionEstandar, 1, 'COMMA', escenarioFijo.idMensurandos.cantDecimales, 'POINT')}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

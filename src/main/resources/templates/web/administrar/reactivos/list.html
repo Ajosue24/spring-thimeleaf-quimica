@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{web/fragments/main_layout}">
+<head>
+    <link href="../../css/form.css" rel="stylesheet">
+    <title>Listado de reactivos</title>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+<div layout:fragment="content" class="container mySpace">
+    <!-- Bloque de notificación  -->
+    <div th:replace="web/fragments/notify :: notify"/>
+    <!-- Fin bloque de notificación -->
+    <div class="right_col" role="main">
+        <div class="row tile_count">
+            <div class="">
+                <div class="page-title">
+                    <div class="title_left">
+                        <h3>Listado de reactivos</h3>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <!--inicio Formulario-->
+                        <div class="x_panel">
+                            <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                                <ul class="nav navbar-left panel_toolbox">
+                                    <li>
+                                        <a class="collapse-link filtroColor">
+                                            <label th:for="filtrosList">Filtro</label>
+                                            <i class="fa fa-chevron-down"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+
+                                <a sec:authorize="${hasAnyRole(T(com.proasecal.software.web.controller.seguridad.RolesAccess).permisosPermitidos('/reactivos/create'))}"
+                                   th:href="@{/reactivos/create}" class="btn btn-success pull-right">
+	                                               <span class="glyphicon glyphicon-plus-sign"
+                                                         style="color:#FFFFFF"></span> Añadir
+                                </a>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="x_content" style="display: none;margin-bottom: 0;">
+                                <form id="reactivoForm" class="form-horizontal form-label-left"
+                                      style="margin-bottom: 0;">
+                                    <div class="form-group" style="margin-bottom: 0;">
+                                        <div class="col-xs-12 form-group" style="margin-bottom: 0;">
+
+                                            <div class="form-group col-xs-6">
+                                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                                    <label th:for="programas">Programa</label>
+                                                    <!-- <select  th:value="${programas.programaId}" id="programas" class="form-control">
+                                                        <option th:value="" th:text="Seleccione... "></option>
+                                                        <option th:each="programasL : ${programasList}"
+                                                                th:selected="${programasL.programaId==programas.programaId}"
+                                                                th:text="${programasL.nombrePrograma}"
+                                                                th:value="${{programasL.nombrePrograma}}" th:id="${programas.programaId}" />
+                                                    </select> 
+
+                                                    <input type="text" th:value="${programas2}"
+                                                           placeholder="Programa" class="form-control input-sm"
+                                                           id="programas2" name="programas2">
+                                                                                          			  
+                                                                                          			  
+                                                                                          			  <select  th:id="programas2" class="form-control" style="width: 100%">
+						                                <option th:value="NULL" th:text="Seleccione... "></option>
+						                                <option th:each="programa : ${programasList}"
+						                                  th:selected="${programas==programa.nombrePrograma?true:false}"
+						                                        th:text="${programa.nombrePrograma}"
+						                                        th:value="${programa.nombrePrograma}"/>						                                                           
+                                                    	</select>  
+                                                           -->
+                                                           
+                                        			  <select  id="programas"  style="width: 100%" >
+						                                <option th:value="NULL" th:text="Seleccione... "></option>
+						                                <option th:each="programa : ${programasList}"
+						                                th:selected="${programas==programa.nombrePrograma?true:false}"
+						                                        th:text="${programa.nombrePrograma}"
+						                                        th:value="${programa.nombrePrograma}"/>						                                                           
+                                                    	</select>                                                            
+             
+                                                           
+                                                </div>
+                                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                                    <label th:for="programas">Grupo</label>
+                                                    <input type="number" placeholder="Grupo"
+                                                           class="form-control input-sm" id="grupo"
+                                                           name="grupo"
+                                                           th:value="${grupo}">
+                                                </div>
+                                                <div class="col-md-12 col-sm-12 col-xs-12 form-group"
+                                                     style="padding:20px">
+                                                    <a class="btn btn-primary" id="buscar">
+                                                        <span class="glyphicon glyphicon-search"
+                                                              style="color:#FFFFFF"></span>
+                                                        Buscar
+                                                    </a>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-xs-6">
+                                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                                    <label th:for="programas">Nombre</label>
+                                                    <input type="text" placeholder="Nombre Reactivo"
+                                                           class="form-control input-sm" id="nombreReactivo"
+                                                           name="nombreReactivo"
+                                                           th:value="${nombreReactivo}">
+
+                                                </div>
+                                                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                                                    <label th:for="programas">Código proasecal</label>
+                                                    <input type="number" placeholder="Cod Proasecal"
+                                                           class="form-control input-sm" id="codProasecal"
+                                                           name="codProasecal"
+                                                           th:value="${codProasecal}">
+                                                </div>
+                                                <div class="col-md-12 col-sm-12 col-xs-12 form-group"
+                                                     style="padding:20px">
+
+                                                    <input type="checkbox" class="js-switch" checked
+                                                           th:checked="${estado}" th:id="estado"
+                                                           th:value="${estado}"
+                                                    /> <label>Estado</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="x_panel">
+                            <div class="table-responsive">
+                                <p class="text-muted font-13 m-b-30">
+                                    Seleccione el reactivo que desea editar
+                                </p>
+                                <table
+                                        class="table table-dark table-striped table-bordered" style="margin-bottom: 0;">
+                                    <thead>
+                                    <tr>
+                                        <th><a>Programa</a><i id="IcoidProgramanombrePrograma"  class="fa fa-chevron-up iconoOrden"  onclick="redirect('idPrograma.nombrePrograma');"></i></th>
+                                        <th><a>Nombre</a><i id="IconombreReactivo"  class="fa fa-chevron-up iconoOrden"   onclick="redirect('nombreReactivo');"></i></th>
+                                        <th><a>Grupo</a><i id="Icogrupo"  class="fa fa-chevron-up iconoOrden"  onclick="redirect('grupo');"></i></th>
+                                        <th><a>Código proasecal</a><i id="IcocodProasecal"  class="fa fa-chevron-up iconoOrden"  onclick="redirect('codProasecal');"></i></th>
+                                        <!--<th><a onclick="redirect('reactivoId');">Numero ID</a></th>-->
+                                        <th><a>Estado</a><i id="Icoestado"  class="fa fa-chevron-up iconoOrden"  onclick="redirect('estado');"></i></th>
+                                        <th style="color: #2b7f70 !important">Acciones</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr th:if="${reactivos.getTotalElements()<1}">
+                                        <td colspan="100%"> No se encuentran resultados de reactivos</td>
+                                    </tr>
+                                    <tr th:each="reactivo: ${reactivos}">
+                                        <!--<td th:text="${reactivo.reactivoId}"></td>-->
+                                        <td th:text="${reactivo.idPrograma.nombrePrograma}"></td>
+                                        <td th:text="${reactivo.nombreReactivo}"></td>
+                                        <td th:text="${reactivo.grupo}"></td>
+                                        <td th:text="${reactivo.codProasecal}"></td>
+                                        <td th:text="${reactivo.estado == false?'Inactivo':'Activo'}"></td>
+                                        <td>
+                                            <a sec:authorize="${hasAnyRole(T(com.proasecal.software.web.controller.seguridad.RolesAccess).permisosPermitidos('/reactivos/edit'))}"
+                                               th:href="@{/reactivos/edit/} + ${reactivo.reactivoId}"
+                                               class="btn btn-round btn-info btn-xs"><i class="fa fa-wrench"></i> Editar
+                                            </a>
+                                            <a sec:authorize="${hasAnyRole(T(com.proasecal.software.web.controller.seguridad.RolesAccess).permisosPermitidos('/reactivos/delete'))}"
+                                               th:onclick="'javascript:openDeleteModal(\''+${reactivo.reactivoId}+'\');'"
+                                               class="btn btn-round btn-danger btn-xs"><i class="fa fa-trash-o"></i>
+                                                Eliminar
+                                            </a>
+                                        </td>
+                                    </tr>
+
+                                    </tbody>
+                                </table>
+                                <div class="form-group col-md-1">
+                                    <select class="form-control pagination" id="pageSizeSelect">
+                                        <option th:each="pageSize : ${pageSizes}" th:text="${pageSize}"
+                                                th:value="${pageSize}"
+                                                th:selected="${pageSize} == ${selectedPageSize}"></option>
+                                    </select>
+                                </div>
+                                <div th:if="${reactivos.totalPages != 1}"
+                                                      class="dataTables_paginate paging_simple_numbers pagination-centered">
+                                    <ul class="pagination">
+                                        <li th:class="${reactivos.number == 0} ? hidden"><a
+                                                class="pageLink"
+                                                th:href="@{/reactivos/list(size=${selectedPageSize}, page=1,codProasecal=${codProasecal},grupo=${grupo},programas=${programas},nombreReactivo=${nombreReactivo},estado=${estado},nameColumn=${nameColumn},sortBy=${sort})}">&laquo;</a>
+                                        </li>
+                                        <li th:class="${reactivos.number == 0} ? hidden"><a
+                                                class="pageLink"
+                                                th:href="@{/reactivos/list(size=${selectedPageSize}, page=${reactivos.number},codProasecal=${codProasecal},grupo=${grupo},programas=${programas},nombreReactivo=${nombreReactivo},estado=${estado},nameColumn=${nameColumn},sortBy=${sort})}">&larr;</a>
+                                        </li>
+                                        <li
+                                                th:class="${reactivos.number == (page - 1)} ? 'active pointer-disabled'"
+                                                th:each="page : ${#numbers.sequence(pager.startPage, pager.endPage)}">
+                                            <a class="pageLink"
+                                               th:href="@{/reactivos/list(size=${selectedPageSize}, page=${page},codProasecal=${codProasecal},grupo=${grupo},programas=${programas},nombreReactivo=${nombreReactivo},estado=${estado},nameColumn=${nameColumn},sortBy=${sort})}"
+                                               th:text="${page}"></a>
+                                        </li>
+                                        <li
+                                                th:class="${reactivos.number + 1 == reactivos.totalPages} ? hidden">
+                                            <a class="pageLink"
+                                               th:href="@{/reactivos/list(size=${selectedPageSize}, page=${reactivos.number + 2},codProasecal=${codProasecal},grupo=${grupo},programas=${programas},nombreReactivo=${nombreReactivo},estado=${estado},nameColumn=${nameColumn},sortBy=${sort})}">&rarr;</a>
+                                        </li>
+                                        <li
+                                                th:class="${reactivos.number + 1 == reactivos.totalPages} ? hidden">
+                                            <a class="pageLink"
+                                               th:href="@{/reactivos/list(size=${selectedPageSize}, page=${reactivos.totalPages},codProasecal=${codProasecal},grupo=${grupo},programas=${programas},nombreReactivo=${nombreReactivo},estado=${estado},nameColumn=${nameColumn},sortBy=${sort})}">&raquo;</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <!--fin tabla para consultar existentes-->
+                    <!-- Modal -->
+                    <div class="modal fade" id="openDeleteModal" tabindex="-1" role="dialog"
+                         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLongTitle">Confirmacion</h5>
+                                </div>
+
+                                <div class="modal-body">
+                                    ¿Está seguro de eliminar el registro?</br>
+                                    <input type="hidden" th:id="reactivoID" value="reactivoID"/>
+                                    <div class="modal-body">
+                                        <button type="button" class="btn btn-success" data-dismiss="modal">Cancelar
+                                        </button>
+                                        <button type="button" class="btn btn-danger" onclick="borrarReactivo()">
+                                            Aceptar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- /.modal -->
+                    <div layout:fragment="customjs">
+                        <script th:inline="javascript">
+	                        /*<![CDATA[*/
+	                        var sort = /*[[${sort}]]*/ 'ASC';
+	                        var nameColumn = /*[[${nameColumn}]]*/ 'idPrograma.nombrePrograma';
+	                        /*]]>*/
+                        </script>                     
+                        <script type="text/javascript" src="../../js/reactivos/reactivo.js"></script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

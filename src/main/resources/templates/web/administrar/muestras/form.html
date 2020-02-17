@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{web/fragments/main_layout}">
+<head>
+    <link href="../../css/form.css" rel="stylesheet">
+
+    <title>Gestión de muestras</title>
+    <meta charset="UTF-8">
+</head>
+<body onload="HabCampos(), onload=ActObservacion()">
+<div layout:fragment="content" class="container mySpace">
+    <div class="right_col" role="main">
+        <div class="x_panel">
+            <div class="x_title formXTitle">
+                <h2 id="formTitle">Creación/Edicion de muestras</h2>
+                <a href="/muestras/list" class="btn btn-success pull-right">
+                    <span class="glyphicon glyphicon-chevron-left" style="color:#FFFFFF"></span>Atras</a>
+            </div>
+            <div class="x_content">
+                <div class="col-md-10 col-md-offset-1">
+                    <!-- Bloque de notificación  -->
+                    <div th:replace="web/fragments/notify :: notify"/>
+                    <!-- Fin bloque de notificación -->
+                    <form id="form" class="form-horizontal form-label-left" action="#" th:action="@{/muestras/save}"
+                          th:object="${muestrasForm}" method="post"  style="display:none">
+
+                        <input type="hidden" th:id="muestraId" th:field="*{muestraId}"/>
+
+                        <div class="form-group">
+                            <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                                <label th:for="idPrograma">Programa<span class="required">*</span></label>
+                                <select th:field="*{idPrograma}" th:id="idPrograma" class="form-control"
+                                        onchange="HabCampos()" required="required" style="width: 100%">
+                                    <option th:value="NULL" th:text="Seleccione... "></option>
+                                    <option th:fragment="idPrograma" th:each="programas : ${programas}"
+                                            th:text="${programas.nombrePrograma}"
+                                            th:value="${{programas}}" th:id="${programas.programaId}"/>
+                                </select>
+                            </div>
+
+                            <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                                <label th:for="idTipoMuestra">Tipo de muestra<span class="required">*</span></label>
+                                <select th:field="*{idTipoMuestra}" th:name="idTipoMuestra" class="form-control"
+                                        required="required" style="width: 100%">
+                                    <option th:value="NULL" th:text="Seleccione... "></option>
+                                    <option th:fragment="models3" th:each="model : ${models3}"
+                                            th:text="${model.nombre}"
+                                            th:value="${{model}}" th:id="${model.tiposMuestrasId}"/>
+                                </select>
+                                <p th:if="${#fields.hasErrors('idTipoMuestra')}"
+                                   class="label label-danger" th:errors="*{idTipoMuestra}">Incorrect</p>
+                            </div>
+                            <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                                <label th:for="numeroMuestra">Número de muestra<span class="required">*</span></label>
+                                <input type="number" class="form-control" th:id="numeroMuestra"
+                                       th:name="numeroMuestra" th:field="*{numeroMuestra}" required="required">
+                                <p th:if="${#fields.hasErrors('numeroMuestra')}" class="label label-danger"
+                                   th:errors="*{numeroMuestra}">Incorrect</p>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                                <label th:for="numero1">Celulas 1</label>
+                                <input type="number" class="form-control" th:id="numero1"
+                                       th:name="numero1" th:field="*{numero1}">
+                            </div>
+
+                            <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                                <label th:for="numero2">Celulas 2</label>
+                                <input type="number" class="form-control" th:id="numero2"
+                                       th:name="numero2" th:field="*{numero2}">
+                            </div>
+
+                            <div class="col-md-4 col-sm-12 col-xs-12 form-group">
+                                <label th:for="numero3">Suero 1</label>
+                                <input type="number" class="form-control" th:id="numero3"
+                                       th:name="numero3" th:field="*{numero3}">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <div class="x_panel">
+                                    <div class="x_title">
+                                        <label>Observaciones de la muestra</label>
+                                        <ul class="nav navbar-right panel_toolbox">
+                                            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
+                                        </ul>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div class="x_content">
+                                        <div id="alerts"></div>
+                                        <div class="btn-toolbar editor" data-role="editor-toolbar"
+                                             data-target="#editor-one">
+                                            <div class="btn-group">
+                                                <a style="display:none" class="btn dropdown-toggle"
+                                                   data-toggle="dropdown" title="Font"><i
+                                                        class="fa fa-font"></i><b class="caret"></b></a>
+                                                <ul class="dropdown-menu">
+                                                </ul>
+                                            </div>
+
+                                            <div class="btn-group">
+                                                <a class="btn dropdown-toggle" data-toggle="dropdown" title="Font Size"><i
+                                                        class="fa fa-text-height"></i>&nbsp;<b class="caret"></b></a>
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <a data-edit="fontSize 5">
+                                                            <p style="font-size:17px">Huge</p>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a data-edit="fontSize 3">
+                                                            <p style="font-size:14px">Normal</p>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a data-edit="fontSize 1">
+                                                            <p style="font-size:11px">Small</p>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+
+                                            <div class="btn-group">
+                                                <a class="btn" data-edit="bold" title="Bold (Ctrl/Cmd+B)"><i
+                                                        class="fa fa-bold"></i></a>
+                                                <a class="btn" data-edit="italic" title="Italic (Ctrl/Cmd+I)"><i
+                                                        class="fa fa-italic"></i></a>
+                                                <a class="btn" data-edit="strikethrough" title="Strikethrough"><i
+                                                        class="fa fa-strikethrough"></i></a>
+                                                <a class="btn" data-edit="underline" title="Underline (Ctrl/Cmd+U)"><i
+                                                        class="fa fa-underline"></i></a>
+                                            </div>
+
+                                            <div class="btn-group">
+                                                <a class="btn" data-edit="insertunorderedlist" title="Bullet list"><i
+                                                        class="fa fa-list-ul"></i></a>
+                                                <a class="btn" data-edit="insertorderedlist" title="Number list"><i
+                                                        class="fa fa-list-ol"></i></a>
+                                                <a class="btn" data-edit="outdent" title="Reduce indent (Shift+Tab)"><i
+                                                        class="fa fa-dedent"></i></a>
+                                                <a class="btn" data-edit="indent" title="Indent (Tab)"><i
+                                                        class="fa fa-indent"></i></a>
+                                            </div>
+
+                                            <div class="btn-group">
+                                                <a class="btn" data-edit="justifyleft"
+                                                   title="Align Left (Ctrl/Cmd+L)"><i class="fa fa-align-left"></i></a>
+                                                <a class="btn" data-edit="justifycenter" title="Center (Ctrl/Cmd+E)"><i
+                                                        class="fa fa-align-center"></i></a>
+                                                <a class="btn" data-edit="justifyright"
+                                                   title="Align Right (Ctrl/Cmd+R)"><i
+                                                        class="fa fa-align-right"></i></a>
+                                                <a class="btn" data-edit="justifyfull" title="Justify (Ctrl/Cmd+J)"><i
+                                                        class="fa fa-align-justify"></i></a>
+                                            </div>
+
+                                            <div class="btn-group">
+                                                <a class="btn dropdown-toggle" data-toggle="dropdown" title="Hyperlink"><i
+                                                        class="fa fa-link"></i></a>
+                                                <div class="dropdown-menu input-append">
+                                                    <input class="span2" placeholder="URL" type="text"
+                                                           data-edit="createLink"/>
+                                                    <button class="btn" type="button">Add</button>
+                                                </div>
+                                                <a class="btn" data-edit="unlink" title="Remove Hyperlink"
+                                                   style="display:none"><i
+                                                        class="fa fa-cut"></i></a>
+                                            </div>
+
+                                            <div class="btn-group">
+                                                <a class="btn" title="Insert picture (or just drag & drop)"
+                                                   id="pictureBtn"><i class="fa fa-picture-o" style="display:none"></i></a>
+                                                <input type="file" data-role="magic-overlay" data-target="#pictureBtn"
+                                                       data-edit="insertImage"/>
+                                            </div>
+
+                                            <div class="btn-group">
+                                                <a class="btn" data-edit="undo" title="Undo (Ctrl/Cmd+Z)"><i
+                                                        class="fa fa-undo"></i></a>
+                                                <a class="btn" data-edit="redo" title="Redo (Ctrl/Cmd+Y)"><i
+                                                        class="fa fa-repeat"></i></a>
+                                            </div>
+                                        </div>
+
+
+                                        <div id="editor-one" class="editor-wrapper" onkeydown="ActualizarDatos()"
+                                             style="color:#000"></div>
+                                        <textarea th:id="observacionMuestra" th:name="observacionMuestra"
+                                                  th:field="*{observacionMuestra}" style="display:none"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--  <div class="form-group">
+                              <div class="col-xs-12 ">
+                                  <label>
+                                      <input type="checkbox" value="true" class="js-switch" checked th:id="mostrarMuestra"
+                                             th:field="*{mostrarMuestra}"/> Mostrar observaciones de la muestra
+                                  </label>
+                              </div>
+                          </div>-->
+
+                        <div class="form-group">
+                            <div class="col-md-6 col-sm-12 col-xs-12 form-group">
+                                <label th:for="fechaInicial">Fecha inicial<span
+                                        class="required">*</span></label>
+                                <div class="xdisplay_inputx form-group has-feedback">
+                                    <input type="date" required="required"
+                                           class="form-control"
+                                           th:name="fechaInicial" th:id="fechaInicial" th:field="*{fechaInicial}">
+                                    <p th:if="${#fields.hasErrors('fechaInicial')}" class="label label-danger"
+                                       th:errors="*{fechaInicial}">Incorrect</p>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 col-sm-12 col-xs-12 form-group">
+                                <label th:for="fechaFinal">Fecha final<span
+                                        class="required">*</span></label>
+                                <div class="xdisplay_inputx form-group has-feedback">
+                                    <input type="date" required="required"
+                                           class="form-control"
+                                           th:name="fechaFinal" th:id="fechaFinal" th:field="*{fechaFinal}">
+                                    <p th:if="${#fields.hasErrors('fechaFinal')}" class="label label-danger"
+                                       th:errors="*{fechaFinal}">Incorrect</p>
+                                </div>
+                            </div>
+                            <input type="hidden"
+                                   class="form-control"
+                                   th:name="fechaBloqueo" th:id="fechaBloqueo" th:field="*{fechaBloqueo}">
+
+
+                            <input type="hidden"
+                                   class="form-control"
+                                   th:name="fechaCierre" th:id="fechaCierre" th:field="*{fechaCierre}">
+
+                            <input type="hidden"
+                                   class="form-control"
+                                   name="fechaLibResultado" id="fechaLibResultado"
+                                   th:field="*{fechaLibResultado}">
+
+                            <input type="hidden"
+                                   class="form-control"
+                                   name="observacionUsuario" id="observacionUsuario"
+                                   th:field="*{observacionUsuario}">
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <br>
+                                <button sec:authorize="${hasAnyRole(T(com.proasecal.software.web.controller.seguridad.RolesAccess).permisosPermitidos('/muestras/save'))}"
+                                        th:type="submit" th:id="save" class="btn btn-success"
+                                        th:name="action"
+                                        th:value="Guardar">Guardar
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<div layout:fragment="customjs">
+    <script src="../../js/muestras/muestras.js"></script>
+
+
+    <!-- bootstrap-wysiwyg -->
+    <script src="../../vendors/bootstrap-wysiwyg/js/bootstrap-wysiwyg.min.js"></script>
+    <script src="../../vendors/jquery.hotkeys/jquery.hotkeys.js"></script>
+    <script src="../../vendors/google-code-prettify/src/prettify.js"></script>
+    <!-- jQuery Tags Input -->
+    <script src="../../vendors/jquery.tagsinput/src/jquery.tagsinput.js"></script>
+    <!-- Select2 -->
+    <script src="../../vendors/select2/dist/js/select2.full.min.js"></script>
+    <!-- Parsley -->
+    <script src="../../vendors/parsleyjs/dist/parsley.min.js"></script>
+    <!-- Autosize -->
+    <script src="../../vendors/autosize/dist/autosize.min.js"></script>
+    <!-- jQuery autocomplete -->
+    <script src="../../vendors/devbridge-autocomplete/dist/jquery.autocomplete.min.js"></script>
+    <!-- starrr -->
+    <script src="../../vendors/starrr/dist/starrr.js"></script>
+
+
+</div>
+</html>

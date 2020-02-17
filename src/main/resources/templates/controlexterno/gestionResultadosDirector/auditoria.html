@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{controlexterno/controlExternoFragments/ce_layout}">
+<head>
+    <link href="../../css/form.css" rel="stylesheet">
+    <title>Listado de clientes</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div layout:fragment="cont">
+	<span class="preload">
+		<i class="fa fa-spinner fa-spin"></i>
+	</span>	
+    <style>
+        .tableRow:hover {
+            background-color: #c7ddef !important;
+        }
+    </style>
+
+    
+    
+             			<button   type="button" name="cancel" class="buttonProasecal cancel"
+                       		th:onclick="'javascript:regresarList(\''+${muestras.muestraId}+'\');'"  style="float:right;margin-right:25px"  >Regresar
+               			</button>
+    <br>
+    <span class="texto">Información de auditoria Muestra - </span><span class="texto" th:text="${muestras.numeroMuestra}"></span>
+
+
+    <div class="titulo_sub"></div>
+
+    <br>
+
+
+
+			         <table   class="table table-striped" >
+			         <tr>
+			         	<th>Programa</th>
+			         	<th>Usuario</th>
+			         	<th>Tipo</th>
+			         	<th>Creado</th>
+			         	<th>Creado por</th>
+			         	<th>Fecha de modificación</th>
+			         	<th>Aprobado por</th>
+			         	<th>Justificación</th>
+
+			         </tr>
+
+			        <tbody>
+			           <tr th:each="listResul : ${modelsListAuditoria}">
+					        	<td th:text="${listResul.idMuestras.idPrograma.nombrePrograma}"></td>
+					        	<td th:text="${listResul.usuarioId.nombreUsuario}"></td>
+						         <td th:text="${listResul.tipoModificacionEliminacion.toString().equalsIgnoreCase('U')?'Modificación':'Eliminación'}"></td>
+			        			<td th:text="${#dates.format(listResul.fechaCreacionResultado,'dd/MM/yyyy')}"></td>
+						        <td>
+						        	<label th:each="ListR, row : ${listResul.usuarioUSedeCreacion.usuariosLaboratorioList}"
+                                           th:text="${ListR.idSedes.nombreSede +' | '}">
+                                   </label>
+                                   <label th:text="${listResul.usuarioUSedeCreacion.nombreUsuario}"></label>
+						        </td>
+					        	<td th:text="${listResul.fechaModificacion}"></td>
+					        	<td th:text="${listResul.aprovadoPor}"></td>
+					        	 <td th:text="${listResul.justificacion}"></td>
+			        </tr>
+
+			        </tbody>
+
+			         </table>
+
+    <div>
+
+    </div>
+
+    <style>
+        .pdfobject-container {
+            height: 40rem;
+            border: 1rem solid rgba(0, 0, 0, .1);
+        }
+    </style>
+</div>
+
+<div layout:fragment="customjs">
+
+    <script src="../../controlexterno/js/controlExterno.js"></script>
+</div>
+</body>

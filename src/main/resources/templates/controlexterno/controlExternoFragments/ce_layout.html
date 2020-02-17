@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">Proasecal S.A.S: Programs Control Externo</title>
+    <div th:replace="controlexterno/controlExternoFragments/listCss :: listCss"/>
+</head>
+<body>
+<div id="container">
+    <div id="header">
+        <img src="../../controlexterno/images/proasecal.png" width="200px">
+    </div>
+    <!--bienvenido-->
+    <div id="userInfo">
+        <div th:replace="controlexterno/controlExternoFragments/nav :: welcomeBar"/>
+    </div>
+    <!--fin barra de bienvenido-->
+    <!--barra de navegacion-->
+    <div id="menuProasec" class="clearDiv">
+        <div th:replace="controlexterno/controlExternoFragments/nav :: navBar"/>
+    </div>
+    <!--fin barra de navegacion-->
+
+        <!--contenido-->
+        <div layout:fragment="cont" > </div>
+        <!--fin contenido-->
+
+</div>
+<div th:replace="controlexterno/controlExternoFragments/footer :: footer"/>
+
+<div layout:fragment="customjs" >
+
+</div>
+</body>
+</html>

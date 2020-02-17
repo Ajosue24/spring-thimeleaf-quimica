@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{web/fragments/main_layout}" >
+<head>
+    <title>Index</title>
+</head>
+<body>
+
+<div  layout:fragment="content" class="container mySpace">
+
+    <div class="right_col" role="main">
+        <!-- top tiles -->
+        <div class="row tile_count">
+            <div class="col-md-10 col-sm-10 col-xs-10 tile_stats_count">
+
+         <!--       <div>
+                    <span th:text="${(T(com.proasecal.software.web.controller.seguridad.RolesAccess).test('vista1'))}"></span>
+                    CUALQUIER ROLL
+                </div>-->
+                <span class="count_top"><i class="fa fa-user"></i>Hola,<span sec:authentication="name">Usuario</span></span>
+                <div class="count">Bienvenido</div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!--<div  layout:fragment="ce_js">
+    <script src="../../js/index.js"></script>
+</div>-->
+</body>
+</html>

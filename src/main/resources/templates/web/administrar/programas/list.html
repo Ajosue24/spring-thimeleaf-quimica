@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{web/fragments/main_layout}">
+<head>
+    <title>Gestión de programas</title>
+
+</head>
+<body>
+<div layout:fragment="content" class="container mySpace">
+    <div class="right_col" role="main">
+        <div class="col-md-12">
+            <div class="page-title">
+                <div class="title_left">
+                    <h3 class="col-md-10">Listado de programas</h3>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <!--tabla para consultar existentes-->
+                    <div class="x_panel">
+                        <div class="x_title col">
+                            <form>
+                                <div class="form-group" col-md-12 col-sm-12 col-xs-12>
+                                    <label th:for="filtrosList">Filtrar por:</label>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-md-3 col-sm-3 col-xs-12 form-group">
+                                        <select class="form-control" th:id="filtrosList" th:name="filtrosList" required="">
+                                            <option th:each="filtro,row : ${filtrosList}"
+                                                    th:value="${{filtro}}"
+                                                    th:selected="(${filtro.bdNombre} == ${filtroSelected})"
+                                                    th:text="${filtro.nombre}"
+                                                    th:id="${filtro.bdNombre}">
+                                            </option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-3 col-sm-3 col-xs-12 form-group">
+                                        <input type="text" required="required" class="form-control" id="criterio"
+                                              th:value="${find}"
+                                               placeholder="Filtro" name="criterio">
+                                    </div>
+                                    <div class="col-md-3 col-sm-3 col-xs-12 form-group">
+                                        <a  class="btn btn-primary" id="buscar">
+                                            <span class="glyphicon glyphicon-search" style="color:#FFFFFF"></span> Buscar
+                                        </a>
+                                        <a th:href="@{/programas/list}" class="btn btn-primary" title="Refrescar filtro">
+                                            <span class="fa fa-refresh" style="color:#FFFFFF"></span>
+                                        </a>
+                                    </div>
+
+                                    <div class="col-md-3 col-sm-3 col-xs-12 form-group">
+                                        <a th:href="@{/programas/form}" class="btn btn-success pull-right">
+                                            <span class="glyphicon glyphicon-plus-sign" style="color:#FFFFFF"></span> Añadir
+                                        </a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div>
+                            <p class="text-muted font-13 m-b-30">
+                                Seleccione el programa que desee editar
+                            </p>
+                            <table id="tableProgramas"class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0"
+                                   width="100%">
+                                <thead>
+                                <tr role="row" class="odd">
+                                    <th><a onclick="redirect('programaId');">Numero ID</a></th>
+                                    <th><a onclick="redirect('tipoProgramaId');">Tipo</a></th>
+                                    <th><a onclick="redirect('nombrePrograma');">Nombre</a></th>
+                                    <th><a onclick="redirect('abreviatura');">Abreviatura</a></th>
+                                    <th><a onclick="redirect('orden');">Orden</a></th>
+                                    <th><a onclick="redirect('estado');">Estado</a></th>
+                                    <th>Editar</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="programa : ${listaProgramas}">
+                                    <td th:text="${programa.programaId}"></td>
+                                    <td th:text="${programa.tipoProgramaId.nombreTipoPrograma}"></td>
+                                    <td th:text="${programa.nombrePrograma}"></td>
+                                    <td th:text="${programa.abreviatura}"></td>
+                                    <td th:text="${programa.orden}"></td>
+                                    <td th:text="${programa.estado == false?'inactivo':'activo'}"></td>
+                                    <td>
+                                        <a sec:authorize="${hasAnyRole(T(com.proasecal.software.web.controller.seguridad.RolesAccess).permisosPermitidos('/programas/edit'))}"
+                                           th:href="@{/programas/edit/} + ${programa.programaId}"
+                                           class="btn btn-round btn-info btn-xs"><i class="fa fa-wrench"></i> Editar
+                                        </a></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div class="form-group col-md-1">
+                                <select class="form-control pagination" id="pageSizeSelect">
+                                    <option th:each="pageSize : ${pageSizes}" th:text="${pageSize}"
+                                            th:value="${pageSize}"
+                                            th:selected="${pageSize} == ${selectedPageSize}"></option>
+                                </select>
+                            </div>
+                            <div th:if="${listaProgramas.totalPages != 1}"
+                                 class="dataTables_paginate paging_simple_numbers pagination-centered">
+                                <ul class="pagination">
+                                    <li th:class="${listaProgramas.number == 0} ? disabled"><a
+                                            class="pageLink"
+                                            th:href="@{/programas/list(size=${selectedPageSize}, page=1,find=${find})}">&laquo;</a>
+                                    </li>
+                                    <li th:class="${listaProgramas.number == 0} ? disabled"><a
+                                            class="pageLink"
+                                            th:href="@{/programas/list(size=${selectedPageSize}, page=${listaProgramas.number},find=${find})}">&larr;</a>
+                                    </li>
+                                    <li
+                                            th:class="${listaProgramas.number == (page - 1)} ? 'active pointer-disabled'"
+                                            th:each="page : ${#numbers.sequence(pager.startPage, pager.endPage)}">
+                                        <a class="pageLink"
+                                           th:href="@{/programas/list(size=${selectedPageSize}, page=${page},find=${find})}"
+                                           th:text="${page}"></a>
+                                    </li>
+                                    <li
+                                            th:class="${listaProgramas.number + 1 == listaProgramas.totalPages} ? disabled">
+                                        <a class="pageLink"
+                                           th:href="@{/programas/list(size=${selectedPageSize}, page=${listaProgramas.number + 2},find=${find})}">&rarr;</a>
+                                    </li>
+                                    <li
+                                            th:class="${listaProgramas.number + 1 == listaProgramas.totalPages} ? disabled">
+                                        <a class="pageLink"
+                                           th:href="@{/programas/list(size=${selectedPageSize}, page=${listaProgramas.totalPages},find=${find})}">&raquo;</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div layout:fragment="customjs">
+    <link rel="stylesheet" th:href="@{/css/programas/programas.css}"
+          href="../../css/programas/programas.css"/>
+    <script src="../../../js/programas/programas.js"></script>
+
+</div>
+</body>
+
+</html>

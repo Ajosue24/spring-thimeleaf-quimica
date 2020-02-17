@@ -1,0 +1,124 @@
+<div th:fragment="sidebar-menu">
+    <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+        <div class="menu_section">
+            <h3>General</h3>
+            <ul class="nav side-menu">
+                <li><a th:href="@{/web/index}"><i class="fa fa-home"></i> Ir Home</a>
+                 <!--   <ul class="nav child_menu">
+                        <li><a href="clientes.html">Dashboard</a></li>
+                        <li><a href="login2.html">Dashboard2</a></li>
+                        <li><a href="login3.html">Dashboard3</a></li>
+                    </ul>-->
+                </li>
+
+                <li sec:authorize="${hasAnyRole(T(com.proasecal.software.web.controller.seguridad.RolesAccess).rolesPermitidos('administrar'))}">
+                    <a><i class="fa fa-eyedropper"></i> Administrar / Gestionar <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                        <li sec:authorize="${hasAnyRole(T(com.proasecal.software.web.controller.seguridad.RolesAccess).permisosPermitidos('/clientes/list'))}"> <a th:href="@{/clientes/list}">Clientes</a></a></li>
+                        <li sec:authorize="${hasAnyRole(T(com.proasecal.software.web.controller.seguridad.RolesAccess).permisosPermitidos('/laboratorios/list'))}"><a th:href="@{/laboratorios/list}">Laboratorios</a></li>
+                        <!--Se cambia "Sedes por laboratorios" a "Sedes" mantis 593-->
+                        <li sec:authorize="${hasAnyRole(T(com.proasecal.software.web.controller.seguridad.RolesAccess).permisosPermitidos('/sedes/list'))}"><a th:href="@{/sedes/list}">Sedes</a></li>
+                        <li sec:authorize="${hasAnyRole(T(com.proasecal.software.web.controller.seguridad.RolesAccess).permisosPermitidos('/muestras/list'))}"><a th:href="@{/muestras/list}">Muestras</a></li>
+                        <li sec:authorize="${hasAnyRole(T(com.proasecal.software.web.controller.seguridad.RolesAccess).permisosPermitidos('/equipos/list'))}"><a th:href="@{/equipos/list}">Equipos</a></li>
+                        <li sec:authorize="${hasAnyRole(T(com.proasecal.software.web.controller.seguridad.RolesAccess).permisosPermitidos('/reactivos/list'))}"><a th:href="@{/reactivos/list}">Reactivos</a></li>
+                        <li sec:authorize="${hasAnyRole(T(com.proasecal.software.web.controller.seguridad.RolesAccess).permisosPermitidos('/metodos/list'))}"><a th:href="@{/metodos/list}">Métodos</a></li>
+                        <li sec:authorize="${hasAnyRole(T(com.proasecal.software.web.controller.seguridad.RolesAccess).permisosPermitidos('/controlexternoinforme/auditoria'))}"><a th:href="@{/controlexternoinforme/auditoria}">Informe de auditoria</a></li>
+                        <!-- <li><a>Gestión Usuarios<span class="fa fa-chevron-down"></span></a>
+                            <ul class="nav child_menu">
+                                <li class="sub_menu"><a href="level2.html">Usuarios por laboratorio</a>
+                                </li>
+                                <li><a href="#level2_1">Usuarios por Laboratorio y sede</a>
+                                </li>
+                            </ul>
+                        </li>                    
+
+                         <li><a th:href="@{/programas/list}">Gestion programas</a></li>-->
+
+
+                        <!--<li><a href="form_wizards.html">Form Wizard</a></li>
+                        <li><a href="form_upload.html">Form Upload</a></li>
+                        <li><a href="form_buttons.html">Form Buttons</a></li>-->
+                    </ul>
+                </li>
+                <li sec:authorize="${hasAnyRole(T(com.proasecal.software.web.controller.seguridad.RolesAccess).rolesPermitidos('inscripcion'))}">
+                <a><i class="fa fa-desktop"></i> Inscripcion <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+  						<li sec:authorize="${hasAnyRole(T(com.proasecal.software.web.controller.seguridad.RolesAccess).permisosPermitidos('/inscripcionprogramas/list'))}"><a th:href="@{/inscripcionprogramas/list}">Inscripcion de programas</a></li>
+  						<li sec:authorize="${hasAnyRole(T(com.proasecal.software.web.controller.seguridad.RolesAccess).permisosPermitidos('/periodosvigencia/list'))}"><a th:href="@{/periodosvigencia/list}">Periodos de vigencia</a></li>
+  						<li sec:authorize="${hasAnyRole(T(com.proasecal.software.web.controller.seguridad.RolesAccess).permisosPermitidos('/inscripcionMasivaMuestras/create'))}"><a th:href="@{/inscripcionMasivaMuestras/create}">Inscripción masiva de muestras</a></li>
+                    </ul>
+                </li>
+                <!--<li><a><i class="fa fa-table"></i> Tables <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                        <li><a href="tables.html">Tables</a></li>
+                        <li><a href="tables_dynamic.html">Table Dynamic</a></li>
+                    </ul>
+                </li>-->
+               <!-- <li><a><i class="fa fa-bar-chart-o"></i> Data Presentation <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                        <li><a href="chartjs.html">Chart JS</a></li>
+                        <li><a href="chartjs2.html">Chart JS2</a></li>
+                        <li><a href="morisjs.html">Moris JS</a></li>
+                        <li><a href="echarts.html">ECharts</a></li>
+                        <li><a href="other_charts.html">Other Charts</a></li>
+                    </ul>
+                </li>
+                <li><a><i class="fa fa-clone"></i>Layouts <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                        <li><a href="fixed_sidebar.html">Fixed Sidebar</a></li>
+                        <li><a href="fixed_footer.html">Fixed Footer</a></li>
+                    </ul>
+                </li>-->
+            </ul>
+        </div>
+        <div class="menu_section" sec:authorize="${hasAnyRole(T(com.proasecal.software.web.controller.seguridad.RolesAccess).rolesPermitidos('seguridad'))}">
+            <h3>Administracion</h3>
+            <ul class="nav side-menu">
+                <li><a><i class="fa fa-bug"></i> Configuracion <span class="fa fa-chevron-down"></span></a>
+                    <ul class="nav child_menu">
+                        <!-- <li><a href="#">Configuracion General</a></li>
+                         <li><a href="#">Contacts</a></li>-->
+                        <li sec:authorize="${hasAnyRole(T(com.proasecal.software.web.controller.seguridad.RolesAccess).permisosPermitidos('/usuarios/list'))}"><a th:href="@{/usuarios/list}">Usuarios y sus Roles</a></li>
+                        <li sec:authorize="${hasAnyRole(T(com.proasecal.software.web.controller.seguridad.RolesAccess).permisosPermitidos('/roles/list'))}"><a th:href="@{/roles/list}">Roles</a></li>
+                        <li sec:authorize="${hasAnyRole(T(com.proasecal.software.web.controller.seguridad.RolesAccess).permisosPermitidos('/pemisosRoles/'))}"><a th:href="@{/pemisosRoles/}">Gestion Accesos</a></li>
+                        <!--<li><a th:href="@{/pemisosProgramas/}">Gestion Accesos por programa</a></li>-->
+                        <!--<li><a th:href="@{/logout}">Salir</a></li>-->
+                   </ul>
+               </li>
+           </ul>
+       </div>
+       <!--
+               <li><a><i class="fa fa-windows"></i> Extras <span class="fa fa-chevron-down"></span></a>
+                   <ul class="nav child_menu">
+                       <li><a href="page_403.html">403 Error</a></li>
+                       <li><a href="page_404.html">404 Error</a></li>
+                       <li><a href="page_500.html">500 Error</a></li>
+                       <li><a href="plain_page.html">Plain Page</a></li>
+                       <li><a href="login.html">Login Page</a></li>
+                       <li><a href="pricing_tables.html">Pricing Tables</a></li>
+                   </ul>
+               </li>
+               <li><a><i class="fa fa-sitemap"></i> Multilevel Menu <span class="fa fa-chevron-down"></span></a>
+                   <ul class="nav child_menu">
+                       <li><a href="#level1_1">Level One</a>
+                       <li><a>Level One<span class="fa fa-chevron-down"></span></a>
+                           <ul class="nav child_menu">
+                               <li class="sub_menu"><a href="level2.html">Level Two</a>
+                               </li>
+                               <li><a href="#level2_1">Level Two</a>
+                               </li>
+                               <li><a href="#level2_2">Level Two</a>
+                               </li>
+                           </ul>
+                       </li>
+                       <li><a href="#level1_2">Level One</a>
+                       </li>
+                   </ul>
+               </li>
+               <li><a href="javascript:void(0)"><i class="fa fa-laptop"></i> Landing Page <span class="label label-success pull-right">Coming Soon</span></a></li>
+           </ul>-->
+        </div>
+
+    </div>
+
+</div>

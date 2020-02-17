@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{controlexterno/controlExternoFragments/ce_layout}">
+<head>
+    <title>Listado de clientes</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+<div layout:fragment="cont" style="padding: 15px;"  >	
+	<span class="preload">
+		<i class="fa fa-spinner fa-spin"></i>
+	</span>	
+    <div class="validatorForm" style="width: 100%">
+        <div class="titFormSample">
+            <b>Programa:</b>&nbsp;<label style="display: inline-block"
+                                         th:text="'    '+${muestras.idPrograma.nombrePrograma}"></label><br>
+            <b>Tipo de muestra:</b>&nbsp;<label style="display: inline-block"
+                                                th:text="${muestras.idTipoMuestra.nombre}"></label>
+        </div>
+        <div class="cabFormSample">
+            <table style="width: 100%;">
+                <tbody>
+                <tr style="background: white;">
+                    <td class="boldText">Laboratorio:</td>
+                    <td th:text="${inscripcionMuestras.idUsuarios.idLaboratoriosSedes.razonSocial}"></td>
+                    <td class="boldText">Sede:</td>
+                    <td th:text="${inscripcionMuestras.idUsuarios.idSedes.nombreSede}"></td>
+                    <td class="boldText">Usuario:</td>
+                    <td th:text="${inscripcionMuestras.idUsuarios.usuarioId.nombreUsuario}"></td>
+                </tr>
+                <tr style="background: white;">
+                    <td class="boldText">Número de la muestra:</td>
+                    <td th:text="${muestras.numeroMuestra}"></td>
+                    <td class="boldText">Fecha de inicio de la muestra:</td>
+                    <td th:text="${#dates.format(muestras.fechaInicial,'dd/MM/yyyy')}"></td>
+                    <td class="boldText">Fecha de ingreso:</td>
+                    <td>
+                        <label th:text="*{resultados!=null?#dates.format(resultados.fechaCreacion,'dd/MM/yyyy'):#calendars.format(#calendars.createNow(), 'dd/MM/yyyy HH:mm')}"></label>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+        <div class="submit"></div>
+    </div>
+    <br>
+
+    <div class="TableForm">
+        <div class="formError" style="background: #FFDDDE;" th:if="${error}">
+            <p style="font-weight: bolder; padding:3px; text-align:justify;">
+                Ocurrio un error! valide el formulario
+            </p>
+        </div>
+        <form id="resultadosParticipanteForm" class="form-horizontal form-label-left" action="#"
+              th:object="${resultadosParticipanteForm}" th:fragment="resultadosParticipanteForm"
+              th:action="@{/controlexterno/resultadosParticipante}" method="post">
+              
+	        <div th:if="${muestras.fechaCierre!=null}And(*{resultados.idResultados==null})">
+	            <div class="formError" style="background: #FFDDDE;height: 37px;"
+	                 th:if="${muestras.fechaCierre.before(#temporals.createNow())}">
+	                <p style="font-weight: bolder; padding:1px 0 0 40px; text-align:justify;">
+	                    <label>x Su resultado se encuentra fuera de fecha</label>
+	                </p>
+	            </div>
+	        </div>        
+        <br>
+        <div class="infoFormObs" th:if="${muestras.observacionMuestra!=null&&!muestras.observacionMuestra.isEmpty()}">
+            <p style="background-color: white; color:#000; font-weight: bolder; padding:3px; text-align:justify;"
+               th:utext="${muestras.observacionMuestra}">
+            </p>
+        </div>
+        
+            <fieldset th:disabled="${disabled}">
+                <input type="hidden" th:id="idInscripcionMuestras"
+                       th:field="*{resultados.idInscripcionMuestras.idInscripcionMuestras}"/>
+                <input type="hidden" th:id="idResultados" th:field="*{resultados.idResultados}"/>
+
+                <table>
+                    <tbody>
+                    <tr th:if="*{resultados.idResultados!=null&&resultados.idResultados>0}And${!disabled}">
+                        <td class="seccionForm " colspan="100">Justificación de la modificacion *</td>
+                    </tr>
+                    <tr th:if="*{resultados.idResultados!=null&&resultados.idResultados>0}And${!disabled}">
+                        <td colspan="100">
+                            <div class="input textarea"><textarea
+                                    th:field="*{resultados.justificacion}" onkeypress="return check(event)"
+                                    name="observaciones" id="justificacion" class="" rows="5" required></textarea>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr th:if="*{resultados.idResultados!=null&&resultados.idResultados>0}And${T(com.proasecal.software.controlexterno.controller.ControlExternoController).nombreSede==''}And${!disabled}">
+                        <td class="seccionForm " colspan="100">Autorizado por *</td>
+                    </tr>
+                    <tr th:if="*{resultados.idResultados!=null&&resultados.idResultados>0}And${T(com.proasecal.software.controlexterno.controller.ControlExternoController).nombreSede==''}And${!disabled}">
+                        <td colspan="100">
+                            <div class="input textarea">
+                                <textarea id="autorizadoPor" name="autorizadoPor" th:text="${autorizadoPor}" rows="1"
+                                          required></textarea>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="seccionForm">Mensurando</td>
+                        <td class="seccionForm">Valor informado</td>
+                        <td class="seccionForm">Método</td>
+                        <td class="seccionForm">Reactivo</td>
+                        <td class="seccionForm">Equipo</td>
+                    </tr>
+                    <tr th:each="mensurando,stat :${mensurandosList}">
+                        <!--/*@thymesVar id="mensurando" type="com.proasecal.software.web.entity.administrar.Mensurandos"*/-->
+                        <td>
+                            <label th:text="${mensurando.nombreMensurando}+' ('+${mensurando.idUnidadesMedidas.unidad}+')'"></label>
+                            <input type="hidden" th:id="mensurandoId"
+                                   th:field="*{resultadosDetalladosList[__${stat.index}__].mensurandosId.mensurandosId}"/>
+                            <input type="hidden" th:id="idResultadosDetallados"
+                                   th:field="*{resultadosDetalladosList[__${stat.index}__].idResultadosDetallados}"/>
+                        </td>
+                        <td>
+                            <input type="text" step="anResultadosDetalladosy"
+                                   class="inputNumeric inputForm"
+                                   th:id="valorInformado+${stat.index}"
+                                   th:name="valorInformado+${stat.index}"
+                                   onkeyup="this.value = this.value.replace(/,/g, '.')"
+                                   th:data-round="${mensurandosList[__${stat.index}__].cantDecimales}"
+                                   th:field="*{resultadosDetalladosList[__${stat.index}__].valorReportado}" >
+                            <p th:if="${#fields.hasErrors('resultadosDetalladosList[__${stat.index}__].valorReportado')}"
+                               class="errorForm"
+                               th:errors="*{resultadosDetalladosList[__${stat.index}__].valorReportado}">Incorrect</p>
+                        </td>
+                        <td>
+                            <select class="selectForm inputForm" th:id="metodoId" th:name="metodoId"
+                                    th:field="*{resultadosDetalladosList[__${stat.index}__].metodoId}">
+                                <option th:value="NULL" th:text="Seleccione... "></option>
+                                <option th:each="metodos,row : ${mensurando.metodosList}"
+                                        th:value="${{metodos}}"
+                                        th:text="${metodos.codProasecal+' | '+metodos.nombreMetodo}"
+                                        th:id="${metodos.metodoId}">
+                                </option>
+                            </select>
+                            <p th:if="${#fields.hasErrors('resultadosDetalladosList[__${stat.index}__].metodoId')}"
+                               class="errorForm" th:errors="*{resultadosDetalladosList[__${stat.index}__].metodoId}">
+                                Incorrect</p>
+                        </td>
+                        <td>
+                            <select class="selectForm inputForm" th:id="reactivosList" th:name="reactivosList"
+                                    th:field="*{resultadosDetalladosList[__${stat.index}__].reactivoId}">
+                                <option th:value="NULL" th:text="Seleccione... "></option>
+                                <option th:each="reactivos,row : ${reactivosList}"
+                                        th:value="${{reactivos}}"
+                                        th:text="${reactivos.codProasecal+' | '+reactivos.nombreReactivo}"
+                                        th:id="${reactivos.reactivoId}">
+                                </option>
+                            </select>
+                            <p th:if="${#fields.hasErrors('resultadosDetalladosList[__${stat.index}__].reactivoId')}"
+                               class="errorForm" th:errors="*{resultadosDetalladosList[__${stat.index}__].reactivoId}">
+                                Incorrect</p>
+                        </td>
+                        <td>
+                            <select class="selectForm inputForm" th:id="listRoles" th:name="reactivosList"
+                                    th:field="*{resultadosDetalladosList[__${stat.index}__].equipoId}">
+                                <option th:value="NULL" th:text="Seleccione... "></option>
+                                <option th:each="equipos,row : ${equiposList}"
+                                        th:value="${{equipos}}"
+                                        th:text="${equipos.codProasecal+' | '+equipos.nombreEquipo}"
+                                        th:id="${equipos.equipoId}">
+                                </option>
+                            </select>
+                            <p th:if="${#fields.hasErrors('resultadosDetalladosList[__${stat.index}__].equipoId')}"
+                               class="errorForm" th:errors="*{resultadosDetalladosList[__${stat.index}__].equipoId}">
+                                Incorrect</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="seccionForm " colspan="100">Observaciones del participante</td>
+                    </tr>
+                    <tr>
+                        <td colspan="100">
+                            <div class="input textarea">
+                                <textarea name="observaciones" id="observaciones" th:field="*{resultados.observaciones}"
+                                          class="" rows="5" onkeypress="return check(event)"></textarea>
+                            </div>
+                        </td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </fieldset>
+ 
+            <div class="submit"><!-- th:if="*{resultados.fechaModificacion==null}" -->
+                <button th:if="${!disabled}" type="button" name="ok" class="buttonProasecal forms" th:type="submit" th:onclick="'javascript:mensajeDecimales(\''+${mensurandosList.size()}+'\');'"   >
+                    Grabar
+                </button>
+           
+
+             			<button  th:if="${T(com.proasecal.software.controlexterno.controller.ControlExternoController).nombreSede==''}" type="button" name="cancel" class="buttonProasecal cancel"
+                       		th:onclick="'javascript:regresarList(\''+${muestras.muestraId}+'\');'"   >Cancelar
+               			</button>
+             
+                       <button th:if="${T(com.proasecal.software.controlexterno.controller.ControlExternoController).nombreSede!=''}"  type="button" name="cancel" class="buttonProasecal cancel"
+                       			 onclick="location.href='/controlexterno/';">Cancelar
+               			</button>
+                        
+
+            </div>
+        </form>
+    </div>
+</div>
+
+<div layout:fragment="customjs">
+    <link href="../../css/form.css" rel="stylesheet">
+    <script src="../../controlexterno/js/resultadosParticipante/resultadosParticipante.js"></script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+
+        var errorFormulario = /*[[${errorFormulario}]]*/ 'default';
+
+        var mensaje0 = /*[[${mensaje0}]]*/ 'mensaje0';
+
+        $(document).ready(function () {
+            if (mensaje0) {
+                alert('No se permite el ingreso de valores cero (0)');
+            }
+            else{
+                if (errorFormulario) {
+                    alert('Existen errores en el formulario');
+                }
+            }
+
+        });
+
+        /*]]>*/
+    </script>
+    <style>
+        .errorForm {
+            clear: both;
+            font-size: 80%;
+            vertical-align: text-bottom;
+            color: #ff0000;
+            background: white;
+            border: 1px solid #ff0000;
+            font-weight: bolder;
+            width: 90%;
+        }
+    </style>
+</div>
+</body>
+</html>

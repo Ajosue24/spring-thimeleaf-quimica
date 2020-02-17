@@ -1,0 +1,19 @@
+<div th:fragment="notify">
+	<div th:if="${notify != null}">
+
+		<script type="text/javascript">		
+	
+			/*<![CDATA[*/
+
+				var title = '[[${notify.getTitle()}]]';
+				var type = '[[${notify.getType()}]]';
+				var message = '[[${notify.getMessage()}]]';
+
+			$(document).ready(function() {
+				
+				init_PNotify(title, type, message);
+	
+			}); /*]]>*/
+		</script>
+	</div>
+</div>
